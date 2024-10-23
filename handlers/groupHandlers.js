@@ -8,7 +8,7 @@ const handleCreateGroup = async (message) => {
 
     validate({
         command: message.body,
-        validation: validations.createGroupCommand.regex,
+        validation: validations.createGroupCommand,
         errorMessage: errorMessages.validation({
             format: "#create <nomor grup>",
             example: "#create 3",
