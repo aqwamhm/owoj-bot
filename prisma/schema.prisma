@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Member {
+  name      String
+  currentJuz       Int
+  reports   Report[]
+  group     Group    @relation(fields: [groupId], references: [id])
+  groupId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([name, groupId])
+}
+
+model Group {
+  id        String   @id
+  number    Int
+  members   Member[]
+  createdAt DateTime @default(now())
+}
+
+model Report {
+  id        String      @id @default(uuid())
+  member    Member   @relation(fields: [memberName, memberGroupId], references: [name, groupId])
+  memberName String 
+  memberGroupId String
+  juz       Int
+  pages     Int
+  period    Period @relation(fields: [periodStartDate, periodEndDate], references: [startDate, endDate])
+  periodStartDate DateTime
+  periodEndDate DateTime
+  createdAt DateTime @default(now())
+}
+
+model Period {
+  reports   Report[]
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime @default(now())
+
+  @@id([startDate, endDate])
+}
