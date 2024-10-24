@@ -1,4 +1,6 @@
-class ValidationError extends Error {
+const ClientError = require("./ClientError");
+
+class ValidationError extends ClientError {
     constructor(message = "Command tidak valid!") {
         super(message);
         this.name = "ValidationError";

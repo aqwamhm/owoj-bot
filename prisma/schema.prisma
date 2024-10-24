@@ -8,35 +8,35 @@ datasource db {
 }
 
 model Member {
-  name      String
-  currentJuz       Int
-  reports   Report[]
-  group     Group    @relation(fields: [groupId], references: [id])
-  groupId   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  name       String
+  currentJuz Int
+  reports    Report[]
+  group      Group    @relation(fields: [groupId], references: [id])
+  groupId    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@id([name, groupId])
 }
 
 model Group {
   id        String   @id
-  number    Int
+  number    Int      @unique
   members   Member[]
   createdAt DateTime @default(now())
 }
 
 model Report {
-  id        String      @id @default(uuid())
-  member    Member   @relation(fields: [memberName, memberGroupId], references: [name, groupId], onDelete: Cascade)
-  memberName String 
-  memberGroupId String
-  juz       Int
-  pages     Int
-  period    Period @relation(fields: [periodStartDate, periodEndDate], references: [startDate, endDate])
+  id              String   @id @default(uuid())
+  member          Member   @relation(fields: [memberName, memberGroupId], references: [name, groupId], onDelete: Cascade)
+  memberName      String
+  memberGroupId   String
+  juz             Int
+  pages           Int
+  period          Period   @relation(fields: [periodStartDate, periodEndDate], references: [startDate, endDate])
   periodStartDate DateTime
-  periodEndDate DateTime
-  createdAt DateTime @default(now())
+  periodEndDate   DateTime
+  createdAt       DateTime @default(now())
 }
 
 model Period {
@@ -46,4 +46,9 @@ model Period {
   createdAt DateTime @default(now())
 
   @@id([startDate, endDate])
+}
+
+model Admin {
+  phoneNumber String @id
+  name        String
 }

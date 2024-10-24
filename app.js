@@ -2,9 +2,7 @@ require("dotenv").config();
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const routesHandler = require("./routes/handler");
 const qrcode = require("qrcode-terminal");
-const ValidationError = require("./exceptions/ValidationError");
-const ConflictError = require("./exceptions/ConflictError");
-const NotFoundError = require("./exceptions/NotFoundError");
+const ClientError = require("./exceptions/ClientError");
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -22,11 +20,7 @@ client.on("message_create", async (message) => {
     try {
         await routesHandler.handler(message);
     } catch (e) {
-        if (
-            e instanceof ValidationError ||
-            e instanceof ConflictError ||
-            e instanceof NotFoundError
-        ) {
+        if (e instanceof ClientError) {
             message.reply(e.message);
             return;
         }
