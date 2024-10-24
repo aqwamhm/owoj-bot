@@ -1,25 +1,7 @@
 const prisma = require("../config/db");
-const ConflictError = require("../exceptions/ConflictError");
-const { showFormattedDate } = require("../utils/hepler");
 
 const reportServices = {
     async create({ name, groupId, juz, pages, startDate, endDate }) {
-        if (
-            await this.find({
-                memberName: name,
-                memberGroupId: groupId,
-                pages,
-                periodStartDate: startDate,
-                periodEndDate: endDate,
-            })
-        ) {
-            throw new ConflictError(
-                `Gagal mencatat laporan. Laporan atas nama ${name} dengan 20 halaman untuk periode (${showFormattedDate(
-                    startDate
-                )} - ${showFormattedDate(endDate)}) telah tercatat sebelumnya.`
-            );
-        }
-
         return await prisma.report.create({
             data: {
                 member: {
@@ -60,13 +42,35 @@ const reportServices = {
         const where = {
             memberName,
             memberGroupId,
-            ...(pages !== undefined && { pages }),
+            ...(pages !== undefined && { pages: parseInt(pages) }),
             ...(periodStartDate && { periodStartDate }),
             ...(periodEndDate && { periodEndDate }),
         };
 
         return await prisma.report.findFirst({
             where,
+        });
+    },
+
+    async updateMany({
+        memberName,
+        memberGroupId,
+        periodStartDate,
+        periodEndDate,
+        juz,
+    }) {
+        const where = {
+            ...(memberName && { memberName }),
+            ...(memberGroupId && { memberGroupId }),
+            ...(periodStartDate && { periodStartDate }),
+            ...(periodEndDate && { periodEndDate }),
+        };
+
+        await prisma.report.updateMany({
+            where,
+            data: {
+                juz: parseInt(juz),
+            },
         });
     },
 };

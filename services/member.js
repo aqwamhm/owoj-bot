@@ -2,34 +2,39 @@ const prisma = require("../config/db");
 
 const memberServices = {
     async set({ name, groupId, currentJuz }) {
-        await prisma.member.upsert({
+        await prisma.member.update({
             where: {
                 name_groupId: {
                     name,
                     groupId,
                 },
             },
-            create: {
+            data: {
                 name,
-                currentJuz,
-                groupId,
-            },
-            update: {
-                name,
-                currentJuz,
-                groupId,
+                currentJuz: parseInt(currentJuz),
             },
         });
     },
 
-    async find({ name, groupId }) {
-        return await prisma.member.findUnique({
-            where: {
-                name_groupId: {
-                    name,
-                    groupId,
-                },
+    async create({ name, groupId, currentJuz }) {
+        await prisma.member.create({
+            data: {
+                name,
+                groupId,
+                currentJuz: parseInt(currentJuz),
             },
+        });
+    },
+
+    async find({ name, groupId, currentJuz }) {
+        const where = {
+            ...(name && { name }),
+            ...(groupId && { groupId }),
+            ...(currentJuz && { currentJuz: parseInt(currentJuz) }),
+        };
+
+        return await prisma.member.findFirst({
+            where,
         });
     },
 
