@@ -9,27 +9,27 @@ const { handleMotivationRequest } = require("../handlers/motivationHandlers");
 
 const routes = () => [
     {
-        command: "#create",
+        command: "/create",
         handler: handleCreateGroup,
     },
     {
-        command: "#set",
+        command: "/set",
         handler: handleSetMember,
     },
     {
-        command: "#lapor",
+        command: "/lapor",
         handler: handleCreateReport,
     },
     {
-        command: "#list",
+        command: "/list",
         handler: handleShowList,
     },
     {
-        command: "#register",
+        command: "/register",
         handler: handleRegisterMember,
     },
     {
-        command: "#semangat",
+        command: "/semangat",
         handler: handleMotivationRequest,
     },
 ];
