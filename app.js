@@ -18,7 +18,8 @@ client.on("qr", (qr) => {
 
 client.on("message_create", async (message) => {
     try {
-        await routesHandler.handler(message);
+        const response = await routesHandler.handler(message);
+        message.reply(response);
     } catch (e) {
         if (e instanceof ClientError) {
             message.reply(e.message);

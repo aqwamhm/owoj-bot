@@ -20,7 +20,7 @@ const handleCreateGroup = async (message) => {
         number: parseInt(arg1),
     });
 
-    message.reply("Group berhasil ditambahkan!");
+    return groupViews.success.create({ nomor: arg1 });
 };
 
 module.exports = { handleCreateGroup };

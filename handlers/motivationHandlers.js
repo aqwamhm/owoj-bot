@@ -63,10 +63,9 @@ const handleMotivationRequest = async (message) => {
         }
 
         const result = await response.json();
-        message.reply(result.choices[0].message.content);
+        return result.choices[0].message.content;
     } catch (error) {
-        console.error("Error:", error);
-        message.reply(error);
+        return motivationViews.error.request();
     }
 };
 

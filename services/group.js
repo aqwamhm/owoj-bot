@@ -7,7 +7,7 @@ const groupServices = {
 
         if (group) {
             throw new ConflictError(
-                "Tidak bisa mendaftarkan grup karena grup ini sudah terdaftar di sistem"
+                groupViews.error.conflict({ nomor: group.number })
             );
         }
 

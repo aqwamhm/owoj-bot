@@ -4,6 +4,8 @@ const validations = require("../validations");
 const errorMessages = require("../views/error");
 const NotFoundError = require("../exceptions/NotFoundError");
 const AuthenticationError = require("../exceptions/AuthenticationError");
+const ConflictError = require("../exceptions/ConflictError");
+const adminViews = require("../views/admin");
 
 const handleRegisterAdmin = async (message) => {
     const { name, phone, password } = validate({
@@ -17,20 +19,17 @@ const handleRegisterAdmin = async (message) => {
     });
 
     if (password !== process.env.ADMIN_PASSWORD) {
-        throw new AuthenticationError(
-            `Gagal mendaftarkan admin. Password yang anda berikan salah.`
-        );
+        throw new AuthenticationError(adminViews.error.authentication());
     }
 
     const admin = await adminServices.find({ phoneNumber: phone });
     if (admin) {
-        throw new NotFoundError(
-            `Gagal mendaftarkan admin. Nomor telepon ${phone} sudah terdaftar sebagai admin.`
-        );
+        throw new ConflictError(adminViews.error.conflict({ phone }));
     }
 
     await adminServices.create({ phoneNumber: phone, name });
-    message.reply(`${name} berhasil didaftarkan sebagai admin.`);
+
+    return adminViews.success.create({ name, phone });
 };
 
 const handleRemoveAdmin = async (message) => {
@@ -45,13 +44,11 @@ const handleRemoveAdmin = async (message) => {
 
     const admin = await adminServices.find({ phoneNumber: phone });
     if (!admin) {
-        throw new NotFoundError(
-            `Gagal menghapus admin. Nomor telepon ${phone} tidak terdaftar sebagai admin.`
-        );
+        throw new NotFoundError(adminViews.error.notFound({ phone }));
     }
 
     await adminServices.remove({ phoneNumber: phone });
-    message.reply(`${admin.name} berhasil dihapus dari daftar admin.`);
+    return adminViews.success.remove({ name: admin.name, phone });
 };
 
 module.exports = { handleRegisterAdmin, handleRemoveAdmin };

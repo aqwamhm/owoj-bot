@@ -1,11 +1,12 @@
 const memberServices = require("../services/member");
 const reportServices = require("../services/report");
-const { getPeriodDate, showFormattedDate } = require("../utils/hepler");
+const { getPeriodDate } = require("../utils/hepler");
 const { validate } = require("../validations/validators");
 const validations = require("../validations");
 const errorMessages = require("../views/error");
 const NotFoundError = require("../exceptions/NotFoundError");
 const ConflictError = require("../exceptions/ConflictError");
+const reportViews = require("../views/report");
 
 const handleCreateReport = async (message) => {
     const { name, pages, previousPeriods } = validate({
@@ -41,9 +42,12 @@ const handleCreateReport = async (message) => {
         })
     ) {
         throw new ConflictError(
-            `Gagal mencatat laporan. Laporan atas nama ${name} dengan ${pages} halaman untuk periode (${showFormattedDate(
-                startDate
-            )} - ${showFormattedDate(endDate)}) telah tercatat sebelumnya.`
+            reportViews.error.conflict({
+                name,
+                pages,
+                startDate,
+                endDate,
+            })
         );
     }
 
@@ -69,7 +73,12 @@ const handleCreateReport = async (message) => {
         endDate,
     });
 
-    message.reply(`Barakallahu fiik, laporan berhasil dicatat untuk ${name}.`);
+    return reportViews.success.create({
+        name,
+        pages,
+        startDate,
+        endDate,
+    });
 };
 
 module.exports = { handleCreateReport };

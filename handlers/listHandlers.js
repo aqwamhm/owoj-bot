@@ -9,9 +9,7 @@ const handleShowList = async (message) => {
         groupId: message.id.remote,
     });
 
-    message.reply(
-        memberListWithReport({ members: memberReportsData, periods })
-    );
+    return memberListWithReport({ members: memberReportsData, periods });
 };
 
 module.exports = { handleShowList };

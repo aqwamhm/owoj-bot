@@ -6,6 +6,7 @@ const { getPeriodDate } = require("../utils/hepler");
 const validations = require("../validations");
 const { validate } = require("../validations/validators");
 const errorMessages = require("../views/error");
+const memberViews = require("../views/member");
 
 const handleSetMember = async (message) => {
     const { juz, name } = validate({
@@ -20,9 +21,7 @@ const handleSetMember = async (message) => {
     const { startDate, endDate } = getPeriodDate();
 
     if (!(await memberServices.find({ groupId, name }))) {
-        throw new NotFoundError(
-            `Gagal memperbarui data member. Nama (${name}) tidak terdataftar di dalam grup ini.`
-        );
+        throw new NotFoundError(memberViews.error.notFound({ name }));
     }
 
     const memberJuzConflict = await memberServices.find({
@@ -31,7 +30,10 @@ const handleSetMember = async (message) => {
     });
     if (memberJuzConflict) {
         throw new ConflictError(
-            `Gagal memperbarui data member. ${memberJuzConflict.name} saat ini sedang membaca juz ${memberJuzConflict.currentJuz}.`
+            memberViews.error.juzConflict({
+                name: memberJuzConflict.name,
+                currentJuz: memberJuzConflict.currentJuz,
+            })
         );
     }
 
@@ -49,7 +51,7 @@ const handleSetMember = async (message) => {
         groupId,
     });
 
-    message.reply(`Data ${name} berhasil diperbarui.`);
+    return memberViews.success.set({ name, currentJuz: juz });
 };
 
 const handleRegisterMember = async (message) => {
@@ -68,9 +70,7 @@ const handleRegisterMember = async (message) => {
 
     for (const { name, juz: currentJuz } of members) {
         if (await memberServices.find({ groupId, name })) {
-            result.push(
-                `Gagal mendaftarkan member ${name}. Nama (${name}) sudah terdaftar di dalam grup ini.`
-            );
+            result.push(memberViews.error.notFound({ name }));
             continue;
         }
 
@@ -79,9 +79,7 @@ const handleRegisterMember = async (message) => {
             currentJuz,
         });
         if (memberJuzConflict) {
-            result.push(
-                `Gagal mendaftarkan member ${name}. ${memberJuzConflict.name} saat ini sedang membaca juz ${memberJuzConflict.currentJuz}.`
-            );
+            result.push(memberViews.error.conflict({ name, currentJuz }));
             continue;
         }
 
@@ -91,11 +89,9 @@ const handleRegisterMember = async (message) => {
             groupId,
         });
 
-        result.push(
-            `${name} berhasil didaftarkan ke dalam grup ini dan akan membaca juz ${currentJuz}.`
-        );
+        result.push(memberViews.success.register({ name, currentJuz }));
     }
-    message.reply(result.join("\n"));
+    return result.join("\n");
 };
 
 const handleRemoveMember = async (message) => {
@@ -112,13 +108,11 @@ const handleRemoveMember = async (message) => {
 
     const member = await memberServices.find({ groupId, name });
     if (!member) {
-        throw new NotFoundError(
-            `Gagal menghapus member. Nama (${name}) tidak terdaftar di dalam grup ini.`
-        );
+        throw new NotFoundError(memberViews.error.notFound({ name }));
     }
 
     await memberServices.remove({ groupId, name });
-    message.reply(`Member ${name} berhasil dihapus dari grup ini.`);
+    return memberViews.success.remove({ name });
 };
 
 module.exports = { handleSetMember, handleRegisterMember, handleRemoveMember };
