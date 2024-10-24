@@ -38,21 +38,6 @@ const memberServices = {
         });
     },
 
-    async getMembersByGroup(groupId) {
-        return await prisma.member.findMany({
-            where: {
-                groupId: groupId,
-            },
-            select: {
-                name: true,
-                currentJuz: true,
-            },
-            orderBy: {
-                name: "asc",
-            },
-        });
-    },
-
     async getWithReports({ groupId }) {
         return await prisma.member.findMany({
             where: {
