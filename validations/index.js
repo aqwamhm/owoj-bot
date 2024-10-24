@@ -11,6 +11,10 @@ const validations = {
         regex: /(?<juz>\d{1,3})#(?<name>[a-zA-Z\s]+?)\s*(?=\d|$)/g,
         multiple: true,
     },
+    removeMemberCommand: {
+        regex: /^\/remove\s+(?<name>[a-zA-Z\s]+?)\s*$/,
+        multiple: false,
+    },
     createGroupCommand: {
         regex: /^\/create\s+\d+\s*$/,
         multiple: false,

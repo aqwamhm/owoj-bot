@@ -26,6 +26,17 @@ const memberServices = {
         });
     },
 
+    async remove({ groupId, name }) {
+        await prisma.member.delete({
+            where: {
+                name_groupId: {
+                    name,
+                    groupId,
+                },
+            },
+        });
+    },
+
     async find({ name, groupId, currentJuz }) {
         const where = {
             ...(name && { name }),

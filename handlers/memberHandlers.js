@@ -98,4 +98,27 @@ const handleRegisterMember = async (message) => {
     message.reply(result.join("\n"));
 };
 
-module.exports = { handleSetMember, handleRegisterMember };
+const handleRemoveMember = async (message) => {
+    const { name } = validate({
+        command: message.body,
+        validation: validations.removeMemberCommand,
+        errorMessage: errorMessages.validation({
+            format: "/remove <name>",
+            example: "/remove Aqwam",
+        }),
+    });
+
+    const groupId = message.id.remote;
+
+    const member = await memberServices.find({ groupId, name });
+    if (!member) {
+        throw new NotFoundError(
+            `Gagal menghapus member. Nama (${name}) tidak terdaftar di dalam grup ini.`
+        );
+    }
+
+    await memberServices.remove({ groupId, name });
+    message.reply(`Member ${name} berhasil dihapus dari grup ini.`);
+};
+
+module.exports = { handleSetMember, handleRegisterMember, handleRemoveMember };

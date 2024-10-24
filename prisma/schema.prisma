@@ -28,7 +28,7 @@ model Group {
 
 model Report {
   id        String      @id @default(uuid())
-  member    Member   @relation(fields: [memberName, memberGroupId], references: [name, groupId])
+  member    Member   @relation(fields: [memberName, memberGroupId], references: [name, groupId], onDelete: Cascade)
   memberName String 
   memberGroupId String
   juz       Int

@@ -2,6 +2,7 @@ const { handleCreateGroup } = require("../handlers/groupHandlers");
 const {
     handleSetMember,
     handleRegisterMember,
+    handleRemoveMember,
 } = require("../handlers/memberHandlers");
 const { handleCreateReport } = require("../handlers/reportHandlers");
 const { handleShowList } = require("../handlers/listHandlers");
@@ -13,8 +14,16 @@ const routes = () => [
         handler: handleCreateGroup,
     },
     {
+        command: "/register",
+        handler: handleRegisterMember,
+    },
+    {
         command: "/set",
         handler: handleSetMember,
+    },
+    {
+        command: "/remove",
+        handler: handleRemoveMember,
     },
     {
         command: "/lapor",
@@ -23,10 +32,6 @@ const routes = () => [
     {
         command: "/list",
         handler: handleShowList,
-    },
-    {
-        command: "/register",
-        handler: handleRegisterMember,
     },
     {
         command: "/semangat",
