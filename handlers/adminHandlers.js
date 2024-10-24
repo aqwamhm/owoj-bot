@@ -33,4 +33,25 @@ const handleRegisterAdmin = async (message) => {
     message.reply(`${name} berhasil didaftarkan sebagai admin.`);
 };
 
-module.exports = { handleRegisterAdmin };
+const handleRemoveAdmin = async (message) => {
+    const { phone } = validate({
+        command: message.body,
+        validation: validations.removeAdminCommand,
+        errorMessage: errorMessages.validation({
+            format: "/remove-admin <nomor menggunakan kode negara (62)>",
+            example: "/remove-admin 6212345678",
+        }),
+    });
+
+    const admin = await adminServices.find({ phoneNumber: phone });
+    if (!admin) {
+        throw new NotFoundError(
+            `Gagal menghapus admin. Nomor telepon ${phone} tidak terdaftar sebagai admin.`
+        );
+    }
+
+    await adminServices.remove({ phoneNumber: phone });
+    message.reply(`${admin.name} berhasil dihapus dari daftar admin.`);
+};
+
+module.exports = { handleRegisterAdmin, handleRemoveAdmin };

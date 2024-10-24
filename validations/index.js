@@ -19,6 +19,10 @@ const validations = {
         regex: /^\/register-admin\s+(?<name>[a-zA-Z\s]+)#(?<phone>\d+)\s+(?<password>\S+)$/,
         multiple: false,
     },
+    removeAdminCommand: {
+        regex: /^\/remove-admin\s+(?<phone>\d+)$/,
+        multiple: false,
+    },
     createGroupCommand: {
         regex: /^\/create\s+\d+\s*$/,
         multiple: false,

@@ -7,7 +7,10 @@ const {
 const { handleCreateReport } = require("../handlers/reportHandlers");
 const { handleShowList } = require("../handlers/listHandlers");
 const { handleMotivationRequest } = require("../handlers/motivationHandlers");
-const { handleRegisterAdmin } = require("../handlers/adminHandlers");
+const {
+    handleRegisterAdmin,
+    handleRemoveAdmin,
+} = require("../handlers/adminHandlers");
 
 const routes = () => [
     {
@@ -29,6 +32,10 @@ const routes = () => [
     {
         command: "/register-admin",
         handler: handleRegisterAdmin,
+    },
+    {
+        command: "/remove-admin",
+        handler: handleRemoveAdmin,
     },
     {
         command: "/lapor",

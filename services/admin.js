@@ -10,6 +10,14 @@ const adminServices = {
         });
     },
 
+    async remove({ phoneNumber }) {
+        await prisma.admin.delete({
+            where: {
+                phoneNumber,
+            },
+        });
+    },
+
     async find({ phoneNumber }) {
         return await prisma.admin.findFirst({
             where: {
