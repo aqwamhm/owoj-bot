@@ -11,43 +11,53 @@ const {
     handleRegisterAdmin,
     handleRemoveAdmin,
 } = require("../handlers/adminHandlers");
+const verifyMessageFromAdmin = require("../middlewares/verifyMessageFromAdmin");
 
 const routes = () => [
     {
         command: "/create",
         handler: handleCreateGroup,
+        middlewares: [verifyMessageFromAdmin],
     },
     {
         command: "/register",
         handler: handleRegisterMember,
+        middlewares: [verifyMessageFromAdmin],
     },
     {
         command: "/set",
         handler: handleSetMember,
+        middlewares: [verifyMessageFromAdmin],
     },
     {
         command: "/remove",
         handler: handleRemoveMember,
+        middlewares: [verifyMessageFromAdmin],
     },
     {
         command: "/register-admin",
         handler: handleRegisterAdmin,
+        middlewares: [],
     },
     {
         command: "/remove-admin",
         handler: handleRemoveAdmin,
+        middlewares: [verifyMessageFromAdmin],
     },
     {
         command: "/lapor",
         handler: handleCreateReport,
+        middlewares: [],
     },
     {
         command: "/list",
         handler: handleShowList,
+        middlewares: [],
     },
     {
         command: "/semangat",
         handler: handleMotivationRequest,
+        middlewares: [],
     },
 ];
 

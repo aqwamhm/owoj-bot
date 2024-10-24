@@ -5,6 +5,11 @@ const handler = async (message) => {
     const route = routes().find((route) => route.command === prompt);
 
     if (route) {
+        if (route.middlewares) {
+            for (const middleware of route.middlewares) {
+                await middleware(message);
+            }
+        }
         await route.handler(message);
     }
 };
