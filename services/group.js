@@ -1,5 +1,6 @@
 const prisma = require("../config/db");
 const ConflictError = require("../exceptions/ConflictError");
+const groupViews = require("../views/group");
 
 const groupServices = {
     async create({ id, number }) {
@@ -25,6 +26,10 @@ const groupServices = {
                 id,
             },
         });
+    },
+
+    async getAll() {
+        return await prisma.group.findMany();
     },
 };
 

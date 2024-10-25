@@ -2,6 +2,7 @@ const groupServices = require("../services/group");
 const validations = require("../validations");
 const { validate } = require("../validations/validators");
 const errorMessages = require("../views/error");
+const groupViews = require("../views/group");
 
 const handleCreateGroup = async (message) => {
     const arg1 = message.body.split(" ")[1];

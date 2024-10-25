@@ -1,7 +1,9 @@
 require("dotenv").config();
+const cron = require("node-cron");
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const routesHandler = require("./routes/handler");
 const qrcode = require("qrcode-terminal");
+const { handleWeekly } = require("./handlers/cronHandlers");
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -20,3 +22,8 @@ client.on("message_create", async (message) => {
 });
 
 client.initialize();
+
+const cronExpression = `0 ${process.env.PERIOD_START_HOUR} * * ${process.env.PERIOD_START_DAY}`;
+cron.schedule(cronExpression, async () => {
+    await handleWeekly(client);
+});

@@ -49,6 +49,27 @@ const memberServices = {
         });
     },
 
+    async incrementAllCurrentJuz() {
+        await prisma.member.updateMany({
+            data: {
+                currentJuz: {
+                    increment: 1,
+                },
+            },
+        });
+
+        await prisma.member.updateMany({
+            where: {
+                currentJuz: {
+                    gt: 30,
+                },
+            },
+            data: {
+                currentJuz: 1,
+            },
+        });
+    },
+
     async getWithReports({ groupId }) {
         return await prisma.member.findMany({
             where: {
