@@ -49,6 +49,9 @@ const reportServices = {
 
         return await prisma.report.findFirst({
             where,
+            orderBy: {
+                createdAt: "asc",
+            },
         });
     },
 

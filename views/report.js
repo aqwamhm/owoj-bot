@@ -15,10 +15,8 @@ Periode: ${showFormattedDate(startDate)} - ${showFormattedDate(endDate)}
         notFound({ name }) {
             return `Nama ${name} tidak terdaftar di dalam grup.`;
         },
-        conflict({ name, pages, startDate, endDate }) {
-            return `Laporan untuk ${name} dengan ${pages} halaman di periode ${showFormattedDate(
-                startDate
-            )} - ${showFormattedDate(endDate)} telah tercatat sebelumnya.`;
+        conflict() {
+            return `Jumlah laporan halaman harus lebih banyak dari jumlah halaman sebelumnya.`;
         },
     },
 };

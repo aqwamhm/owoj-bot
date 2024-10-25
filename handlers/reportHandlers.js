@@ -32,23 +32,15 @@ const handleCreateReport = async (message) => {
 
     let result;
 
-    if (
-        await reportServices.find({
-            memberName: name,
-            memberGroupId: groupId,
-            pages,
-            periodStartDate: startDate,
-            periodEndDate: endDate,
-        })
-    ) {
-        throw new ConflictError(
-            reportViews.error.conflict({
-                name,
-                pages,
-                startDate,
-                endDate,
-            })
-        );
+    const previousReport = await reportServices.find({
+        memberName: name,
+        memberGroupId: groupId,
+        periodStartDate: startDate,
+        periodEndDate: endDate,
+    });
+
+    if (previousReport && previousReport.pages >= pages) {
+        throw new ConflictError(reportViews.error.conflict());
     }
 
     if (!previousPeriods) {
