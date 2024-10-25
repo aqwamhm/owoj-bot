@@ -5,11 +5,9 @@ const reportViews = {
         create({ name, pages, startDate, endDate }) {
             return `Baarakallahu fiik, laporan berhasil dicatat: 
             
-            Nama: ${name}
-            Halaman: ${pages}
-            Periode: ${showFormattedDate(startDate)} - ${showFormattedDate(
-                endDate
-            )}
+Nama: ${name}
+Halaman: ${pages}
+Periode: ${showFormattedDate(startDate)} - ${showFormattedDate(endDate)}
             `;
         },
     },

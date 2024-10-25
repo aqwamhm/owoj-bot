@@ -2,7 +2,6 @@ require("dotenv").config();
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const routesHandler = require("./routes/handler");
 const qrcode = require("qrcode-terminal");
-const ClientError = require("./exceptions/ClientError");
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -17,18 +16,7 @@ client.on("qr", (qr) => {
 });
 
 client.on("message_create", async (message) => {
-    try {
-        const response = await routesHandler.handler(message);
-        message.reply(response);
-    } catch (e) {
-        if (e instanceof ClientError) {
-            message.reply(e.message);
-            return;
-        }
-
-        message.reply("Terjadi kesalahan");
-        console.error(e);
-    }
+    await routesHandler.handler(message);
 });
 
 client.initialize();

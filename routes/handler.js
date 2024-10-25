@@ -1,3 +1,4 @@
+const ClientError = require("../exceptions/ClientError");
 const routes = require("./routes");
 
 const handler = async (message) => {
@@ -11,12 +12,25 @@ const handler = async (message) => {
     };
 
     if (route) {
-        if (route.middlewares) {
-            for (const middleware of route.middlewares) {
-                await middleware(msg);
+        try {
+            if (route.middlewares) {
+                for (const middleware of route.middlewares) {
+                    await middleware(message);
+                }
             }
+            const result = await route.handler(message);
+
+            message.reply(result);
+        } catch (e) {
+            if (e instanceof ClientError) {
+                message.reply(e.message);
+                console.log(e.message);
+                return;
+            }
+
+            message.reply("Terjadi kesalahan");
+            console.error(e);
         }
-        await route.handler(msg);
     }
 };
 

@@ -26,7 +26,6 @@ const getPeriodDate = (period = 0) => {
 
 const showFormattedDate = (date) => {
     const options = {
-        weekday: "long",
         year: "numeric",
         month: "long",
         day: "numeric",
