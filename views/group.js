@@ -5,8 +5,8 @@ const groupViews = {
         },
     },
     error: {
-        notFound({ nomor }) {
-            return `Nomor grup ${nomor} tidak terdaftar.`;
+        notFound() {
+            return `Grup ini tidak terdaftar sebagai OWOJ.`;
         },
         conflict({ nomor }) {
             return `OWOJ ${nomor} sudah terdaftar.`;
