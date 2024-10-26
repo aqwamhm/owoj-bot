@@ -1,4 +1,4 @@
-const { getPeriodDate } = require("../utils/hepler");
+const { getPeriodDate } = require("../utils/date");
 
 const memberListWithReport = ({ members, periods, groupName }) => {
     let result = "";

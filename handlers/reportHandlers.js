@@ -1,6 +1,6 @@
 const memberServices = require("../services/member");
 const reportServices = require("../services/report");
-const { getPeriodDate } = require("../utils/hepler");
+const { getPeriodDate } = require("../utils/date");
 const { validate } = require("../validations/validators");
 const validations = require("../validations");
 const errorMessages = require("../views/error");

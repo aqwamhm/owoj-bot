@@ -1,7 +1,7 @@
 const groupServices = require("../services/group");
 const memberServices = require("../services/member");
 const periodServices = require("../services/period");
-const { getPeriodDate } = require("../utils/hepler");
+const { getPeriodDate } = require("../utils/date");
 const templateViews = require("../views/template");
 const { handleShowList } = require("./listHandlers");
 

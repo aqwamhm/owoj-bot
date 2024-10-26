@@ -1,4 +1,4 @@
-const { showFormattedDate } = require("../utils/hepler");
+const { showFormattedDate } = require("../utils/date");
 
 const reportViews = {
     success: {
