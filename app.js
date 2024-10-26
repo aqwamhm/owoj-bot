@@ -5,8 +5,13 @@ const routesHandler = require("./routes/handler");
 const qrcode = require("qrcode-terminal");
 const { handleWeekly } = require("./handlers/cronHandlers");
 
+const puppeteer = {
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+};
+
 const client = new Client({
     authStrategy: new LocalAuth(),
+    ...(process.env.NODE_ENV === "production" ? { puppeteer } : {}),
 });
 
 client.once("ready", () => {
