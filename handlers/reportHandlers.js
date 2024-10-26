@@ -7,6 +7,7 @@ const errorMessages = require("../views/error");
 const NotFoundError = require("../exceptions/NotFoundError");
 const ConflictError = require("../exceptions/ConflictError");
 const reportViews = require("../views/report");
+const memberViews = require("../views/member");
 
 const handleCreateReport = async (message) => {
     const { name, pages, previousPeriods } = validate({
@@ -21,9 +22,7 @@ const handleCreateReport = async (message) => {
     const groupId = message.id.remote;
 
     if (!(await memberServices.find({ name, groupId }))) {
-        throw new NotFoundError(
-            `Gagal mencatat laporan. Nama (${name}) tidak terdaftar di dalam grup ini.`
-        );
+        throw new NotFoundError(memberViews.error.notFound({ name }));
     }
 
     const { startDate, endDate } = previousPeriods

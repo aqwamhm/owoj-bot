@@ -1,4 +1,5 @@
 const { getPeriodDate } = require("../utils/date");
+const { formatName } = require("../utils/name");
 
 const memberListWithReport = ({ members, periods, groupName }) => {
     let result = "";
@@ -48,7 +49,7 @@ const memberListWithReport = ({ members, periods, groupName }) => {
                 inProgressCount++;
             }
 
-            result += `${i}. ${member.name}: ${formatPages(
+            result += `${i}. ${formatName(member.name)}: ${formatPages(
                 currentPeriodReports
             )}\n`;
 
@@ -66,9 +67,11 @@ const memberListWithReport = ({ members, periods, groupName }) => {
                     previousPeriodReports.length > 0 &&
                     previousPeriodReports.every((report) => report.pages !== 20)
                 ) {
-                    result += `\t ↪️ ${previousPeriodReports[0].juz}. ${
-                        member.name
-                    }: ${formatPages(previousPeriodReports)}\n`;
+                    result += `\t ↪️ ${
+                        previousPeriodReports[0].juz
+                    }. ${formatName(member.name)}: ${formatPages(
+                        previousPeriodReports
+                    )}\n`;
                 }
             });
         } else {
@@ -97,7 +100,7 @@ const memberListWithReport = ({ members, periods, groupName }) => {
     for (let i = 0; i < 3; i++) {
         result += `${i + 1}. `;
         if (topChampions[i]) {
-            result += `${topChampions[i].name} ${medals[i]}\n`;
+            result += `${formatName(topChampions[i].name)} ${medals[i]}\n`;
         } else {
             result += `---\n`;
         }

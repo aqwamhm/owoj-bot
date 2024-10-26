@@ -2,6 +2,7 @@ const ClientError = require("../exceptions/ClientError");
 const routes = require("./routes");
 
 const handler = async (message) => {
+    message.body = message.body.toLowerCase();
     const prompt = message.body.split(" ")[0];
     const route = routes().find((route) => route.command === prompt);
 
@@ -18,7 +19,6 @@ const handler = async (message) => {
         } catch (e) {
             if (e instanceof ClientError) {
                 message.reply(e.message);
-                console.log(e.message);
                 return;
             }
 

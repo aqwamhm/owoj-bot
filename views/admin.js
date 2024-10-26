@@ -1,7 +1,11 @@
+const { formatName } = require("../utils/name");
+
 const adminViews = {
     success: {
         create({ name, phone }) {
-            return `Berhasil mendaftarkan admin ${name} dengan nomor telepon ${phone}.`;
+            return `Berhasil mendaftarkan admin ${formatName(
+                name
+            )} dengan nomor telepon ${phone}.`;
         },
         remove({ name, phone }) {
             return `Berhasil menghapus admin ${name} dengan nomor telepon ${phone}.`;
