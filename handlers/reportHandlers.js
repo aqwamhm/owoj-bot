@@ -37,8 +37,6 @@ const handleCreateReport = async (message) => {
         periodEndDate: endDate,
     });
 
-    console.log(previousReport);
-
     if (previousReport && previousReport.pages >= pages) {
         throw new ConflictError(reportViews.error.conflict());
     }
@@ -53,7 +51,9 @@ const handleCreateReport = async (message) => {
 
     let juz;
     if (previousPeriods) {
-        juz = !report ? decrementJuz(member.currentJuz) : report.juz;
+        juz = !report
+            ? decrementJuz(member.currentJuz, previousPeriods)
+            : report.juz;
     } else {
         juz = member.currentJuz;
     }
