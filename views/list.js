@@ -1,10 +1,17 @@
-const { getPeriodDate } = require("../utils/date");
+const { getPeriodDate, showFormattedDate } = require("../utils/date");
 const { formatName } = require("../utils/name");
 
-const memberListWithReport = ({ members, periods, groupName }) => {
-    let result = "";
+const memberListWithReport = ({ members, periods }) => {
     const { startDate: currentPeriodStartDate, endDate: currentPeriodEndDate } =
         getPeriodDate();
+    let result = `بسم الله الرحمن الرحيم
+
+REKAP OWOJ on WA
+Periode : ${showFormattedDate(currentPeriodStartDate)} - ${showFormattedDate(
+        currentPeriodEndDate
+    )}
+
+`;
 
     const previousPeriods = periods.filter((period) => {
         return (
@@ -17,7 +24,7 @@ const memberListWithReport = ({ members, periods, groupName }) => {
         return reports
             .filter((report) => report.pages > 0)
             .map((report) =>
-                report.pages === 20 ? `${report.pages} ✅` : report.pages
+                report.pages >= 20 ? `${report.pages} ✅` : report.pages
             )
             .sort((a, b) => a - b)
             .join(", ");
@@ -39,7 +46,7 @@ const memberListWithReport = ({ members, periods, groupName }) => {
             });
 
             const completed20Pages = currentPeriodReports.some(
-                (report) => report.pages === 20
+                (report) => report.pages >= 20
             );
 
             if (completed20Pages) {
@@ -65,9 +72,9 @@ const memberListWithReport = ({ members, periods, groupName }) => {
 
                 if (
                     previousPeriodReports.length > 0 &&
-                    previousPeriodReports.every((report) => report.pages !== 20)
+                    previousPeriodReports.every((report) => report.pages < 20)
                 ) {
-                    result += `\t ↪️ ${
+                    result += `   ↪️ ${
                         previousPeriodReports[0].juz
                     }. ${formatName(member.name)}: ${formatPages(
                         previousPeriodReports
@@ -83,12 +90,12 @@ const memberListWithReport = ({ members, periods, groupName }) => {
         const reportA = a.reports.find(
             (report) =>
                 report.periodStartDate.toISOString() ===
-                    currentPeriodStartDate && report.pages === 20
+                    currentPeriodStartDate && report.pages >= 20
         );
         const reportB = b.reports.find(
             (report) =>
                 report.periodStartDate.toISOString() ===
-                    currentPeriodStartDate && report.pages === 20
+                    currentPeriodStartDate && report.pages >= 20
         );
         return new Date(reportA.createdAt) - new Date(reportB.createdAt);
     });
