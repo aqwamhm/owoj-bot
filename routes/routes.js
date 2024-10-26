@@ -12,6 +12,7 @@ const {
     handleRemoveAdmin,
 } = require("../handlers/adminHandlers");
 const verifyMessageFromAdmin = require("../middlewares/verifyMessageFromAdmin");
+const verifyMessageInOWOJGroup = require("../middlewares/verifyMessageInOWOJGroup");
 
 const routes = () => [
     {
@@ -22,17 +23,17 @@ const routes = () => [
     {
         command: "/register",
         handler: handleRegisterMember,
-        middlewares: [verifyMessageFromAdmin],
+        middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
     },
     {
         command: "/set",
         handler: handleSetMember,
-        middlewares: [verifyMessageFromAdmin],
+        middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
     },
     {
         command: "/remove",
         handler: handleRemoveMember,
-        middlewares: [verifyMessageFromAdmin],
+        middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
     },
     {
         command: "/register-admin",
@@ -52,12 +53,12 @@ const routes = () => [
     {
         command: "/list",
         handler: handleShowList,
-        middlewares: [],
+        middlewares: [verifyMessageInOWOJGroup],
     },
     {
         command: "/semangat",
         handler: handleMotivationRequest,
-        middlewares: [],
+        middlewares: [verifyMessageInOWOJGroup],
     },
 ];
 

@@ -6,7 +6,7 @@ const groupViews = {
     },
     error: {
         notFound() {
-            return `Grup ini tidak terdaftar sebagai OWOJ.`;
+            return `Chat ini tidak terdaftar sebagai grup OWOJ.`;
         },
         conflict({ nomor }) {
             return `OWOJ ${nomor} sudah terdaftar.`;
