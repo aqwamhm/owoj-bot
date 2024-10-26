@@ -24,7 +24,7 @@ const validations = {
         multiple: false,
     },
     createGroupCommand: {
-        regex: /^\/create\s+\d+\s*$/,
+        regex: /^\/register-group\s+\d+\s*$/,
         multiple: false,
     },
     listCommand: {

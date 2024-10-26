@@ -16,7 +16,7 @@ const verifyMessageInOWOJGroup = require("../middlewares/verifyMessageInOWOJGrou
 
 const routes = () => [
     {
-        command: "/create",
+        command: "/register-group",
         handler: handleCreateGroup,
         middlewares: [verifyMessageFromAdmin],
     },
