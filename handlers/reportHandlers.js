@@ -8,6 +8,7 @@ const NotFoundError = require("../exceptions/NotFoundError");
 const ConflictError = require("../exceptions/ConflictError");
 const reportViews = require("../views/report");
 const memberViews = require("../views/member");
+const { decrementJuz } = require("../utils/juz");
 
 const handleCreateReport = async (message) => {
     const { name, pages, previousPeriods } = validate({
@@ -29,8 +30,6 @@ const handleCreateReport = async (message) => {
         ? getPeriodDate(-Math.abs(previousPeriods))
         : getPeriodDate();
 
-    let result;
-
     const previousReport = await reportServices.find({
         memberName: name,
         memberGroupId: groupId,
@@ -38,22 +37,26 @@ const handleCreateReport = async (message) => {
         periodEndDate: endDate,
     });
 
+    console.log(previousReport);
+
     if (previousReport && previousReport.pages >= pages) {
         throw new ConflictError(reportViews.error.conflict());
     }
 
-    if (!previousPeriods) {
-        result = await memberServices.find({ name, groupId });
-    } else {
-        result = await reportServices.find({
-            memberName: name,
-            memberGroupId: groupId,
-            periodStartDate: startDate,
-            periodEndDate: endDate,
-        });
-    }
+    const member = await memberServices.find({ name, groupId });
+    const report = await reportServices.find({
+        memberName: name,
+        memberGroupId: groupId,
+        periodStartDate: startDate,
+        periodEndDate: endDate,
+    });
 
-    const juz = !previousPeriods ? result.currentJuz : result.juz;
+    let juz;
+    if (previousPeriods) {
+        juz = !report ? decrementJuz(member.currentJuz) : report.juz;
+    } else {
+        juz = member.currentJuz;
+    }
 
     await reportServices.create({
         name,

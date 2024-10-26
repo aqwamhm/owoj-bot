@@ -20,7 +20,7 @@ const memberViews = {
         notFound({ name }) {
             return `Nama (${formatName(
                 name
-            )}) sudah terdaftar di dalam grup ini.`;
+            )}) tidak terdaftar di dalam grup ini.`;
         },
         juzConflict({ name, currentJuz }) {
             return `${formatName(
