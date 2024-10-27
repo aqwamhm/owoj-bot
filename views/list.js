@@ -23,10 +23,12 @@ Periode : ${showFormattedDate(currentPeriodStartDate)} - ${showFormattedDate(
     const formatPages = (reports) => {
         return reports
             .filter((report) => report.pages > 0)
+            .sort((a, b) => {
+                return new Date(a.createdAt) - new Date(b.createdAt);
+            })
             .map((report) =>
                 report.pages >= 20 ? `${report.pages} ✅` : report.pages
             )
-            .sort((a, b) => a - b)
             .join(", ");
     };
 
