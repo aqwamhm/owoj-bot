@@ -11,8 +11,8 @@ const handleCreateGroup = async (message) => {
         command: message.body,
         validation: validations.createGroupCommand,
         errorMessage: errorMessages.validation({
-            format: "#create <nomor grup>",
-            example: "#create 3",
+            format: "/register-group <nomor grup>",
+            example: "/register-group 3",
         }),
     });
 

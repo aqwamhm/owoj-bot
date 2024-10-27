@@ -15,8 +15,8 @@ const handleCreateReport = async (message) => {
         command: message.body,
         validation: validations.createReportCommand,
         errorMessage: errorMessages.validation({
-            format: "#lapor <nama>#<jumlah halaman> (-<jumlah minggu sebelumnya>)",
-            example: "#lapor Aqwam#20 -1",
+            format: "/lapor <nama>#<jumlah halaman> -<jumlah minggu sebelumnya jika ada>",
+            example: "/lapor Aqwam#20 -1",
         }),
     });
 
@@ -80,8 +80,8 @@ const handleRemoveReport = async (message) => {
         command: message.body,
         validation: validations.removeReportCommand,
         errorMessage: errorMessages.validation({
-            format: "#batal-lapor <nama> (-<jumlah minggu sebelumnya>)",
-            example: "#batal-lapor Aqwam -1",
+            format: "/batal-lapor <nama> (-<jumlah minggu sebelumnya>)",
+            example: "/batal-lapor Aqwam -1",
         }),
     });
 

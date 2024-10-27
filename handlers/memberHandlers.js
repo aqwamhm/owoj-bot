@@ -61,8 +61,8 @@ const handleRegisterMember = async (message) => {
         command: message.body,
         validation: validations.registerMemberCommand,
         errorMessage: errorMessages.validation({
-            format: "#register <juz>#<nama>",
-            example: "#register 1#Aqwam 2#John Doe 3#Maria",
+            format: "/register <juz>#<nama>",
+            example: "/register 1#Aqwam 2#John Doe 3#Maria",
         }),
     });
 
