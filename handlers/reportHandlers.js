@@ -80,8 +80,8 @@ const handleRemoveReport = async (message) => {
         command: message.body,
         validation: validations.removeReportCommand,
         errorMessage: errorMessages.validation({
-            format: "/batal-lapor <nama> (-<jumlah minggu sebelumnya>)",
-            example: "/batal-lapor Aqwam -1",
+            format: "/batal-lapor <nama>#halaman -<jumlah minggu sebelumnya jika ada>",
+            example: "/batal-lapor Aqwam#halaman -1",
         }),
     });
 
