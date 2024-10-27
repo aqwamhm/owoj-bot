@@ -3,6 +3,10 @@ const validations = {
         regex: /^\/lapor\s+(?<name>[a-zA-Z\s]+?)#(?<pages>\d+)(?:\s+-\s*(?<previousPeriods>\d+))?\s*$/,
         multiple: false,
     },
+    removeReportCommand: {
+        regex: /^\/batal-lapor\s+(?<name>[a-zA-Z\s]+?)#(?<pages>\d+)(?:\s+-\s*(?<previousPeriods>\d+))?\s*$/,
+        multiple: false,
+    },
     setMemberCommand: {
         regex: /^\/set\s+(?<juz>\d{1,3})#(?<name>[a-zA-Z\s]+?)\s*$/,
         multiple: false,

@@ -4,7 +4,10 @@ const {
     handleRegisterMember,
     handleRemoveMember,
 } = require("../handlers/memberHandlers");
-const { handleCreateReport } = require("../handlers/reportHandlers");
+const {
+    handleCreateReport,
+    handleRemoveReport,
+} = require("../handlers/reportHandlers");
 const { handleShowList } = require("../handlers/listHandlers");
 const { handleMotivationRequest } = require("../handlers/motivationHandlers");
 const {
@@ -48,7 +51,12 @@ const routes = () => [
     {
         command: "/lapor",
         handler: handleCreateReport,
-        middlewares: [],
+        middlewares: [verifyMessageInOWOJGroup],
+    },
+    {
+        command: "/batal-lapor",
+        handler: handleRemoveReport,
+        middlewares: [verifyMessageInOWOJGroup],
     },
     {
         command: "/list",

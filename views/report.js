@@ -9,12 +9,15 @@ const reportViews = {
 Nama: ${formatName(name)}
 Halaman: ${pages}
 Periode: ${showFormattedDate(startDate)} - ${showFormattedDate(endDate)}
-            `;
+`;
+        },
+        remove() {
+            return `Laporan berhasil dihapus.`;
         },
     },
     error: {
-        notFound({ name }) {
-            return `Nama ${formatName(name)} tidak terdaftar di dalam grup.`;
+        notFound() {
+            return `Laporan tidak ditemukan.`;
         },
         conflict() {
             return `Jumlah laporan halaman harus lebih banyak dari jumlah halaman sebelumnya.`;

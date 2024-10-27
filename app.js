@@ -23,7 +23,22 @@ client.on("qr", (qr) => {
 });
 
 client.on("message_create", async (message) => {
-    await routesHandler.handler(message);
+    if (process.env.NODE_ENV === "production") {
+        await routesHandler.handler(message);
+    } else {
+        let result = "";
+        message.reply = (text) => {
+            result = text;
+        };
+
+        try {
+            await routesHandler.handler(message);
+        } catch (e) {
+            result = e.message;
+        }
+
+        console.log(result);
+    }
 });
 
 client.initialize();

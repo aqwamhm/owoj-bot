@@ -75,4 +75,43 @@ const handleCreateReport = async (message) => {
     });
 };
 
-module.exports = { handleCreateReport };
+const handleRemoveReport = async (message) => {
+    const { name, pages, previousPeriods } = validate({
+        command: message.body,
+        validation: validations.removeReportCommand,
+        errorMessage: errorMessages.validation({
+            format: "#batal-lapor <nama> (-<jumlah minggu sebelumnya>)",
+            example: "#batal-lapor Aqwam -1",
+        }),
+    });
+
+    const groupId = message.id.remote;
+
+    const { startDate, endDate } = previousPeriods
+        ? getPeriodDate(-Math.abs(previousPeriods))
+        : getPeriodDate();
+
+    if (
+        !(await reportServices.find({
+            memberName: name,
+            memberGroupId: groupId,
+            periodStartDate: startDate,
+            periodEndDate: endDate,
+            pages,
+        }))
+    ) {
+        throw new NotFoundError(reportViews.error.notFound());
+    }
+
+    await reportServices.delete({
+        memberName: name,
+        memberGroupId: groupId,
+        periodStartDate: startDate,
+        periodEndDate: endDate,
+        pages,
+    });
+
+    return reportViews.success.remove();
+};
+
+module.exports = { handleCreateReport, handleRemoveReport };
