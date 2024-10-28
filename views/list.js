@@ -9,12 +9,13 @@ const memberListWithReport = ({ members, periods }) => {
     const { startDate: currentPeriodStartDate, endDate: currentPeriodEndDate } =
         getPeriodDate();
     const reportDeadline = `${daysOfWeek[process.env.PERIOD_START_DAY]} ${
-        process.env.PERIOD_START_HOUR
-    }:00`;
+        process.env.PERIOD_START_HOUR - 1
+    }:59`;
 
     let result = `بسم الله الرحمن الرحيم
 
 *REKAP OWOJ on WA*
+
 Kordinator: 👨‍🏫 Sutomo Budi Santoso
 Bot Developer: 👨‍💻 Aqwam Hizbal Muhshiy
 Periode : ${showFormattedDate(currentPeriodStartDate)} - ${showFormattedDate(
@@ -39,9 +40,9 @@ Batas Akhir Laporan: ${reportDeadline}
             })
             .map((report) => {
                 if (report.type == "MUROTTAL") {
-                    return `🎧`;
+                    return `🎧 ✅`;
                 } else if (report.type == "TERJEMAH") {
-                    return `📖`;
+                    return `📖 ✅`;
                 } else {
                     return report.pages >= 20
                         ? `${report.pages} ✅`
