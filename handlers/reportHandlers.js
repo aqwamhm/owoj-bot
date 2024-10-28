@@ -49,7 +49,13 @@ const handleCreateReport = async (message) => {
     }
 
     if (pagesOrType === "terjemah") {
-        // TODO: create terjemah report
+        return await createTerjemahReport({
+            name,
+            groupId,
+            juz,
+            startDate,
+            endDate,
+        });
     } else if (pagesOrType === "murottal") {
         return await createMurottalReport({
             name,
@@ -68,6 +74,25 @@ const handleCreateReport = async (message) => {
             endDate,
         });
     }
+};
+
+const createTerjemahReport = async ({
+    name,
+    groupId,
+    juz,
+    startDate,
+    endDate,
+}) => {
+    await reportServices.upsert({
+        name,
+        groupId,
+        juz,
+        type: "TERJEMAH",
+        startDate,
+        endDate,
+    });
+
+    return "BERHASIL LAPOR TERJEMAH";
 };
 
 const createMurottalReport = async ({

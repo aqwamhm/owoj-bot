@@ -40,6 +40,8 @@ Batas Akhir Laporan: ${reportDeadline}
             .map((report) => {
                 if (report.type == "MUROTTAL") {
                     return `🎧`;
+                } else if (report.type == "TERJEMAH") {
+                    return `📖`;
                 } else {
                     return report.pages >= 20
                         ? `${report.pages} ✅`
