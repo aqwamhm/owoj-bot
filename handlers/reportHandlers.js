@@ -32,6 +32,13 @@ const handleCreateReport = async (message) => {
         ? getPeriodDate(-Math.abs(previousPeriods))
         : getPeriodDate();
 
+    const report = await reportServices.find({
+        memberName: name,
+        memberGroupId: groupId,
+        periodStartDate: startDate,
+        periodEndDate: endDate,
+    });
+
     let juz;
     if (previousPeriods) {
         juz = !report
@@ -75,13 +82,6 @@ const createTilawahReport = async ({
     if (previousReport && previousReport.pages >= pages) {
         throw new ConflictError(reportViews.error.conflict());
     }
-
-    const report = await reportServices.find({
-        memberName: name,
-        memberGroupId: groupId,
-        periodStartDate: startDate,
-        periodEndDate: endDate,
-    });
 
     await reportServices.create({
         name,
