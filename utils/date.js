@@ -33,4 +33,15 @@ const showFormattedDate = (date) => {
     return new Date(date).toLocaleDateString("id-ID", options);
 };
 
-module.exports = { getPeriodDate, showFormattedDate };
+const daysOfWeek = [
+    "Minggu",
+    "Senin",
+    "Selasa",
+    "Rabu",
+    "Kamis",
+    "Jumat",
+    "Sabtu",
+    "Minggu",
+];
+
+module.exports = { getPeriodDate, showFormattedDate, daysOfWeek };

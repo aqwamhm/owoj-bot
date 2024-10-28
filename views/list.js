@@ -1,15 +1,26 @@
-const { getPeriodDate, showFormattedDate } = require("../utils/date");
+const {
+    getPeriodDate,
+    showFormattedDate,
+    daysOfWeek,
+} = require("../utils/date");
 const { formatName } = require("../utils/name");
 
 const memberListWithReport = ({ members, periods }) => {
     const { startDate: currentPeriodStartDate, endDate: currentPeriodEndDate } =
         getPeriodDate();
+    const reportDeadline = `${daysOfWeek[process.env.PERIOD_START_DAY]} ${
+        process.env.PERIOD_START_HOUR
+    }:00`;
+
     let result = `بسم الله الرحمن الرحيم
 
-REKAP OWOJ on WA
+*REKAP OWOJ on WA*
+Kordinator: 👨‍🏫 Sutomo Budi Santoso
+Bot Developer: 👨‍💻 Aqwam Hizbal Muhshiy
 Periode : ${showFormattedDate(currentPeriodStartDate)} - ${showFormattedDate(
         currentPeriodEndDate
     )}
+Batas Akhir Laporan: ${reportDeadline}
 
 `;
 
@@ -26,9 +37,15 @@ Periode : ${showFormattedDate(currentPeriodStartDate)} - ${showFormattedDate(
             .sort((a, b) => {
                 return new Date(a.createdAt) - new Date(b.createdAt);
             })
-            .map((report) =>
-                report.pages >= 20 ? `${report.pages} ✅` : report.pages
-            )
+            .map((report) => {
+                if (report.type == "MUROTTAL") {
+                    return `🎧`;
+                } else {
+                    return report.pages >= 20
+                        ? `${report.pages} ✅`
+                        : report.pages;
+                }
+            })
             .join(", ");
     };
 
