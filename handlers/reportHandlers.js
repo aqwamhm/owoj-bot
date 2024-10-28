@@ -11,7 +11,7 @@ const memberViews = require("../views/member");
 const { decrementJuz } = require("../utils/juz");
 
 const handleCreateReport = async (message) => {
-    const { name, pages, previousPeriods } = validate({
+    const { name, pagesOrType, previousPeriods } = validate({
         command: message.body,
         validation: validations.createReportCommand,
         errorMessage: errorMessages.validation({
@@ -22,7 +22,9 @@ const handleCreateReport = async (message) => {
 
     const groupId = message.id.remote;
 
-    if (!(await memberServices.find({ name, groupId }))) {
+    const member = await memberServices.find({ name, groupId });
+
+    if (!member) {
         throw new NotFoundError(memberViews.error.notFound({ name }));
     }
 
@@ -30,6 +32,39 @@ const handleCreateReport = async (message) => {
         ? getPeriodDate(-Math.abs(previousPeriods))
         : getPeriodDate();
 
+    let juz;
+    if (previousPeriods) {
+        juz = !report
+            ? decrementJuz(member.currentJuz, previousPeriods)
+            : report.juz;
+    } else {
+        juz = member.currentJuz;
+    }
+
+    if (pagesOrType === "terjemah") {
+        // TODO: create terjemah report
+    } else if (pagesOrType === "murottal") {
+        // TODO: create murottal report
+    } else {
+        return await createTilawahReport({
+            name,
+            groupId,
+            pages: pagesOrType,
+            juz,
+            startDate,
+            endDate,
+        });
+    }
+};
+
+const createTilawahReport = async ({
+    name,
+    groupId,
+    pages,
+    juz,
+    startDate,
+    endDate,
+}) => {
     const previousReport = await reportServices.find({
         memberName: name,
         memberGroupId: groupId,
@@ -41,22 +76,12 @@ const handleCreateReport = async (message) => {
         throw new ConflictError(reportViews.error.conflict());
     }
 
-    const member = await memberServices.find({ name, groupId });
     const report = await reportServices.find({
         memberName: name,
         memberGroupId: groupId,
         periodStartDate: startDate,
         periodEndDate: endDate,
     });
-
-    let juz;
-    if (previousPeriods) {
-        juz = !report
-            ? decrementJuz(member.currentJuz, previousPeriods)
-            : report.juz;
-    } else {
-        juz = member.currentJuz;
-    }
 
     await reportServices.create({
         name,
