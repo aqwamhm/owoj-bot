@@ -83,6 +83,13 @@ const createTerjemahReport = async ({
     startDate,
     endDate,
 }) => {
+    await reportServices.deleteMany({
+        memberName: name,
+        memberGroupId: groupId,
+        periodStartDate: startDate,
+        periodEndDate: endDate,
+    });
+
     await reportServices.upsert({
         name,
         groupId,
@@ -102,6 +109,13 @@ const createMurottalReport = async ({
     startDate,
     endDate,
 }) => {
+    await reportServices.deleteMany({
+        memberName: name,
+        memberGroupId: groupId,
+        periodStartDate: startDate,
+        periodEndDate: endDate,
+    });
+
     await reportServices.upsert({
         name,
         groupId,

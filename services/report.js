@@ -129,6 +129,24 @@ const reportServices = {
         });
     },
 
+    async deleteMany({
+        memberName,
+        memberGroupId,
+        periodStartDate,
+        periodEndDate,
+    }) {
+        const where = {
+            ...(memberName && { memberName }),
+            ...(memberGroupId && { memberGroupId }),
+            ...(periodStartDate && { periodStartDate }),
+            ...(periodEndDate && { periodEndDate }),
+        };
+
+        await prisma.report.deleteMany({
+            where,
+        });
+    },
+
     async updateMany({
         memberName,
         memberGroupId,
