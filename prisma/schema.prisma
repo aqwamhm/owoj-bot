@@ -27,16 +27,17 @@ model Group {
 }
 
 model Report {
-  id              String   @id @default(uuid())
-  member          Member   @relation(fields: [memberName, memberGroupId], references: [name, groupId], onDelete: Cascade)
+  id              String     @id @default(uuid())
+  member          Member     @relation(fields: [memberName, memberGroupId], references: [name, groupId], onDelete: Cascade)
   memberName      String
   memberGroupId   String
   juz             Int
   pages           Int
-  period          Period   @relation(fields: [periodStartDate, periodEndDate], references: [startDate, endDate])
+  type            ReportType @default(TILAWAH)
+  period          Period     @relation(fields: [periodStartDate, periodEndDate], references: [startDate, endDate])
   periodStartDate DateTime
   periodEndDate   DateTime
-  createdAt       DateTime @default(now())
+  createdAt       DateTime   @default(now())
 
   @@unique([memberName, memberGroupId, pages, periodStartDate, periodEndDate])
 }
@@ -53,4 +54,10 @@ model Period {
 model Admin {
   phoneNumber String @id
   name        String
+}
+
+enum ReportType {
+  TILAWAH
+  TERJEMAH
+  MUROTTAL
 }
