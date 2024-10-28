@@ -32,6 +32,56 @@ const reportServices = {
         });
     },
 
+    async upsert({ name, groupId, juz, type, startDate, endDate }) {
+        const where = {
+            memberName: name,
+            memberGroupId: groupId,
+            periodStartDate: startDate,
+            periodEndDate: endDate,
+        };
+
+        await prisma.report.upsert({
+            where: {
+                memberName_memberGroupId_pages_periodStartDate_periodEndDate: {
+                    ...where,
+                    pages: 0,
+                },
+            },
+            update: {
+                // TODO: SHOULD SUPPORT TOTAL PAGES IN THE FUTURE
+                pages: 20,
+                type,
+            },
+            create: {
+                member: {
+                    connect: {
+                        name_groupId: {
+                            name,
+                            groupId,
+                        },
+                    },
+                },
+                pages: 20,
+                juz,
+                type,
+                period: {
+                    connectOrCreate: {
+                        where: {
+                            startDate_endDate: {
+                                startDate,
+                                endDate,
+                            },
+                        },
+                        create: {
+                            startDate,
+                            endDate,
+                        },
+                    },
+                },
+            },
+        });
+    },
+
     async find({
         memberName,
         memberGroupId,

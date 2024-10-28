@@ -51,7 +51,13 @@ const handleCreateReport = async (message) => {
     if (pagesOrType === "terjemah") {
         // TODO: create terjemah report
     } else if (pagesOrType === "murottal") {
-        // TODO: create murottal report
+        return await createMurottalReport({
+            name,
+            groupId,
+            juz,
+            startDate,
+            endDate,
+        });
     } else {
         return await createTilawahReport({
             name,
@@ -62,6 +68,25 @@ const handleCreateReport = async (message) => {
             endDate,
         });
     }
+};
+
+const createMurottalReport = async ({
+    name,
+    groupId,
+    juz,
+    startDate,
+    endDate,
+}) => {
+    await reportServices.upsert({
+        name,
+        groupId,
+        juz,
+        type: "MUROTTAL",
+        startDate,
+        endDate,
+    });
+
+    return "BERHASIL LAPOR MUROTTAL";
 };
 
 const createTilawahReport = async ({
