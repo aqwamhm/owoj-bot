@@ -1,6 +1,7 @@
 const groupServices = require("../services/group");
 const memberServices = require("../services/member");
 const periodServices = require("../services/period");
+const reportServices = require("../services/report");
 const { getPeriodDate } = require("../utils/date");
 const templateViews = require("../views/template");
 const { handleShowList } = require("./listHandlers");
@@ -12,7 +13,16 @@ const handleWeekly = async (client) => {
             startDate,
             endDate,
         });
+
         await memberServices.incrementAllCurrentJuz();
+
+        const members = await memberServices.findAll();
+        await reportServices.createMany({
+            members,
+            startDate,
+            endDate,
+        });
+
         const groups = await groupServices.getAll();
         groups.forEach(async (group) => {
             client.sendMessage(group.id, templateViews.doaKhatamQuran);

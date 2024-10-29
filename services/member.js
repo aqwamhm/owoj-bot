@@ -37,6 +37,10 @@ const memberServices = {
         });
     },
 
+    async findAll() {
+        return await prisma.member.findMany();
+    },
+
     async find({ name, groupId, currentJuz }) {
         const where = {
             ...(name && { name }),

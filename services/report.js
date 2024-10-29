@@ -32,6 +32,20 @@ const reportServices = {
         });
     },
 
+    async createMany({ members, pages = 0, startDate, endDate }) {
+        return await prisma.report.createMany({
+            data: members.map((member) => ({
+                memberName: member.name,
+                memberGroupId: member.groupId,
+                juz: member.currentJuz,
+                pages,
+                periodStartDate: startDate,
+                periodEndDate: endDate,
+            })),
+            skipDuplicates: true,
+        });
+    },
+
     async upsert({ name, groupId, juz, type, startDate, endDate }) {
         const where = {
             memberName: name,
