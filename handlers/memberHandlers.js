@@ -56,7 +56,6 @@ const handleSetMember = async (message) => {
 
 const handleRegisterMember = async (message) => {
     let result = [];
-
     const members = validate({
         command: message.body,
         validation: validations.registerMemberCommand,
@@ -65,6 +64,8 @@ const handleRegisterMember = async (message) => {
             example: "/register 1#Aqwam 2#John Doe 3#Maria",
         }),
     });
+
+    const { startDate, endDate } = getPeriodDate();
 
     const groupId = message.id.remote;
 
@@ -87,6 +88,15 @@ const handleRegisterMember = async (message) => {
             name,
             currentJuz,
             groupId,
+        });
+
+        await reportServices.create({
+            name,
+            groupId,
+            juz: currentJuz,
+            pages: 0,
+            startDate,
+            endDate,
         });
 
         result.push(memberViews.success.register({ name, currentJuz }));

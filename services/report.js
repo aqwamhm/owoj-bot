@@ -12,8 +12,8 @@ const reportServices = {
                         },
                     },
                 },
-                juz,
-                pages,
+                juz: parseInt(juz),
+                pages: parseInt(pages),
                 period: {
                     connectOrCreate: {
                         where: {
