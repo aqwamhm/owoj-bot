@@ -28,13 +28,13 @@ model Group {
 
 model Report {
   id              String     @id @default(uuid())
-  member          Member     @relation(fields: [memberName, memberGroupId], references: [name, groupId], onDelete: Cascade)
+  member          Member     @relation(fields: [memberName, memberGroupId], references: [name, groupId], onDelete: Cascade, onUpdate: Cascade)
   memberName      String
   memberGroupId   String
   juz             Int
   pages           Int
   type            ReportType @default(TILAWAH)
-  period          Period     @relation(fields: [periodStartDate, periodEndDate], references: [startDate, endDate])
+  period          Period     @relation(fields: [periodStartDate, periodEndDate], references: [startDate, endDate], onUpdate: Cascade)
   periodStartDate DateTime
   periodEndDate   DateTime
   createdAt       DateTime   @default(now())
