@@ -1,4 +1,6 @@
-const handleMotivationRequest = async (message) => {
+const motivationViews = require("../views/motivation");
+
+const handleMotivationRequest = async () => {
     const url = "https://openrouter.ai/api/v1/chat/completions";
     const apiKey = process.env.OPENROUTER_API_TOKEN;
 
@@ -20,10 +22,9 @@ const handleMotivationRequest = async (message) => {
     4. Masukkan nilai-nilai islami dalam pesan tersebut
     5. Pesan harus bersifat memotivasi dan mendorong konsistensi
     6. Jangan mengutip ayat Al-Qur'an atau Hadits secara langsung
-    7. Anda harus kreatif! Namun tetap fokus pada SEMANGAT BERSAMA dan KONSISTENSI
+    7. Anda harus kreatif! Namun tetap fokus pada SEMANGAT dan KONSISTENSI
     8. Tambahkan emoji-emoji yang relevan (terlebih emoji islami) di dalam pesan
-    9. Hindari penggunaan kata-kata klise atau terlalu formal
-    10. JANGAN PERNAH menyebut nomor juz atau progress tertentu
+    9. JANGAN PERNAH menyebut nomor juz atau progress tertentu
 
     Berikan satu pesan yang memenuhi seluruh kriteria di atas dengan menggabungkan kata-kata islami secara natural dan tidak berlebihan.
 
@@ -38,7 +39,7 @@ const handleMotivationRequest = async (message) => {
     - FOKUS pada SEMANGAT BERSAMA dan KONSISTENSI`;
 
     const data = {
-        model: "nousresearch/hermes-3-llama-3.1-405b:free",
+        model: "meta-llama/llama-3.1-70b-instruct:free",
         messages: [
             {
                 role: "user",
@@ -63,7 +64,7 @@ const handleMotivationRequest = async (message) => {
 
         const result = await response.json();
         return result.choices[0].message.content;
-    } catch (error) {
+    } catch {
         return motivationViews.error.request();
     }
 };

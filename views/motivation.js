@@ -5,3 +5,5 @@ const motivationViews = {
         },
     },
 };
+
+module.exports = motivationViews;
