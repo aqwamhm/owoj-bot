@@ -39,7 +39,7 @@ model Report {
   periodEndDate   DateTime
   createdAt       DateTime   @default(now())
 
-  @@unique([memberName, memberGroupId, pages, periodStartDate, periodEndDate])
+  @@unique([memberName, memberGroupId, pages, type, periodStartDate, periodEndDate])
 }
 
 model Period {

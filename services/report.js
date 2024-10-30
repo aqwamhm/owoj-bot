@@ -51,6 +51,7 @@ const reportServices = {
         memberName,
         memberGroupId,
         pages,
+        type,
         periodStartDate,
         periodEndDate,
     }) {
@@ -58,6 +59,7 @@ const reportServices = {
             memberName,
             memberGroupId,
             ...(pages !== undefined && { pages: parseInt(pages) }),
+            ...(type && { type }),
             ...(periodStartDate && { periodStartDate }),
             ...(periodEndDate && { periodEndDate }),
         };
@@ -76,6 +78,7 @@ const reportServices = {
         periodStartDate,
         periodEndDate,
         pages,
+        type,
     }) {
         const where = {
             ...(memberName && { memberName }),
@@ -83,13 +86,15 @@ const reportServices = {
             ...(periodStartDate && { periodStartDate }),
             ...(periodEndDate && { periodEndDate }),
             ...(pages && { pages: parseInt(pages) }),
+            ...(type && { type }),
         };
 
         return await prisma.report.delete({
             where: {
-                memberName_memberGroupId_pages_periodStartDate_periodEndDate: {
-                    ...where,
-                },
+                memberName_memberGroupId_pages_type_periodStartDate_periodEndDate:
+                    {
+                        ...where,
+                    },
             },
         });
     },

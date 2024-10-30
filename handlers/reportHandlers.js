@@ -184,7 +184,7 @@ const createTilawahReport = async ({
 };
 
 const handleRemoveReport = async (message) => {
-    const { name, pages, previousPeriods } = validate({
+    const { name, pagesOrType, previousPeriods } = validate({
         command: message.body,
         validation: validations.removeReportCommand,
         errorMessage: errorMessages.validation({
@@ -199,6 +199,20 @@ const handleRemoveReport = async (message) => {
         ? getPeriodDate(-Math.abs(previousPeriods))
         : getPeriodDate();
 
+    let pages;
+    let type;
+
+    if (pagesOrType === "terjemah") {
+        pages = 20;
+        type = "TERJEMAH";
+    } else if (pagesOrType === "murottal") {
+        pages = 20;
+        type = "MUROTTAL";
+    } else {
+        pages = parseInt(pagesOrType);
+        type = "TILAWAH";
+    }
+
     if (
         !(await reportServices.find({
             memberName: name,
@@ -206,6 +220,7 @@ const handleRemoveReport = async (message) => {
             periodStartDate: startDate,
             periodEndDate: endDate,
             pages,
+            type,
         }))
     ) {
         throw new NotFoundError(reportViews.error.notFound());
@@ -217,6 +232,7 @@ const handleRemoveReport = async (message) => {
         periodStartDate: startDate,
         periodEndDate: endDate,
         pages,
+        type,
     });
 
     return reportViews.success.remove();
