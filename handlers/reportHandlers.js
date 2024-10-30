@@ -15,8 +15,8 @@ const handleCreateReport = async (message) => {
         command: message.body,
         validation: validations.createReportCommand,
         errorMessage: errorMessages.validation({
-            format: "/lapor <nama>#<jumlah halaman> -<jumlah minggu sebelumnya jika ada>",
-            example: "/lapor Aqwam#20 -1",
+            format: reportViews.validation.format(),
+            example: reportViews.validation.example(),
         }),
     });
 
@@ -99,7 +99,14 @@ const createTerjemahReport = async ({
         endDate,
     });
 
-    return "BERHASIL LAPOR TERJEMAH";
+    return reportViews.success.create({
+        name,
+        pages: 20,
+        juz,
+        type: "TERJEMAH",
+        startDate,
+        endDate,
+    });
 };
 
 const createMurottalReport = async ({
@@ -125,7 +132,14 @@ const createMurottalReport = async ({
         endDate,
     });
 
-    return "BERHASIL LAPOR MUROTTAL";
+    return reportViews.success.create({
+        name,
+        pages: 20,
+        juz,
+        type: "MUROTTAL",
+        startDate,
+        endDate,
+    });
 };
 
 const createTilawahReport = async ({
@@ -159,6 +173,8 @@ const createTilawahReport = async ({
     return reportViews.success.create({
         name,
         pages,
+        juz,
+        type: "TILAWAH",
         startDate,
         endDate,
     });

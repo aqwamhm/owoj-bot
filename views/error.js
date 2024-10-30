@@ -4,7 +4,8 @@ const errorMessages = {
 
 Berikut adalah ${format ? "format" : "contoh"} yang benar: 
 ${format ? format : ""}
-${format && example ? "\nContoh: " : ""}${example ? example : ""}`;
+${format && example ? "\nContoh:" : ""}
+${example ? example : ""}`;
     },
 };
 
