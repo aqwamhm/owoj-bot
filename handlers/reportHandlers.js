@@ -90,9 +90,10 @@ const createTerjemahReport = async ({
         periodEndDate: endDate,
     });
 
-    await reportServices.upsert({
+    await reportServices.create({
         name,
         groupId,
+        pages: 20,
         juz,
         type: "TERJEMAH",
         startDate,
@@ -123,9 +124,10 @@ const createMurottalReport = async ({
         periodEndDate: endDate,
     });
 
-    await reportServices.upsert({
+    await reportServices.create({
         name,
         groupId,
+        pages: 20,
         juz,
         type: "MUROTTAL",
         startDate,
@@ -164,8 +166,9 @@ const createTilawahReport = async ({
     await reportServices.create({
         name,
         groupId,
-        juz,
         pages: parseInt(pages),
+        juz,
+        type: "TILAWAH",
         startDate,
         endDate,
     });
