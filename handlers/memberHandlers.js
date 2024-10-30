@@ -71,7 +71,7 @@ const handleRegisterMember = async (message) => {
 
     for (const { name, juz: currentJuz } of members) {
         if (await memberServices.find({ groupId, name })) {
-            result.push(memberViews.error.notFound({ name }));
+            result.push(memberViews.error.nameConflict({ name }));
             continue;
         }
 
