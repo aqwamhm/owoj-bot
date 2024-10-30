@@ -1,6 +1,7 @@
 const getPeriodDate = (period = 0) => {
     const now = new Date();
     const currentDay = now.getDay();
+    const currentHour = now.getHours();
 
     const startDay = Math.min(
         Math.max(parseInt(process.env.PERIOD_START_DAY || "1", 10) % 7, 0),
@@ -13,6 +14,13 @@ const getPeriodDate = (period = 0) => {
     );
 
     let startDayOffset = (currentDay - startDay + 7) % 7;
+
+    if (
+        (currentDay === startDay && currentHour < startHour) ||
+        (startDayOffset === 0 && currentHour < startHour)
+    ) {
+        startDayOffset = 7;
+    }
 
     const startDate = new Date(now);
     startDate.setDate(now.getDate() - startDayOffset + period * 7);
