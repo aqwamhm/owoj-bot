@@ -16,12 +16,12 @@ const memberListWithReport = ({ members, periods }) => {
 
 *REKAP OWOJ on WA*
 
-Kordinator: 👨‍🏫 Sutomo Budi Santoso
-Bot Developer: 👨‍💻 Aqwam Hizbal Muhshiy
-Periode : ${showFormattedDate(currentPeriodStartDate)} - ${showFormattedDate(
+- *Kordinator:* 👨‍🏫 Sutomo Budi Santoso
+- *Bot Developer:* 👨‍💻 Aqwam Hizbal Muhshiy
+- *Periode:* ${showFormattedDate(currentPeriodStartDate)} - ${showFormattedDate(
         currentPeriodEndDate
     )}
-Batas Akhir Laporan: ${reportDeadline}
+- *Batas Akhir Laporan:* ${reportDeadline}
 
 `;
 
@@ -137,6 +137,15 @@ Batas Akhir Laporan: ${reportDeadline}
 
     result += `\n*✅ Khalas:* ${completedCount}\n`;
     result += `*🔄 Dalam Progres:* ${inProgressCount}\n`;
+
+    result += `
+    
+*Keterangan:*
+- ✅: Khalas (20 halaman+)
+- ↪️: Belum khalas periode sebelumnya
+- 🎧: Laporan murottal (peserta wanita berhalangan)
+- 📖: Laporan terjemah (peserta wanita berhalangan)
+`;
 
     return result;
 };
