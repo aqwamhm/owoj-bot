@@ -10,7 +10,6 @@ Nama: ${formatName(name)}
 Halaman: ${pages}
 Juz: ${juz}
 Jenis: ${formatName(type)}
-${showFormattedDate(startDate)} - ${showFormattedDate(endDate)}
 Periode: ${showFormattedDate(startDate)} - ${showFormattedDate(endDate)}
 `;
         },
