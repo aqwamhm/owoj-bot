@@ -1,34 +1,40 @@
 const getPeriodDate = (period = 0) => {
+    const WIB_OFFSET = 7;
+
     const now = new Date();
-    const currentDay = now.getDay();
-    const currentHour = now.getHours();
+    const utcHour = now.getUTCHours();
+    const wibHour = (utcHour + WIB_OFFSET) % 24;
+
+    const utcDay = now.getUTCDay();
+    const wibDay = utcHour + WIB_OFFSET >= 24 ? (utcDay + 1) % 7 : utcDay;
 
     const startDay = Math.min(
-        Math.max(parseInt(process.env.PERIOD_START_DAY || "1", 10) % 7, 0),
+        Math.max(parseInt(process.env.PERIOD_START_DAY || "6", 10) % 7, 0),
         6
     );
 
     const startHour = Math.min(
-        Math.max(parseInt(process.env.PERIOD_START_HOUR || "0", 10), 0),
+        Math.max(parseInt(process.env.PERIOD_START_HOUR || "18", 10), 0),
         23
     );
 
-    let startDayOffset = (currentDay - startDay + 7) % 7;
+    let startDayOffset = (wibDay - startDay + 7) % 7;
 
     if (
-        (currentDay === startDay && currentHour < startHour) ||
-        (startDayOffset === 0 && currentHour < startHour)
+        (wibDay === startDay && wibHour < startHour) ||
+        (startDayOffset === 0 && wibHour < startHour)
     ) {
         startDayOffset = 7;
     }
 
     const startDate = new Date(now);
-    startDate.setDate(now.getDate() - startDayOffset + period * 7);
-    startDate.setHours(startHour, 0, 0, 0);
+    startDate.setUTCDate(now.getUTCDate() - startDayOffset + period * 7);
+    const utcStartHour = (startHour - WIB_OFFSET + 24) % 24;
+    startDate.setUTCHours(utcStartHour, 0, 0, 0);
 
     const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 7);
-    endDate.setHours(startHour, 0, 0, -1);
+    endDate.setUTCDate(startDate.getUTCDate() + 7);
+    endDate.setUTCHours(utcStartHour, 0, 0, -1);
 
     return {
         startDate: startDate.toISOString(),
