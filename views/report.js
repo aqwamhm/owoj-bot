@@ -7,7 +7,7 @@ const reportViews = {
             return `Baarakallahu fiik, laporan berhasil dicatat: 
             
 - *Nama:* ${formatName(name)}
-- *Halaman:* ${pages}
+- *Jumlah Halaman:* ${pages}
 - *Juz:* ${juz}
 - *Jenis:* ${formatName(type)} 
 - *Periode:* ${showFormattedDate(startDate)} - ${showFormattedDate(endDate)}
