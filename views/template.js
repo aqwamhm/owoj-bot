@@ -23,6 +23,15 @@ Ya Allah rahmatilah kami dengan al Qur’an, jadikanlah Al Qur’an bagi kami se
 Semoga kita semua mendapatkan syafa'at dari Al-Qur'an yang kita baca dan syafa'at Rasulullah Shollalloohu 'Alaihi Wasallam dalam kehidupan kita di dunia dan di akhirat.
 
 Aamiin, Aamiin Yaa Mujibas Saailiin."`,
+    oneDayReminder() {
+        return `*📢 Pengingat 24 Jam Menuju Periode Baru 📢* 
+
+Assalamu’alaikum Warahmatullahi Wabarakatuh,
+
+Dalam waktu *24 jam lagi*, insyaAllah kita akan memasuki periode baru. Bagi yang belum melaporkan bacaan pekan ini, mohon segera mengirim laporan agar tercatat khalas (selesai) sebelum periode baru dimulai.
+
+*_Jangan lupa untuk menggunakan format laporan yang benar ya. ✅_*`;
+    },
 };
 
 module.exports = templateViews;

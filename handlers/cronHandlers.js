@@ -6,7 +6,7 @@ const { getPeriodDate } = require("../utils/date");
 const templateViews = require("../views/template");
 const { handleShowList } = require("./listHandlers");
 
-const handleWeekly = async (client) => {
+const handleNewPeriod = async (client) => {
     try {
         const { startDate, endDate } = getPeriodDate();
         await periodServices.create({
@@ -39,4 +39,15 @@ const handleWeekly = async (client) => {
     }
 };
 
-module.exports = { handleWeekly };
+const handleOneDayBeforeNewPeriod = async (client) => {
+    try {
+        const groups = await groupServices.getAll();
+        groups.forEach((group) => {
+            client.sendMessage(group.id, templateViews.oneDayReminder());
+        });
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+module.exports = { handleNewPeriod, handleOneDayBeforeNewPeriod };

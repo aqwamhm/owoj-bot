@@ -3,7 +3,10 @@ const cron = require("node-cron");
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const routesHandler = require("./routes/handler");
 const qrcode = require("qrcode-terminal");
-const { handleWeekly } = require("./handlers/cronHandlers");
+const {
+    handleNewPeriod,
+    handleOneDayBeforeNewPeriod,
+} = require("./handlers/cronHandlers");
 
 const puppeteer = {
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -43,7 +46,14 @@ client.on("message_create", async (message) => {
 
 client.initialize();
 
-const cronExpression = `0 ${process.env.PERIOD_START_HOUR} * * ${process.env.PERIOD_START_DAY}`;
-cron.schedule(cronExpression, async () => {
-    await handleWeekly(client);
+const newPeriod = `0 ${process.env.PERIOD_START_HOUR} * * ${process.env.PERIOD_START_DAY}`;
+cron.schedule(newPeriod, async () => {
+    await handleNewPeriod(client);
+});
+
+const OneDayBeforeNewPeriod = `0 ${process.env.PERIOD_START_HOUR} * * ${
+    process.env.PERIOD_START_DAY - 1
+}`;
+cron.schedule(OneDayBeforeNewPeriod, async () => {
+    await handleOneDayBeforeNewPeriod(client);
 });

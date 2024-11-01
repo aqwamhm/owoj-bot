@@ -34,8 +34,9 @@ const reportViews = {
         example() {
             return `- /lapor Aqwam#20 (untuk periode saat ini)
 - /lapor Aqwam#20 -1 (untuk satu periode sebelumnya)
-- /lapor Ivo#Terjemah
-- /lapor Ivo#Murottal`;
+- /lapor Apri#20 -2 (untuk dua periode sebelumnya)
+- /lapor Ivo#Terjemah (untuk laporan terjemah)
+- /lapor Ivo#Murottal (untuk laporan murottal)`;
         },
     },
 };
