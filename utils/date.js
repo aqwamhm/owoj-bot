@@ -1,18 +1,18 @@
-const getPeriodDate = (period = 0) => {
+const getPeriodDate = (period = 0, testDate = null) => {
     const WIB_OFFSET = 7;
+    const now = testDate ? new Date(testDate) : new Date();
 
-    const now = new Date();
     const utcHour = now.getUTCHours();
     const wibHour = (utcHour + WIB_OFFSET) % 24;
 
     const utcDay = now.getUTCDay();
-    const wibDay = utcHour + WIB_OFFSET >= 24 ? (utcDay + 1) % 7 : utcDay;
+    const isNextDay = utcHour + WIB_OFFSET >= 24;
+    const wibDay = isNextDay ? (utcDay + 1) % 7 : utcDay;
 
     const startDay = Math.min(
         Math.max(parseInt(process.env.PERIOD_START_DAY || "6", 10) % 7, 0),
         6
     );
-
     const startHour = Math.min(
         Math.max(parseInt(process.env.PERIOD_START_HOUR || "18", 10), 0),
         23
@@ -20,11 +20,20 @@ const getPeriodDate = (period = 0) => {
 
     let startDayOffset = (wibDay - startDay + 7) % 7;
 
-    if (
-        (wibDay === startDay && wibHour < startHour) ||
-        (startDayOffset === 0 && wibHour < startHour)
-    ) {
-        startDayOffset = 7;
+    const wibTimeIsBeforeStart = wibHour < startHour;
+
+    if (isNextDay) {
+        if (wibDay === startDay && !wibTimeIsBeforeStart) {
+            startDayOffset = 0;
+        } else if (startDayOffset === 1 && wibTimeIsBeforeStart) {
+            startDayOffset = 0;
+        }
+    } else {
+        if (wibDay === startDay && wibTimeIsBeforeStart) {
+            startDayOffset = 7;
+        } else if (startDayOffset === 0 && wibTimeIsBeforeStart) {
+            startDayOffset = 7;
+        }
     }
 
     const startDate = new Date(now);
