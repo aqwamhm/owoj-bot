@@ -22,18 +22,10 @@ const getPeriodDate = (period = 0, testDate = null) => {
 
     const wibTimeIsBeforeStart = wibHour < startHour;
 
-    if (isNextDay) {
-        if (wibDay === startDay && !wibTimeIsBeforeStart) {
-            startDayOffset = 0;
-        } else if (startDayOffset === 1 && wibTimeIsBeforeStart) {
-            startDayOffset = 0;
-        }
-    } else {
-        if (wibDay === startDay && wibTimeIsBeforeStart) {
-            startDayOffset = 7;
-        } else if (startDayOffset === 0 && wibTimeIsBeforeStart) {
-            startDayOffset = 7;
-        }
+    if (wibDay === startDay && wibTimeIsBeforeStart) {
+        startDayOffset = 7;
+    } else if (wibDay !== startDay && wibTimeIsBeforeStart) {
+        startDayOffset -= 1;
     }
 
     const startDate = new Date(now);
