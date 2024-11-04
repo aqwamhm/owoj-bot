@@ -33,13 +33,14 @@ model Report {
   memberGroupId   String
   juz             Int
   pages           Int
+  totalPages      Int        @default(20)
   type            ReportType @default(TILAWAH)
   period          Period     @relation(fields: [periodStartDate, periodEndDate], references: [startDate, endDate], onUpdate: Cascade)
   periodStartDate DateTime
   periodEndDate   DateTime
   createdAt       DateTime   @default(now())
 
-  @@unique([memberName, memberGroupId, pages, type, periodStartDate, periodEndDate])
+  @@unique([memberName, memberGroupId, pages, totalPages, type, periodStartDate, periodEndDate])
 }
 
 model Period {
