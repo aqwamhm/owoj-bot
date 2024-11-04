@@ -2,12 +2,7 @@ const getPeriodDate = (period = 0, testDate = null) => {
     const WIB_OFFSET = 7;
     const now = testDate ? new Date(testDate) : new Date();
 
-    const utcHour = now.getUTCHours();
-    const wibHour = (utcHour + WIB_OFFSET) % 24;
-
-    const utcDay = now.getUTCDay();
-    const isNextDay = utcHour + WIB_OFFSET >= 24;
-    const wibDay = isNextDay ? (utcDay + 1) % 7 : utcDay;
+    const wibDate = new Date(now.getTime() + WIB_OFFSET * 60 * 60 * 1000);
 
     const startDay = Math.min(
         Math.max(parseInt(process.env.PERIOD_START_DAY || "6", 10) % 7, 0),
@@ -18,28 +13,31 @@ const getPeriodDate = (period = 0, testDate = null) => {
         23
     );
 
-    let startDayOffset = (wibDay - startDay + 7) % 7;
+    const periodStart = new Date(wibDate);
+    periodStart.setUTCHours(startHour, 0, 0, 0);
+    periodStart.setUTCDate(
+        periodStart.getUTCDate() -
+            ((periodStart.getUTCDay() - startDay + 7) % 7)
+    );
 
-    const wibTimeIsBeforeStart = wibHour < startHour;
-
-    if (wibDay === startDay && wibTimeIsBeforeStart) {
-        startDayOffset = 7;
-    } else if (wibDay !== startDay && wibTimeIsBeforeStart) {
-        startDayOffset -= 1;
+    if (wibDate < periodStart) {
+        periodStart.setUTCDate(periodStart.getUTCDate() - 7);
     }
 
-    const startDate = new Date(now);
-    startDate.setUTCDate(now.getUTCDate() - startDayOffset + period * 7);
-    const utcStartHour = (startHour - WIB_OFFSET + 24) % 24;
-    startDate.setUTCHours(utcStartHour, 0, 0, 0);
+    periodStart.setUTCDate(periodStart.getUTCDate() + period * 7);
 
-    const endDate = new Date(startDate);
-    endDate.setUTCDate(startDate.getUTCDate() + 7);
-    endDate.setUTCHours(utcStartHour, 0, 0, -1);
+    const periodEnd = new Date(periodStart);
+    periodEnd.setUTCDate(periodEnd.getUTCDate() + 7);
+    periodEnd.setUTCMilliseconds(periodEnd.getUTCMilliseconds() - 1);
+
+    const utcStart = new Date(
+        periodStart.getTime() - WIB_OFFSET * 60 * 60 * 1000
+    );
+    const utcEnd = new Date(periodEnd.getTime() - WIB_OFFSET * 60 * 60 * 1000);
 
     return {
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
+        startDate: utcStart.toISOString(),
+        endDate: utcEnd.toISOString(),
     };
 };
 
