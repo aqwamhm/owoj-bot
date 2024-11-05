@@ -138,6 +138,8 @@ const createTilawahReport = async ({
     startDate,
     endDate,
 }) => {
+    const [finishedPages, totalPages] = pages.split("/");
+
     const previousReport = await reportServices.find({
         memberName: name,
         memberGroupId: groupId,
@@ -152,11 +154,20 @@ const createTilawahReport = async ({
     await reportServices.create({
         name,
         groupId,
-        pages: parseInt(pages),
+        pages: parseInt(finishedPages),
+        totalPages: parseInt(totalPages),
         juz,
         type: "TILAWAH",
         startDate,
         endDate,
+    });
+
+    await reportServices.updateMany({
+        memberName: name,
+        memberGroupId: groupId,
+        periodStartDate: startDate,
+        periodEndDate: endDate,
+        totalPages: parseInt(totalPages),
     });
 
     return reportViews.success.create({

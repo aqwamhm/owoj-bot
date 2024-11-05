@@ -1,9 +1,34 @@
 const prisma = require("../config/db");
 
 const reportServices = {
-    async create({ name, groupId, juz, pages, type, startDate, endDate }) {
-        return await prisma.report.create({
-            data: {
+    async create({
+        name,
+        groupId,
+        juz,
+        pages,
+        totalPages,
+        type,
+        startDate,
+        endDate,
+    }) {
+        type = type || "TILAWAH";
+        pages = pages || 0;
+        totalPages = totalPages || 0;
+
+        return await prisma.report.upsert({
+            where: {
+                memberName_memberGroupId_pages_totalPages_type_periodStartDate_periodEndDate:
+                    {
+                        memberName: name,
+                        memberGroupId: groupId,
+                        pages: 0,
+                        totalPages: 0,
+                        type,
+                        periodStartDate: startDate,
+                        periodEndDate: endDate,
+                    },
+            },
+            create: {
                 member: {
                     connect: {
                         name_groupId: {
@@ -14,6 +39,35 @@ const reportServices = {
                 },
                 juz: parseInt(juz),
                 pages: parseInt(pages),
+                totalPages: parseInt(totalPages),
+                type,
+                period: {
+                    connectOrCreate: {
+                        where: {
+                            startDate_endDate: {
+                                startDate,
+                                endDate,
+                            },
+                        },
+                        create: {
+                            startDate,
+                            endDate,
+                        },
+                    },
+                },
+            },
+            update: {
+                member: {
+                    connect: {
+                        name_groupId: {
+                            name,
+                            groupId,
+                        },
+                    },
+                },
+                juz: parseInt(juz),
+                pages: parseInt(pages),
+                totalPages: parseInt(totalPages),
                 type,
                 period: {
                     connectOrCreate: {
@@ -123,6 +177,7 @@ const reportServices = {
         periodStartDate,
         periodEndDate,
         juz,
+        totalPages,
     }) {
         const where = {
             ...(memberName && { memberName }),
@@ -131,11 +186,14 @@ const reportServices = {
             ...(periodEndDate && { periodEndDate }),
         };
 
+        const data = {
+            ...(juz && { juz: parseInt(juz) }),
+            ...(totalPages && { totalPages: parseInt(totalPages) }),
+        };
+
         await prisma.report.updateMany({
             where,
-            data: {
-                juz: parseInt(juz),
-            },
+            data,
         });
     },
 };
