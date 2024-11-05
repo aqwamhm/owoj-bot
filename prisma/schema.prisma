@@ -33,7 +33,7 @@ model Report {
   memberGroupId   String
   juz             Int
   pages           Int
-  totalPages      Int        @default(20)
+  totalPages      Int        @default(0)
   type            ReportType @default(TILAWAH)
   period          Period     @relation(fields: [periodStartDate, periodEndDate], references: [startDate, endDate], onUpdate: Cascade)
   periodStartDate DateTime
