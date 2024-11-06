@@ -4,7 +4,7 @@ const validations = {
         multiple: false,
     },
     removeReportCommand: {
-        regex: /^\/batal-lapor\s+(?<name>[a-zA-Z\s]+?)#(?<pagesOrType>\d+|terjemah|murottal)(?:\s*-\s*(?<previousPeriods>\d+))?\s*$/,
+        regex: /^\/batal-lapor\s+(?<name>[a-zA-Z\s]+?)#(?<pagesOrType>\d+\/\d+|terjemah|murottal)(?:\s*-\s*(?<previousPeriods>\d+))?\s*$/,
         multiple: false,
     },
     setMemberCommand: {

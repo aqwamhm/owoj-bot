@@ -196,17 +196,18 @@ const handleRemoveReport = async (message) => {
         ? getPeriodDate(-Math.abs(previousPeriods))
         : getPeriodDate();
 
-    let pages;
-    let type;
+    let pages, totalPages, type;
 
     if (pagesOrType === "terjemah") {
         pages = 20;
+        totalPages = 20;
         type = "TERJEMAH";
     } else if (pagesOrType === "murottal") {
         pages = 20;
+        totalPages = 20;
         type = "MUROTTAL";
     } else {
-        pages = parseInt(pagesOrType);
+        [pages, totalPages] = pagesOrType.split("/");
         type = "TILAWAH";
     }
 
@@ -217,20 +218,52 @@ const handleRemoveReport = async (message) => {
             periodStartDate: startDate,
             periodEndDate: endDate,
             pages,
+            totalPages,
             type,
         }))
     ) {
         throw new NotFoundError(reportViews.error.notFound());
     }
 
-    await reportServices.delete({
+    const allPeriodReports = await reportServices.findMany({
         memberName: name,
         memberGroupId: groupId,
         periodStartDate: startDate,
         periodEndDate: endDate,
-        pages,
-        type,
     });
+
+    if (allPeriodReports.length > 1) {
+        await reportServices.delete({
+            memberName: name,
+            memberGroupId: groupId,
+            periodStartDate: startDate,
+            periodEndDate: endDate,
+            pages,
+            totalPages,
+            type,
+        });
+    } else {
+        const firstPeriodReport = allPeriodReports[0];
+        await reportServices.create({
+            name,
+            groupId,
+            juz: firstPeriodReport.juz,
+            pages: 0,
+            totalPages: 0,
+            type: "TILAWAH",
+            startDate,
+            endDate,
+        });
+        await reportServices.delete({
+            memberName: name,
+            memberGroupId: groupId,
+            periodStartDate: startDate,
+            periodEndDate: endDate,
+            pages,
+            totalPages,
+            type,
+        });
+    }
 
     return reportViews.success.remove();
 };
