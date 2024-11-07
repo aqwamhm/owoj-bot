@@ -2,7 +2,7 @@ const memberServices = require("../services/member");
 const reportServices = require("../services/report");
 const { getPeriodDate } = require("../utils/date");
 const { validate } = require("../validations/validators");
-const validations = require("../validations");
+
 const errorMessages = require("../views/error");
 const NotFoundError = require("../exceptions/NotFoundError");
 const ConflictError = require("../exceptions/ConflictError");
@@ -10,10 +10,10 @@ const reportViews = require("../views/report");
 const memberViews = require("../views/member");
 const { decrementJuz } = require("../utils/juz");
 
-const handleCreateReport = async (message) => {
+const handleCreateReport = async (message, validation) => {
     const { name, pagesOrType, previousPeriods } = validate({
         command: message.body,
-        validation: validations.createReportCommand,
+        validation,
         errorMessage: errorMessages.validation({
             format: reportViews.validation.format(),
             example: reportViews.validation.example(),
@@ -180,10 +180,10 @@ const createTilawahReport = async ({
     });
 };
 
-const handleRemoveReport = async (message) => {
+const handleRemoveReport = async (message, validation) => {
     const { name, pagesOrType, previousPeriods } = validate({
         command: message.body,
-        validation: validations.removeReportCommand,
+        validation,
         errorMessage: errorMessages.validation({
             format: "/batal-lapor <nama>#halaman -<jumlah minggu sebelumnya jika ada>",
             example: "/batal-lapor Aqwam#halaman -1",

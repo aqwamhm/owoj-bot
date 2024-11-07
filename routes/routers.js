@@ -1,19 +1,22 @@
 const ClientError = require("../exceptions/ClientError");
-const routes = require("./routes");
+const { commands } = require(".");
 
-const handler = async (message) => {
+const commandRouter = async (message) => {
     message.body = message.body.toLowerCase();
     const prompt = message.body.split(" ")[0];
-    const route = routes().find((route) => route.command === prompt);
+    const command = commands().find((command) => command.prompt === prompt);
 
-    if (route) {
+    if (command) {
         try {
-            if (route.middlewares) {
-                for (const middleware of route.middlewares) {
+            if (command.middlewares) {
+                for (const middleware of command.middlewares) {
                     await middleware(message);
                 }
             }
-            const result = await route.handler(message);
+            const result = await command.handler(
+                message,
+                command.validation || {}
+            );
 
             message.reply(result);
         } catch (e) {
@@ -28,4 +31,4 @@ const handler = async (message) => {
     }
 };
 
-module.exports = { handler };
+module.exports = { commandRouter };

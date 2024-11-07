@@ -3,15 +3,15 @@ const NotFoundError = require("../exceptions/NotFoundError");
 const memberServices = require("../services/member");
 const reportServices = require("../services/report");
 const { getPeriodDate } = require("../utils/date");
-const validations = require("../validations");
+
 const { validate } = require("../validations/validators");
 const errorMessages = require("../views/error");
 const memberViews = require("../views/member");
 
-const handleSetMember = async (message) => {
+const handleSetMember = async (message, validation) => {
     const { juz, name } = validate({
         command: message.body,
-        validation: validations.setMemberCommand,
+        validation,
         errorMessage: errorMessages.validation({
             format: "#set <juz#nama>",
             example: "#set 12#Aqwam",
@@ -54,11 +54,11 @@ const handleSetMember = async (message) => {
     return memberViews.success.set({ name, currentJuz: juz });
 };
 
-const handleRegisterMember = async (message) => {
+const handleRegisterMember = async (message, validation) => {
     let result = [];
     const members = validate({
         command: message.body,
-        validation: validations.registerMemberCommand,
+        validation,
         errorMessage: errorMessages.validation({
             format: "/register <juz>#<nama>",
             example: "/register 1#Aqwam 2#John Doe 3#Maria",
@@ -104,10 +104,10 @@ const handleRegisterMember = async (message) => {
     return result.join("\n");
 };
 
-const handleRemoveMember = async (message) => {
+const handleRemoveMember = async (message, validation) => {
     const { name } = validate({
         command: message.body,
-        validation: validations.removeMemberCommand,
+        validation,
         errorMessage: errorMessages.validation({
             format: "/remove <name>",
             example: "/remove Aqwam",

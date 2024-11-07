@@ -17,57 +17,93 @@ const {
 const verifyMessageFromAdmin = require("../middlewares/verifyMessageFromAdmin");
 const verifyMessageInOWOJGroup = require("../middlewares/verifyMessageInOWOJGroup");
 
-const routes = () => [
+const commands = () => [
     {
-        command: "/register-group",
+        prompt: "/register-group",
         handler: handleCreateGroup,
         middlewares: [verifyMessageFromAdmin],
+        validation: {
+            regex: /^\/register-group\s+\d+\s*$/,
+            multiple: false,
+        },
     },
     {
-        command: "/register",
+        prompt: "/register",
         handler: handleRegisterMember,
         middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
+        validation: {
+            regex: /(?<juz>\d{1,3})#(?<name>[a-zA-Z\s]+?)\s*(?=\d|$)/g,
+            multiple: true,
+        },
     },
     {
-        command: "/set",
+        prompt: "/set",
         handler: handleSetMember,
         middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
+        validation: {
+            regex: /^\/set\s+(?<juz>\d{1,3})#(?<name>[a-zA-Z\s]+?)\s*$/,
+            multiple: false,
+        },
     },
     {
-        command: "/remove",
+        prompt: "/remove",
         handler: handleRemoveMember,
         middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
+        validation: {
+            regex: /^\/remove\s+(?<name>[a-zA-Z\s]+?)\s*$/,
+            multiple: false,
+        },
     },
     {
-        command: "/register-admin",
+        prompt: "/register-admin",
         handler: handleRegisterAdmin,
         middlewares: [],
+        validation: {
+            regex: /^\/register-admin\s+(?<name>[a-zA-Z\s]+)#(?<phone>\d+)\s+(?<password>\S+)$/,
+            multiple: false,
+        },
     },
     {
-        command: "/remove-admin",
+        prompt: "/remove-admin",
         handler: handleRemoveAdmin,
         middlewares: [verifyMessageFromAdmin],
+        validation: {
+            regex: /^\/remove-admin\s+(?<phone>\d+)$/,
+            multiple: false,
+        },
     },
     {
-        command: "/lapor",
+        prompt: "/lapor",
         handler: handleCreateReport,
         middlewares: [verifyMessageInOWOJGroup],
+        validation: {
+            regex: /^\/lapor\s+(?<name>[a-zA-Z\s]+?)#(?<pagesOrType>\d+\/\d+|terjemah|murottal)(?:\s*-\s*(?<previousPeriods>\d+))?\s*$/,
+            multiple: false,
+        },
     },
     {
-        command: "/batal-lapor",
+        prompt: "/batal-lapor",
         handler: handleRemoveReport,
         middlewares: [verifyMessageInOWOJGroup],
+        validation: {
+            regex: /^\/batal-lapor\s+(?<name>[a-zA-Z\s]+?)#(?<pagesOrType>\d+\/\d+|terjemah|murottal)(?:\s*-\s*(?<previousPeriods>\d+))?\s*$/,
+            multiple: false,
+        },
     },
     {
-        command: "/list",
+        prompt: "/list",
         handler: handleShowList,
         middlewares: [verifyMessageInOWOJGroup],
+        validation: {
+            regex: /^\/list\s*$/,
+            multiple: false,
+        },
     },
     {
-        command: "/semangat",
+        prompt: "/semangat",
         handler: handleMotivationRequest,
         middlewares: [verifyMessageInOWOJGroup],
     },
 ];
 
-module.exports = routes;
+module.exports = { commands };

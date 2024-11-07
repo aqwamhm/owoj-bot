@@ -1,16 +1,15 @@
 const adminServices = require("../services/admin");
 const { validate } = require("../validations/validators");
-const validations = require("../validations");
 const errorMessages = require("../views/error");
 const NotFoundError = require("../exceptions/NotFoundError");
 const AuthenticationError = require("../exceptions/AuthenticationError");
 const ConflictError = require("../exceptions/ConflictError");
 const adminViews = require("../views/admin");
 
-const handleRegisterAdmin = async (message) => {
+const handleRegisterAdmin = async (message, validation) => {
     const { name, phone, password } = validate({
         command: message.body,
-        validation: validations.registerAdminCommand,
+        validation,
         errorMessage: errorMessages.validation({
             format: "/register-admin <nama>#<nomor menggunakan kode negara (62)> <password>",
             example:
@@ -32,10 +31,10 @@ const handleRegisterAdmin = async (message) => {
     return adminViews.success.create({ name, phone });
 };
 
-const handleRemoveAdmin = async (message) => {
+const handleRemoveAdmin = async (message, validation) => {
     const { phone } = validate({
         command: message.body,
-        validation: validations.removeAdminCommand,
+        validation,
         errorMessage: errorMessages.validation({
             format: "/remove-admin <nomor menggunakan kode negara (62)>",
             example: "/remove-admin 6212345678",

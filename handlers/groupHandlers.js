@@ -1,15 +1,15 @@
 const groupServices = require("../services/group");
-const validations = require("../validations");
+
 const { validate } = require("../validations/validators");
 const errorMessages = require("../views/error");
 const groupViews = require("../views/group");
 
-const handleCreateGroup = async (message) => {
+const handleCreateGroup = async (message, validation) => {
     const arg1 = message.body.split(" ")[1];
 
     validate({
         command: message.body,
-        validation: validations.createGroupCommand,
+        validation,
         errorMessage: errorMessages.validation({
             format: "/register-group <nomor grup>",
             example: "/register-group 3",
