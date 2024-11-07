@@ -80,7 +80,7 @@ const handleRegisterMember = async (message, validation) => {
             currentJuz,
         });
         if (memberJuzConflict) {
-            result.push(memberViews.error.conflict({ name, currentJuz }));
+            result.push(memberViews.error.juzConflict({ name, currentJuz }));
             continue;
         }
 

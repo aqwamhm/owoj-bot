@@ -21,7 +21,7 @@ const handleCreateGroup = async (message, validation) => {
         number: parseInt(arg1),
     });
 
-    return groupViews.success.create({ nomor: arg1 });
+    return groupViews.success.create({ number: arg1 });
 };
 
 module.exports = { handleCreateGroup };

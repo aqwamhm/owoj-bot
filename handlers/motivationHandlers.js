@@ -58,7 +58,6 @@ const handleMotivationRequest = async () => {
         });
 
         if (!response.ok) {
-            console.log(response);
             return;
         }
 

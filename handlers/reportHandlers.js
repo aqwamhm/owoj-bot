@@ -147,7 +147,7 @@ const createTilawahReport = async ({
         periodEndDate: endDate,
     });
 
-    if (previousReport && previousReport.pages >= pages) {
+    if (previousReport && previousReport.pages >= finishedPages) {
         throw new ConflictError(reportViews.error.conflict());
     }
 

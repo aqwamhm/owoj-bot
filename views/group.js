@@ -1,15 +1,15 @@
 const groupViews = {
     success: {
-        create({ nomor }) {
-            return `OWOJ ${nomor} berhasil di daftarkan ke sistem.`;
+        create({ number }) {
+            return `OWOJ ${number} berhasil di daftarkan ke sistem.`;
         },
     },
     error: {
         notFound() {
             return `Chat ini tidak terdaftar sebagai grup OWOJ.`;
         },
-        conflict({ nomor }) {
-            return `OWOJ ${nomor} sudah terdaftar.`;
+        conflict({ number }) {
+            return `OWOJ ${number} sudah terdaftar.`;
         },
     },
 };
