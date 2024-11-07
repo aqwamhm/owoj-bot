@@ -4,7 +4,7 @@ const memberServices = require("../services/member");
 const reportServices = require("../services/report");
 const { getPeriodDate } = require("../utils/date");
 
-const { validate } = require("../validations/validators");
+const { validate } = require("../utils/validator");
 const errorMessages = require("../views/error");
 const memberViews = require("../views/member");
 

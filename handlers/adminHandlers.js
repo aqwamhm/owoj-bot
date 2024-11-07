@@ -1,5 +1,5 @@
 const adminServices = require("../services/admin");
-const { validate } = require("../validations/validators");
+const { validate } = require("../utils/validator");
 const errorMessages = require("../views/error");
 const NotFoundError = require("../exceptions/NotFoundError");
 const AuthenticationError = require("../exceptions/AuthenticationError");

@@ -1,6 +1,6 @@
 const groupServices = require("../services/group");
 
-const { validate } = require("../validations/validators");
+const { validate } = require("../utils/validator");
 const errorMessages = require("../views/error");
 const groupViews = require("../views/group");
 
