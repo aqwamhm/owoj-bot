@@ -1,4 +1,4 @@
-const prisma = require("../config/db");
+const { prisma } = require("../config/db");
 
 const periodServices = {
     async create({ startDate, endDate }) {

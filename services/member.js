@@ -1,4 +1,4 @@
-const prisma = require("../config/db");
+const { prisma } = require("../config/db");
 
 const memberServices = {
     async set({ name, groupId, currentJuz }) {

@@ -1,4 +1,4 @@
-const prisma = require("../config/db");
+const { prisma } = require("../config/db");
 const ConflictError = require("../exceptions/ConflictError");
 const groupViews = require("../views/group");
 
