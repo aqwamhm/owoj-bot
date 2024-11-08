@@ -1,4 +1,4 @@
-const memberHandlers = require("../memberHandlers");
+const MemberHandler = require("../MemberHandler");
 const ConflictError = require("../../exceptions/ConflictError");
 const NotFoundError = require("../../exceptions/NotFoundError");
 const memberServices = require("../../services/member");
@@ -14,7 +14,7 @@ jest.mock("../../utils/validator");
 jest.mock("../../views/error");
 jest.mock("../../views/member");
 
-describe("memberHandlers", () => {
+describe("MemberHandler", () => {
     describe("handleSetMember", () => {
         it("should set a member successfully", async () => {
             const message = {
@@ -37,7 +37,7 @@ describe("memberHandlers", () => {
             reportServices.updateMany.mockResolvedValue(true);
             memberServices.set.mockResolvedValue(true);
 
-            const result = await memberHandlers.handleSetMember(
+            const result = await MemberHandler.handleSetMember(
                 message,
                 validation
             );
@@ -58,7 +58,7 @@ describe("memberHandlers", () => {
             memberServices.find.mockResolvedValue(null);
 
             await expect(
-                memberHandlers.handleSetMember(message, validation)
+                MemberHandler.handleSetMember(message, validation)
             ).rejects.toThrow(NotFoundError);
         });
 
@@ -80,7 +80,7 @@ describe("memberHandlers", () => {
             });
 
             await expect(
-                memberHandlers.handleSetMember(message, validation)
+                MemberHandler.handleSetMember(message, validation)
             ).rejects.toThrow(ConflictError);
         });
     });
@@ -106,7 +106,7 @@ describe("memberHandlers", () => {
             memberServices.create.mockResolvedValue(true);
             reportServices.create.mockResolvedValue(true);
 
-            const result = await memberHandlers.handleRegisterMember(
+            const result = await MemberHandler.handleRegisterMember(
                 message,
                 validation
             );
@@ -144,7 +144,7 @@ describe("memberHandlers", () => {
             memberServices.find.mockResolvedValueOnce({ name: "Aqwam" });
             memberServices.find.mockResolvedValue(null);
 
-            const result = await memberHandlers.handleRegisterMember(
+            const result = await MemberHandler.handleRegisterMember(
                 message,
                 validation
             );
@@ -182,7 +182,7 @@ describe("memberHandlers", () => {
                 currentJuz: 1,
             });
 
-            const result = await memberHandlers.handleRegisterMember(
+            const result = await MemberHandler.handleRegisterMember(
                 message,
                 validation
             );
@@ -218,7 +218,7 @@ describe("memberHandlers", () => {
             memberServices.find.mockResolvedValue({ name: "Aqwam" });
             memberServices.remove.mockResolvedValue(true);
 
-            const result = await memberHandlers.handleRemoveMember(
+            const result = await MemberHandler.handleRemoveMember(
                 message,
                 validation
             );
@@ -239,7 +239,7 @@ describe("memberHandlers", () => {
             memberServices.find.mockResolvedValue(null);
 
             await expect(
-                memberHandlers.handleRemoveMember(message, validation)
+                MemberHandler.handleRemoveMember(message, validation)
             ).rejects.toThrow(NotFoundError);
         });
     });

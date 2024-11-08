@@ -1,8 +1,6 @@
-const groupHandlers = require("../groupHandlers");
+const GroupHandler = require("../GroupHandler");
 const groupServices = require("../../services/group");
 const { validate } = require("../../utils/validator");
-const errorMessages = require("../../views/error");
-const NotFoundError = require("../../exceptions/NotFoundError");
 const groupViews = require("../../views/group");
 
 jest.mock("../../services/group");
@@ -10,7 +8,7 @@ jest.mock("../../utils/validator");
 jest.mock("../../views/error");
 jest.mock("../../views/admin");
 
-describe("groupHandlers", () => {
+describe("GroupHandler", () => {
     describe("handleCreateGroup", () => {
         it("should create a new group successfully", async () => {
             const message = {
@@ -23,7 +21,7 @@ describe("groupHandlers", () => {
             groupServices.find.mockResolvedValue(null);
             groupServices.create.mockResolvedValue(true);
 
-            const result = await groupHandlers.handleCreateGroup(
+            const result = await GroupHandler.handleCreateGroup(
                 message,
                 validation
             );

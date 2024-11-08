@@ -1,4 +1,4 @@
-const listHandlers = require("../listHandlers");
+const ListHandler = require("../ListHandler");
 const periodServices = require("../../services/period");
 const memberServices = require("../../services/member");
 const { memberListWithReport } = require("../../views/list");
@@ -7,7 +7,7 @@ jest.mock("../../services/period");
 jest.mock("../../services/member");
 jest.mock("../../views/list");
 
-describe("listHandlers", () => {
+describe("ListHandler", () => {
     describe("handleShowList", () => {
         it("should return a list of members with reports successfully", async () => {
             const message = { id: { remote: "groupId123" } };
@@ -22,7 +22,7 @@ describe("listHandlers", () => {
                 "List of members with reports"
             );
 
-            const result = await listHandlers.handleShowList(message);
+            const result = await ListHandler.handleShowList(message);
 
             expect(result).toEqual("List of members with reports");
         });
@@ -34,7 +34,7 @@ describe("listHandlers", () => {
             memberServices.getWithReports.mockResolvedValue([]);
             memberListWithReport.mockReturnValue("No members or periods found");
 
-            const result = await listHandlers.handleShowList(message);
+            const result = await ListHandler.handleShowList(message);
 
             expect(result).toEqual("No members or periods found");
         });

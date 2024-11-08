@@ -18,7 +18,9 @@ const commandRouter = async (message) => {
                 command.validation || {}
             );
 
-            message.reply(result);
+            if (result) {
+                message.reply(result);
+            }
         } catch (e) {
             if (e instanceof ClientError) {
                 message.reply(e.message);

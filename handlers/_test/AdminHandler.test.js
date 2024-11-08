@@ -1,4 +1,4 @@
-const adminHandlers = require("../adminHandlers");
+const AdminHandler = require("../AdminHandler");
 const adminServices = require("../../services/admin");
 const { validate } = require("../../utils/validator");
 const NotFoundError = require("../../exceptions/NotFoundError");
@@ -13,7 +13,7 @@ jest.mock("../../views/admin");
 
 const originalEnv = process.env;
 
-describe("adminHandlers", () => {
+describe("AdminHandler", () => {
     beforeEach(() => {
         jest.resetModules();
         process.env = { ...originalEnv, ADMIN_PASSWORD: "mock-password" };
@@ -38,7 +38,7 @@ describe("adminHandlers", () => {
             adminServices.find.mockResolvedValue(null);
             adminServices.create.mockResolvedValue(true);
 
-            const result = await adminHandlers.handleRegisterAdmin(
+            const result = await AdminHandler.handleRegisterAdmin(
                 message,
                 validation
             );
@@ -64,7 +64,7 @@ describe("adminHandlers", () => {
             });
 
             await expect(
-                adminHandlers.handleRegisterAdmin(message, validation)
+                AdminHandler.handleRegisterAdmin(message, validation)
             ).rejects.toThrow(AuthenticationError);
         });
 
@@ -82,7 +82,7 @@ describe("adminHandlers", () => {
             adminServices.find.mockResolvedValue({ phoneNumber: "6281234567" });
 
             await expect(
-                adminHandlers.handleRegisterAdmin(message, validation)
+                AdminHandler.handleRegisterAdmin(message, validation)
             ).rejects.toThrow(ConflictError);
         });
     });
@@ -99,7 +99,7 @@ describe("adminHandlers", () => {
             });
             adminServices.remove.mockResolvedValue(true);
 
-            const result = await adminHandlers.handleRemoveAdmin(
+            const result = await AdminHandler.handleRemoveAdmin(
                 message,
                 validation
             );
@@ -120,7 +120,7 @@ describe("adminHandlers", () => {
             adminServices.find.mockResolvedValue(null);
 
             await expect(
-                adminHandlers.handleRemoveAdmin(message, validation)
+                AdminHandler.handleRemoveAdmin(message, validation)
             ).rejects.toThrow(NotFoundError);
         });
     });

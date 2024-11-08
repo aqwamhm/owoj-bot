@@ -1,26 +1,16 @@
-const { handleCreateGroup } = require("../handlers/groupHandlers");
-const {
-    handleSetMember,
-    handleRegisterMember,
-    handleRemoveMember,
-} = require("../handlers/memberHandlers");
-const {
-    handleCreateReport,
-    handleRemoveReport,
-} = require("../handlers/reportHandlers");
-const { handleShowList } = require("../handlers/listHandlers");
-const { handleMotivationRequest } = require("../handlers/motivationHandlers");
-const {
-    handleRegisterAdmin,
-    handleRemoveAdmin,
-} = require("../handlers/adminHandlers");
+const AdminHandler = require("../handlers/AdminHandler");
+const MemberHandler = require("../handlers/MemberHandler");
+const GroupHandler = require("../handlers/GroupHandler");
+const ReportHandler = require("../handlers/ReportHandler");
+const ListHandler = require("../handlers/ListHandler");
+const MotivationHandler = require("../handlers/MotivationHandler");
 const verifyMessageFromAdmin = require("../middlewares/verifyMessageFromAdmin");
 const verifyMessageInOWOJGroup = require("../middlewares/verifyMessageInOWOJGroup");
 
 const commands = () => [
     {
         prompt: "/register-group",
-        handler: handleCreateGroup,
+        handler: GroupHandler.handleCreateGroup.bind(GroupHandler),
         middlewares: [verifyMessageFromAdmin],
         validation: {
             regex: /^\/register-group\s+\d+\s*$/,
@@ -29,7 +19,7 @@ const commands = () => [
     },
     {
         prompt: "/register",
-        handler: handleRegisterMember,
+        handler: MemberHandler.handleRegisterMember.bind(MemberHandler),
         middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
         validation: {
             regex: /(?<juz>\d{1,3})#(?<name>[a-zA-Z\s]+?)\s*(?=\d|$)/g,
@@ -38,7 +28,7 @@ const commands = () => [
     },
     {
         prompt: "/set",
-        handler: handleSetMember,
+        handler: MemberHandler.handleSetMember.bind(MemberHandler),
         middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
         validation: {
             regex: /^\/set\s+(?<juz>\d{1,3})#(?<name>[a-zA-Z\s]+?)\s*$/,
@@ -47,7 +37,7 @@ const commands = () => [
     },
     {
         prompt: "/remove",
-        handler: handleRemoveMember,
+        handler: MemberHandler.handleRemoveMember.bind(MemberHandler),
         middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
         validation: {
             regex: /^\/remove\s+(?<name>[a-zA-Z\s]+?)\s*$/,
@@ -56,7 +46,7 @@ const commands = () => [
     },
     {
         prompt: "/register-admin",
-        handler: handleRegisterAdmin,
+        handler: AdminHandler.handleRegisterAdmin.bind(AdminHandler),
         middlewares: [],
         validation: {
             regex: /^\/register-admin\s+(?<name>[a-zA-Z\s]+)#(?<phone>\d+)\s+(?<password>\S+)$/,
@@ -65,7 +55,7 @@ const commands = () => [
     },
     {
         prompt: "/remove-admin",
-        handler: handleRemoveAdmin,
+        handler: AdminHandler.handleRemoveAdmin.bind(AdminHandler),
         middlewares: [verifyMessageFromAdmin],
         validation: {
             regex: /^\/remove-admin\s+(?<phone>\d+)$/,
@@ -74,7 +64,7 @@ const commands = () => [
     },
     {
         prompt: "/lapor",
-        handler: handleCreateReport,
+        handler: ReportHandler.handleCreateReport.bind(ReportHandler),
         middlewares: [verifyMessageInOWOJGroup],
         validation: {
             regex: /^\/lapor\s+(?<name>[a-zA-Z\s]+?)#(?<pagesOrType>\d+\/\d+|terjemah|murottal)(?:\s*-\s*(?<previousPeriods>\d+))?\s*$/,
@@ -83,7 +73,7 @@ const commands = () => [
     },
     {
         prompt: "/batal-lapor",
-        handler: handleRemoveReport,
+        handler: ReportHandler.handleRemoveReport.bind(ReportHandler),
         middlewares: [verifyMessageInOWOJGroup],
         validation: {
             regex: /^\/batal-lapor\s+(?<name>[a-zA-Z\s]+?)#(?<pagesOrType>\d+\/\d+|terjemah|murottal)(?:\s*-\s*(?<previousPeriods>\d+))?\s*$/,
@@ -92,7 +82,7 @@ const commands = () => [
     },
     {
         prompt: "/list",
-        handler: handleShowList,
+        handler: ListHandler.handleShowList.bind(ListHandler),
         middlewares: [verifyMessageInOWOJGroup],
         validation: {
             regex: /^\/list\s*$/,
@@ -101,8 +91,10 @@ const commands = () => [
     },
     {
         prompt: "/semangat",
-        handler: handleMotivationRequest,
+        handler:
+            MotivationHandler.handleMotivationRequest.bind(MotivationHandler),
         middlewares: [verifyMessageInOWOJGroup],
+        validation: {},
     },
 ];
 

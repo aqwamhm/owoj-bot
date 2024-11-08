@@ -1,12 +1,11 @@
-const motivationHandlers = require("../motivationHandlers");
+const MotivationHandler = require("../MotivationHandler");
 const motivationViews = require("../../views/motivation");
-const fetch = require("node-fetch");
 
 jest.mock("../../views/motivation");
 
 const originalEnv = process.env;
 
-describe("motivationHandlers", () => {
+describe("MotivationHandler", () => {
     beforeEach(() => {
         process.env = { ...originalEnv, OPENROUTER_API_TOKEN: "mock-api-key" };
         global.fetch = jest.fn();
@@ -34,7 +33,7 @@ describe("motivationHandlers", () => {
                 json: jest.fn().mockResolvedValueOnce(mockResponse),
             });
 
-            const result = await motivationHandlers.handleMotivationRequest();
+            const result = await MotivationHandler.handleMotivationRequest();
 
             expect(result).toEqual("Motivational message");
         });
@@ -46,7 +45,7 @@ describe("motivationHandlers", () => {
             };
 
             await expect(
-                motivationHandlers.handleMotivationRequest()
+                MotivationHandler.handleMotivationRequest()
             ).rejects.toThrow(
                 "OPENROUTER_API_TOKEN tidak ditemukan di file .env"
             );
@@ -58,7 +57,7 @@ describe("motivationHandlers", () => {
                 json: jest.fn().mockResolvedValueOnce({}),
             });
 
-            const result = await motivationHandlers.handleMotivationRequest();
+            const result = await MotivationHandler.handleMotivationRequest();
 
             expect(result).toEqual(motivationViews.error.request());
         });
@@ -66,7 +65,7 @@ describe("motivationHandlers", () => {
         it("should return an error view if the API request throws an error", async () => {
             global.fetch.mockRejectedValue(new Error("API request failed"));
 
-            const result = await motivationHandlers.handleMotivationRequest();
+            const result = await MotivationHandler.handleMotivationRequest();
 
             expect(result).toEqual(motivationViews.error.request());
         });
