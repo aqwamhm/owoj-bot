@@ -1,6 +1,7 @@
 const formatName = (name) => {
     return name
-        .split(" ")
+        .trim()
+        .split(/\s+/)
         .map(
             (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
         )
