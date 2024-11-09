@@ -230,8 +230,8 @@ class ReportHandler {
             command: message.body,
             validation,
             errorMessage: errorMessages.validation({
-                format: "/batal-lapor <nama>#halaman -<jumlah minggu sebelumnya jika ada>",
-                example: "/batal-lapor Aqwam#halaman -1",
+                format: "/batal-lapor nama#halaman/total halaman -jumlah minggu sebelumnya (opsional)",
+                example: "/batal-lapor Aqwam#10/20",
             }),
         });
 

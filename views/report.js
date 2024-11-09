@@ -30,16 +30,16 @@ const reportViews = {
     },
     validation: {
         format() {
-            return `- /lapor <nama>#<jumlah halaman> -<jumlah periode sebelumnya (opsional)>
-- /lapor <nama>#Terjemah -<jumlah periode sebelumnya (opsional)>
-- /lapor <nama>#Murottal -<jumlah periode sebelumnya (opsional)>`;
+            return `- /lapor nama#jumlah halaman/total halaman
+- /lapor nama#jumlah halaman/total halaman#terjemah
+- /lapor nama#jumlah halaman/total halaman#murottal`;
         },
         example() {
-            return `- /lapor Aqwam#20 (untuk periode saat ini)
-- /lapor Aqwam#20 -1 (untuk satu periode sebelumnya)
-- /lapor Apri#20 -2 (untuk dua periode sebelumnya)
-- /lapor Ivo#Terjemah (untuk laporan terjemah)
-- /lapor Ivo#Murottal (untuk laporan murottal)`;
+            return `- /lapor Aqwam#20/20 (untuk periode saat ini)
+- /lapor Aqwam#20/20 -1 (untuk satu periode sebelumnya)
+- /lapor Apri#20/20 -2 (untuk dua periode sebelumnya)
+- /lapor Ivo#20/20#terjemah (untuk laporan terjemah)
+- /lapor Ivo#20/20#murottal (untuk laporan murottal)`;
         },
     },
 };

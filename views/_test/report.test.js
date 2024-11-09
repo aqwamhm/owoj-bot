@@ -52,14 +52,14 @@ describe("reportViews", () => {
         it("should return the correct message for format", () => {
             const result = reportViews.validation.format();
             expect(result).toBe(
-                "- /lapor <nama>#<jumlah halaman> -<jumlah periode sebelumnya (opsional)>\n- /lapor <nama>#Terjemah -<jumlah periode sebelumnya (opsional)>\n- /lapor <nama>#Murottal -<jumlah periode sebelumnya (opsional)>"
+                "- /lapor nama#jumlah halaman/total halaman\n- /lapor nama#jumlah halaman/total halaman#terjemah\n- /lapor nama#jumlah halaman/total halaman#murottal"
             );
         });
 
         it("should return the correct message for example", () => {
             const result = reportViews.validation.example();
             expect(result).toBe(
-                "- /lapor Aqwam#20 (untuk periode saat ini)\n- /lapor Aqwam#20 -1 (untuk satu periode sebelumnya)\n- /lapor Apri#20 -2 (untuk dua periode sebelumnya)\n- /lapor Ivo#Terjemah (untuk laporan terjemah)\n- /lapor Ivo#Murottal (untuk laporan murottal)"
+                "- /lapor Aqwam#20/20 (untuk periode saat ini)\n- /lapor Aqwam#20/20 -1 (untuk satu periode sebelumnya)\n- /lapor Apri#20/20 -2 (untuk dua periode sebelumnya)\n- /lapor Ivo#20/20#terjemah (untuk laporan terjemah)\n- /lapor Ivo#20/20#murottal (untuk laporan murottal)"
             );
         });
     });
