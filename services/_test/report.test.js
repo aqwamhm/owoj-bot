@@ -120,7 +120,7 @@ describe("reportServices", () => {
                 juz: 5,
                 pages: 10,
                 totalPages: 30,
-                type: "MEMORIZATION",
+                type: "TILAWAH",
                 startDate: new Date("2024-01-01"),
                 endDate: new Date("2024-12-31"),
             };
@@ -135,7 +135,7 @@ describe("reportServices", () => {
                             memberGroupId: "1",
                             pages: 0,
                             totalPages: 0,
-                            type: "MEMORIZATION",
+                            type: "TILAWAH",
                             periodStartDate: mockData.startDate,
                             periodEndDate: mockData.endDate,
                         },
@@ -152,7 +152,7 @@ describe("reportServices", () => {
                     juz: 5,
                     pages: 10,
                     totalPages: 30,
-                    type: "MEMORIZATION",
+                    type: "TILAWAH",
                     period: {
                         connectOrCreate: {
                             where: {
@@ -180,7 +180,7 @@ describe("reportServices", () => {
                     juz: 5,
                     pages: 10,
                     totalPages: 30,
-                    type: "MEMORIZATION",
+                    type: "TILAWAH",
                     period: {
                         connectOrCreate: {
                             where: {
