@@ -19,7 +19,7 @@ class ReportHandler {
     }
 
     async handleCreateReport(message, validation) {
-        const { name, pagesOrType, previousPeriods } = validate({
+        const { name, pages, type, previousPeriods } = validate({
             command: message.body,
             validation,
             errorMessage: errorMessages.validation({
@@ -56,27 +56,50 @@ class ReportHandler {
             juz = member.currentJuz;
         }
 
-        if (pagesOrType === "terjemah") {
+        const [finishedPages, totalPages] = pages.split("/").map(Number);
+
+        if (finishedPages > totalPages) {
+            throw new ConflictError(
+                this.reportViews.error.conflictTotalPages()
+            );
+        }
+
+        const previousReport = await this.reportServices.find({
+            memberName: name,
+            memberGroupId: groupId,
+            periodStartDate: startDate,
+            periodEndDate: endDate,
+        });
+
+        if (previousReport && previousReport.pages >= finishedPages) {
+            throw new ConflictError(this.reportViews.error.conflictPages());
+        }
+
+        if (type === "terjemah") {
             return await this.createTerjemahReport({
                 name,
                 groupId,
                 juz,
                 startDate,
                 endDate,
+                finishedPages,
+                totalPages,
             });
-        } else if (pagesOrType === "murottal") {
+        } else if (type === "murottal") {
             return await this.createMurottalReport({
                 name,
                 groupId,
                 juz,
                 startDate,
                 endDate,
+                finishedPages,
+                totalPages,
             });
         } else {
             return await this.createTilawahReport({
                 name,
                 groupId,
-                pages: pagesOrType,
+                pages,
                 juz,
                 startDate,
                 endDate,
@@ -84,20 +107,38 @@ class ReportHandler {
         }
     }
 
-    async createTerjemahReport({ name, groupId, juz, startDate, endDate }) {
+    async createTerjemahReport({
+        name,
+        groupId,
+        juz,
+        startDate,
+        endDate,
+        finishedPages,
+        totalPages,
+    }) {
         await this.reportServices.create({
             name,
             groupId,
-            pages: 20,
+            pages: finishedPages,
+            totalPages: totalPages,
             juz,
             type: "TERJEMAH",
             startDate,
             endDate,
         });
 
+        await this.reportServices.updateMany({
+            memberName: name,
+            memberGroupId: groupId,
+            periodStartDate: startDate,
+            periodEndDate: endDate,
+            totalPages,
+            type: "TERJEMAH",
+        });
+
         return this.reportViews.success.create({
             name,
-            pages: 20,
+            pages: `${finishedPages}/${totalPages}`,
             juz,
             type: "TERJEMAH",
             startDate,
@@ -105,20 +146,38 @@ class ReportHandler {
         });
     }
 
-    async createMurottalReport({ name, groupId, juz, startDate, endDate }) {
+    async createMurottalReport({
+        name,
+        groupId,
+        juz,
+        startDate,
+        endDate,
+        finishedPages,
+        totalPages,
+    }) {
         await this.reportServices.create({
             name,
             groupId,
-            pages: 20,
+            pages: finishedPages,
+            totalPages: totalPages,
             juz,
             type: "MUROTTAL",
             startDate,
             endDate,
         });
 
+        await this.reportServices.updateMany({
+            memberName: name,
+            memberGroupId: groupId,
+            periodStartDate: startDate,
+            periodEndDate: endDate,
+            totalPages,
+            type: "MUROTTAL",
+        });
+
         return this.reportViews.success.create({
             name,
-            pages: 20,
+            pages: `${finishedPages}/${totalPages}`,
             juz,
             type: "MUROTTAL",
             startDate,
@@ -134,24 +193,13 @@ class ReportHandler {
         startDate,
         endDate,
     }) {
-        const [finishedPages, totalPages] = pages.split("/");
-
-        const previousReport = await this.reportServices.find({
-            memberName: name,
-            memberGroupId: groupId,
-            periodStartDate: startDate,
-            periodEndDate: endDate,
-        });
-
-        if (previousReport && previousReport.pages >= finishedPages) {
-            throw new ConflictError(this.reportViews.error.conflict());
-        }
+        const [finishedPages, totalPages] = pages.split("/").map(Number);
 
         await this.reportServices.create({
             name,
             groupId,
-            pages: parseInt(finishedPages),
-            totalPages: parseInt(totalPages),
+            pages: finishedPages,
+            totalPages,
             juz,
             type: "TILAWAH",
             startDate,
@@ -163,7 +211,8 @@ class ReportHandler {
             memberGroupId: groupId,
             periodStartDate: startDate,
             periodEndDate: endDate,
-            totalPages: parseInt(totalPages),
+            totalPages,
+            type: "TILAWAH",
         });
 
         return this.reportViews.success.create({
@@ -177,7 +226,7 @@ class ReportHandler {
     }
 
     async handleRemoveReport(message, validation) {
-        const { name, pagesOrType, previousPeriods } = validate({
+        const { name, pages, type, previousPeriods } = validate({
             command: message.body,
             validation,
             errorMessage: errorMessages.validation({
@@ -192,37 +241,36 @@ class ReportHandler {
             ? getPeriodDate(-Math.abs(previousPeriods))
             : getPeriodDate();
 
-        let pages, totalPages, type;
+        const [finishedPages, totalPages] = pages
+            .split("/")
+            .map((page) => parseInt(page.trim(), 10));
 
-        if (pagesOrType === "terjemah") {
-            pages = 20;
-            totalPages = 20;
-            type = "TERJEMAH";
-        } else if (pagesOrType === "murottal") {
-            pages = 20;
-            totalPages = 20;
-            type = "MUROTTAL";
+        // Determine the report type based on the 'type' field
+        let reportType;
+        if (type === "terjemah") {
+            reportType = "TERJEMAH";
+        } else if (type === "murottal") {
+            reportType = "MUROTTAL";
         } else {
-            [pages, totalPages] = pagesOrType.split("/");
-            pages = parseInt(pages);
-            totalPages = parseInt(totalPages);
-            type = "TILAWAH";
+            reportType = "TILAWAH";
         }
 
-        if (
-            !(await this.reportServices.find({
-                memberName: name,
-                memberGroupId: groupId,
-                periodStartDate: startDate,
-                periodEndDate: endDate,
-                pages,
-                totalPages,
-                type,
-            }))
-        ) {
+        // Check if the specific report exists
+        const existingReport = await this.reportServices.find({
+            memberName: name,
+            memberGroupId: groupId,
+            periodStartDate: startDate,
+            periodEndDate: endDate,
+            pages: finishedPages,
+            totalPages,
+            type: reportType,
+        });
+
+        if (!existingReport) {
             throw new NotFoundError(this.reportViews.error.notFound());
         }
 
+        // Retrieve all reports for the user in the same period
         const allPeriodReports = await this.reportServices.findMany({
             memberName: name,
             memberGroupId: groupId,
@@ -231,17 +279,21 @@ class ReportHandler {
         });
 
         if (allPeriodReports.length > 1) {
+            // Delete the specific report immediately if there are multiple reports
             await this.reportServices.delete({
                 memberName: name,
                 memberGroupId: groupId,
                 periodStartDate: startDate,
                 periodEndDate: endDate,
-                pages,
+                pages: finishedPages,
                 totalPages,
-                type,
+                type: reportType,
             });
         } else {
+            // If it's the only report, reset the report to 0/0 with a default type "TILAWAH"
             const firstPeriodReport = allPeriodReports[0];
+
+            // Create a new placeholder report to reset the user's progress
             await this.reportServices.create({
                 name,
                 groupId,
@@ -252,14 +304,16 @@ class ReportHandler {
                 startDate,
                 endDate,
             });
+
+            // Delete the original report that the user requested to remove
             await this.reportServices.delete({
                 memberName: name,
                 memberGroupId: groupId,
                 periodStartDate: startDate,
                 periodEndDate: endDate,
-                pages,
+                pages: finishedPages,
                 totalPages,
-                type,
+                type: reportType,
             });
         }
 

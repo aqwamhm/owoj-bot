@@ -479,6 +479,7 @@ describe("reportServices", () => {
                 periodEndDate: new Date("2024-12-31"),
                 juz: 3,
                 totalPages: 30,
+                type: "TILAWAH",
             };
 
             prisma.report.updateMany.mockResolvedValue({ count: 1 });
@@ -493,6 +494,7 @@ describe("reportServices", () => {
                 data: {
                     juz: 3,
                     totalPages: 30,
+                    type: "TILAWAH",
                 },
             });
         });

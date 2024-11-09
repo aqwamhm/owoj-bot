@@ -34,9 +34,16 @@ describe("reportViews", () => {
         });
 
         it("should return the correct message for conflict", () => {
-            const result = reportViews.error.conflict();
+            const result = reportViews.error.conflictPages();
             expect(result).toBe(
                 "Jumlah laporan halaman harus lebih banyak dari jumlah halaman sebelumnya."
+            );
+        });
+
+        it("should return the correct message for conflictTotalPages", () => {
+            const result = reportViews.error.conflictTotalPages();
+            expect(result).toBe(
+                "Jumlah halaman tidak boleh lebih besar dari total halaman."
             );
         });
     });

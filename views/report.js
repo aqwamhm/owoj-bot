@@ -21,8 +21,11 @@ const reportViews = {
         notFound() {
             return `Laporan tidak ditemukan.`;
         },
-        conflict() {
+        conflictPages() {
             return `Jumlah laporan halaman harus lebih banyak dari jumlah halaman sebelumnya.`;
+        },
+        conflictTotalPages() {
+            return `Jumlah halaman tidak boleh lebih besar dari total halaman.`;
         },
     },
     validation: {

@@ -23,7 +23,7 @@ const reportServices = {
                         memberGroupId: groupId,
                         pages: 0,
                         totalPages: 0,
-                        type,
+                        type: "TILAWAH",
                         periodStartDate: startDate,
                         periodEndDate: endDate,
                     },
@@ -209,6 +209,7 @@ const reportServices = {
         periodEndDate,
         juz,
         totalPages,
+        type,
     }) {
         const where = {
             ...(memberName && { memberName }),
@@ -220,6 +221,8 @@ const reportServices = {
         const data = {
             ...(juz && { juz: parseInt(juz) }),
             ...(totalPages && { totalPages: parseInt(totalPages) }),
+            ...(totalPages && { totalPages: parseInt(totalPages) }),
+            ...(type && { type }),
         };
 
         await prisma.report.updateMany({

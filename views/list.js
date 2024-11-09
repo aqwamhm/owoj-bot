@@ -8,7 +8,7 @@ const { formatName } = require("../utils/name");
 const memberListWithReport = ({ members, periods }) => {
     const { startDate: currentPeriodStartDate, endDate: currentPeriodEndDate } =
         getPeriodDate();
-    const reportDeadline = `${daysOfWeek[process.env.PERIOD_START_DAY]} ${
+    const reportDeadline = `${daysOfWeek[process.env.PERIOD_START_DAY]}, ${
         process.env.PERIOD_START_HOUR - 1
     }:59`;
 
@@ -33,23 +33,37 @@ const memberListWithReport = ({ members, periods }) => {
     });
 
     const formatPages = (reports) => {
-        return reports
-            .filter((report) => report.pages > 0)
-            .sort((a, b) => {
-                return new Date(a.createdAt) - new Date(b.createdAt);
-            })
-            .map((report) => {
-                if (report.type == "MUROTTAL") {
-                    return `🎧 ✅`;
-                } else if (report.type == "TERJEMAH") {
-                    return `📖 ✅`;
-                } else {
-                    return report.pages >= 20
-                        ? `${report.pages} ✅`
-                        : report.pages;
+        // Filter reports with pages > 0
+        const filteredReports = reports.filter((report) => report.pages > 0);
+
+        // Sort reports by pages
+        filteredReports.sort((a, b) => parseInt(a.pages) - parseInt(b.pages));
+
+        // Map over the filtered reports
+        const result = filteredReports
+            .map((report, index) => {
+                let formattedResult = report.pages;
+
+                // Check if it's the last report in the filtered list
+                if (index === filteredReports.length - 1) {
+                    let typeEmoji = " ";
+
+                    if (report.type === "TERJEMAH") {
+                        typeEmoji = " 📖 ";
+                    } else if (report.type === "MUROTTAL") {
+                        typeEmoji = " 🎧 ";
+                    }
+
+                    formattedResult += ` / ${report.totalPages}${typeEmoji}${
+                        report.pages === report.totalPages ? "✅" : ""
+                    }`;
                 }
+
+                return formattedResult;
             })
-            .join(", ");
+            .join(", "); // Join results with a comma
+
+        return result;
     };
 
     const champions = [];
@@ -67,11 +81,12 @@ const memberListWithReport = ({ members, periods }) => {
                 );
             });
 
-            const completed20Pages = currentPeriodReports.some(
-                (report) => report.pages >= 20
+            const completed = currentPeriodReports.some(
+                (report) =>
+                    report.pages == report.totalPages && report.pages > 0
             );
 
-            if (completed20Pages) {
+            if (completed) {
                 champions.push(member);
                 completedCount++;
             } else {
@@ -94,7 +109,11 @@ const memberListWithReport = ({ members, periods }) => {
 
                 if (
                     previousPeriodReports.length > 0 &&
-                    previousPeriodReports.every((report) => report.pages < 20)
+                    previousPeriodReports.every(
+                        (report) =>
+                            report.pages < report.totalPages ||
+                            report.totalPages === 0
+                    )
                 ) {
                     result += `   ↪️ ${
                         previousPeriodReports[0].juz
@@ -112,12 +131,12 @@ const memberListWithReport = ({ members, periods }) => {
         const reportA = a.reports.find(
             (report) =>
                 report.periodStartDate.toISOString() ===
-                    currentPeriodStartDate && report.pages >= 20
+                    currentPeriodStartDate && report.pages == report.totalPages
         );
         const reportB = b.reports.find(
             (report) =>
                 report.periodStartDate.toISOString() ===
-                    currentPeriodStartDate && report.pages >= 20
+                    currentPeriodStartDate && report.pages == report.totalPages
         );
         return new Date(reportA.createdAt) - new Date(reportB.createdAt);
     });
@@ -141,7 +160,7 @@ const memberListWithReport = ({ members, periods }) => {
     result += `
     
 *Keterangan:*
-- ✅: Khalas (20 halaman+)
+- ✅: Khalas (halaman dibaca = total halaman)
 - ↪️: Belum khalas periode sebelumnya
 - 🎧: Laporan murottal (peserta wanita berhalangan)
 - 📖: Laporan terjemah (peserta wanita berhalangan)
