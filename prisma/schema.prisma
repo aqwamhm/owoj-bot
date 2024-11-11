@@ -39,6 +39,7 @@ model Report {
   periodStartDate DateTime
   periodEndDate   DateTime
   createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @default(now()) @updatedAt
 
   @@unique([memberName, memberGroupId, pages, totalPages, type, periodStartDate, periodEndDate])
 }

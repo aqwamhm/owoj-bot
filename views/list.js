@@ -138,7 +138,7 @@ const memberListWithReport = ({ members, periods }) => {
                 report.periodStartDate.toISOString() ===
                     currentPeriodStartDate && report.pages == report.totalPages
         );
-        return new Date(reportA.createdAt) - new Date(reportB.createdAt);
+        return new Date(reportA.updatedAt) - new Date(reportB.updatedAt);
     });
 
     const topChampions = champions.slice(0, 3);
