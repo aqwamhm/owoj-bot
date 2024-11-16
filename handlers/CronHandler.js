@@ -32,7 +32,7 @@ class CronHandler {
             groups.forEach(async (group) => {
                 this.client.sendMessage(group.id, templateViews.doaKhatamQuran);
                 this.client.sendMessage(group.id, templateViews.pembukaan);
-                const list = await ListHandler.handleShowList({
+                const list = await ListHandler.handleShowMemberList({
                     id: {
                         remote: group.id,
                     },

@@ -1,4 +1,4 @@
-const { memberListWithReport } = require("../list");
+const { memberListWithReport, adminList } = require("../list");
 
 const {
     getPeriodDate,
@@ -383,5 +383,33 @@ describe("memberListWithReport", () => {
         expect(result).toContain("1. Aqwam 🥇");
         expect(result).toContain("2. Ivo 🥈");
         expect(result).toContain("3. Melni 🥉");
+    });
+});
+
+describe("adminList", () => {
+    it("should generate the admin list correctly", () => {
+        const result = adminList({
+            admins: [
+                {
+                    id: "id-1",
+                    name: "Aqwam",
+                    phoneNumber: "123456789",
+                },
+                {
+                    id: "id-2",
+                    name: "Budi",
+                    phoneNumber: "716318673",
+                },
+                {
+                    id: "id-3",
+                    name: "Ivo",
+                    phoneNumber: "128937981",
+                },
+            ],
+        });
+
+        expect(result).toContain("1. Aqwam - 123456789");
+        expect(result).toContain("2. Budi - 716318673");
+        expect(result).toContain("3. Ivo - 128937981");
     });
 });

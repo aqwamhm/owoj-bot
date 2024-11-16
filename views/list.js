@@ -169,4 +169,16 @@ const memberListWithReport = ({ members, periods }) => {
     return result;
 };
 
-module.exports = { memberListWithReport };
+const adminList = ({ admins }) => {
+    let result = `*Daftar admin yang terdaftar di sistem robot:*\n\n`;
+
+    admins.forEach((admin, index) => {
+        result += `${index + 1}. ${formatName(admin.name)} - ${
+            admin.phoneNumber
+        }\n`;
+    });
+
+    return result;
+};
+
+module.exports = { memberListWithReport, adminList };

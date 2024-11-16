@@ -82,10 +82,19 @@ const commands = () => [
     },
     {
         prompt: "/list",
-        handler: ListHandler.handleShowList.bind(ListHandler),
+        handler: ListHandler.handleShowMemberList.bind(ListHandler),
         middlewares: [verifyMessageInOWOJGroup],
         validation: {
             regex: /^\/list\s*$/,
+            multiple: false,
+        },
+    },
+    {
+        prompt: "/list-admin",
+        handler: ListHandler.handleShowAdminList.bind(ListHandler),
+        middlewares: [],
+        validation: {
+            regex: /^\/list-admin\s*$/,
             multiple: false,
         },
     },

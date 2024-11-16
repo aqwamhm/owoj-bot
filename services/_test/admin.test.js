@@ -10,6 +10,7 @@ jest.mock("../../config/db", () => {
                 create: jest.fn(),
                 delete: jest.fn(),
                 findFirst: jest.fn(),
+                findMany: jest.fn(),
             },
             $connect: jest.fn(),
         },
@@ -49,6 +50,21 @@ describe("adminServices", () => {
                     phoneNumber: mockPhoneNumber,
                 },
             });
+        });
+    });
+
+    describe("getAll", () => {
+        it("should call prisma.admin.findMany and return result", async () => {
+            const mockAdmins = [
+                { phoneNumber: "123456789", name: "Test User" },
+                { phoneNumber: "987654321", name: "Test User 2" },
+            ];
+            prisma.admin.findMany.mockResolvedValue(mockAdmins);
+
+            const result = await adminServices.getAll();
+
+            expect(prisma.admin.findMany).toHaveBeenCalled();
+            expect(result).toEqual(mockAdmins);
         });
     });
 

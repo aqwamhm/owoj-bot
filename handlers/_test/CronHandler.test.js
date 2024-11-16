@@ -42,7 +42,7 @@ describe("CronHandler", () => {
                 { id: 1, name: "Member 1" },
             ]);
             groupServices.getAll.mockResolvedValue([{ id: "groupId1" }]);
-            ListHandler.handleShowList.mockResolvedValue("List message");
+            ListHandler.handleShowMemberList.mockResolvedValue("List message");
 
             await cronHandler.handleNewPeriod();
 

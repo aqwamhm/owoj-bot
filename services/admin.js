@@ -18,6 +18,10 @@ const adminServices = {
         });
     },
 
+    async getAll() {
+        return await prisma.admin.findMany();
+    },
+
     async find({ phoneNumber }) {
         return await prisma.admin.findFirst({
             where: {
