@@ -33,6 +33,11 @@ const groupServices = {
             orderBy: {
                 number: "asc",
             },
+            include: {
+                _count: {
+                    select: { members: true },
+                },
+            },
         });
     },
 };

@@ -184,8 +184,8 @@ const adminList = ({ admins }) => {
 const groupList = ({ groups }) => {
     let result = `*Daftar grup yang terdaftar di sistem robot:*\n\n`;
 
-    groups.forEach((group, index) => {
-        result += `OWOJ ${group.number}\n`;
+    groups.forEach((group) => {
+        result += `OWOJ ${group.number} - ${group._count.members}\n`;
     });
 
     return result;

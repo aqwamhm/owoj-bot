@@ -1,4 +1,4 @@
-const { memberListWithReport, adminList } = require("../list");
+const { memberListWithReport, adminList, groupList } = require("../list");
 
 const {
     getPeriodDate,
@@ -421,20 +421,29 @@ describe("groupList", () => {
                 {
                     id: "id-1",
                     number: 1,
+                    _count: {
+                        members: 5,
+                    },
                 },
                 {
                     id: "id-2",
                     number: 2,
+                    _count: {
+                        members: 10,
+                    },
                 },
                 {
                     id: "id-3",
                     number: 3,
+                    _count: {
+                        members: 20,
+                    },
                 },
             ],
         });
 
-        expect(result).toContain("OWOJ 1");
-        expect(result).toContain("OWOJ 2");
-        expect(result).toContain("OWOJ 3");
+        expect(result).toContain("OWOJ 1 - 5");
+        expect(result).toContain("OWOJ 2 - 10");
+        expect(result).toContain("OWOJ 3 - 20");
     });
 });
