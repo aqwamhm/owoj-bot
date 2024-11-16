@@ -99,6 +99,15 @@ const commands = () => [
         },
     },
     {
+        prompt: "/list-group",
+        handler: ListHandler.handleShowGroupList.bind(ListHandler),
+        middlewares: [],
+        validation: {
+            regex: /^\/list-group\s*$/,
+            multiple: false,
+        },
+    },
+    {
         prompt: "/semangat",
         handler:
             MotivationHandler.handleMotivationRequest.bind(MotivationHandler),

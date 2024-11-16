@@ -2,11 +2,17 @@ const ListHandler = require("../ListHandler");
 const periodServices = require("../../services/period");
 const memberServices = require("../../services/member");
 const adminServices = require("../../services/admin");
-const { memberListWithReport, adminList } = require("../../views/list");
+const groupServices = require("../../services/group");
+const {
+    memberListWithReport,
+    adminList,
+    groupList,
+} = require("../../views/list");
 
 jest.mock("../../services/period");
 jest.mock("../../services/member");
 jest.mock("../../services/admin");
+jest.mock("../../services/group");
 jest.mock("../../views/list");
 
 describe("ListHandler", () => {
@@ -45,6 +51,24 @@ describe("ListHandler", () => {
             const result = await ListHandler.handleShowAdminList(message);
 
             expect(result).toEqual("List of admins");
+        });
+    });
+
+    describe("handleShowGroupList", () => {
+        it("should return a list of groups successfully", async () => {
+            const message = { id: { remote: "groupId123" } };
+
+            groupServices.getAll.mockResolvedValue([
+                { id: "id-1", number: 1 },
+                { id: "id-2", number: 2 },
+                { id: "id-3", number: 3 },
+            ]);
+
+            groupList.mockReturnValue("List of groups");
+
+            const result = await ListHandler.handleShowGroupList(message);
+
+            expect(result).toEqual("List of groups");
         });
     });
 });

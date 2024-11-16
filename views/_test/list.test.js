@@ -413,3 +413,28 @@ describe("adminList", () => {
         expect(result).toContain("3. Ivo - 128937981");
     });
 });
+
+describe("groupList", () => {
+    it("should generate the group list correctly", () => {
+        const result = groupList({
+            groups: [
+                {
+                    id: "id-1",
+                    number: 1,
+                },
+                {
+                    id: "id-2",
+                    number: 2,
+                },
+                {
+                    id: "id-3",
+                    number: 3,
+                },
+            ],
+        });
+
+        expect(result).toContain("OWOJ 1");
+        expect(result).toContain("OWOJ 2");
+        expect(result).toContain("OWOJ 3");
+    });
+});

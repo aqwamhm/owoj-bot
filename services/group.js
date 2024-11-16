@@ -29,7 +29,11 @@ const groupServices = {
     },
 
     async getAll() {
-        return await prisma.group.findMany();
+        return await prisma.group.findMany({
+            orderBy: {
+                number: "asc",
+            },
+        });
     },
 };
 

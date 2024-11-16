@@ -1,13 +1,21 @@
 const periodServices = require("../services/period");
 const memberServices = require("../services/member");
 const adminServices = require("../services/admin");
+const groupServices = require("../services/group");
 const listView = require("../views/list");
 
 class ListHandler {
-    constructor(periodServices, memberServices, listView) {
+    constructor(
+        periodServices,
+        memberServices,
+        adminServices,
+        groupServices,
+        listView
+    ) {
         this.periodServices = periodServices;
         this.memberServices = memberServices;
         this.adminServices = adminServices;
+        this.groupServices = groupServices;
         this.listView = listView;
     }
 
@@ -30,6 +38,20 @@ class ListHandler {
             admins,
         });
     }
+
+    async handleShowGroupList(message) {
+        const groups = await this.groupServices.getAll();
+
+        return this.listView.groupList({
+            groups,
+        });
+    }
 }
 
-module.exports = new ListHandler(periodServices, memberServices, listView);
+module.exports = new ListHandler(
+    periodServices,
+    memberServices,
+    adminServices,
+    groupServices,
+    listView
+);

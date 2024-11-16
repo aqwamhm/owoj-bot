@@ -181,4 +181,14 @@ const adminList = ({ admins }) => {
     return result;
 };
 
-module.exports = { memberListWithReport, adminList };
+const groupList = ({ groups }) => {
+    let result = `*Daftar grup yang terdaftar di sistem robot:*\n\n`;
+
+    groups.forEach((group, index) => {
+        result += `OWOJ ${group.number}\n`;
+    });
+
+    return result;
+};
+
+module.exports = { memberListWithReport, adminList, groupList };
