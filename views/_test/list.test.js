@@ -442,8 +442,8 @@ describe("groupList", () => {
             ],
         });
 
-        expect(result).toContain("OWOJ 1 - 5");
-        expect(result).toContain("OWOJ 2 - 10");
-        expect(result).toContain("OWOJ 3 - 20");
+        expect(result).toContain("OWOJ 1: 5");
+        expect(result).toContain("OWOJ 2: 10");
+        expect(result).toContain("OWOJ 3: 20");
     });
 });
