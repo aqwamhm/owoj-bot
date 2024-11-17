@@ -320,6 +320,40 @@ describe("reportServices", () => {
         });
     });
 
+    describe("get", () => {
+        it("should find reports with the correct filters", async () => {
+            const mockFilters = {
+                memberName: "Alice",
+                memberGroupId: "1",
+                pages: 5,
+                totalPages: 20,
+                type: "TILAWAH",
+                periodStartDate: new Date("2024-01-01"),
+                periodEndDate: new Date("2024-12-31"),
+            };
+
+            prisma.report.findMany.mockResolvedValue([
+                {
+                    memberName: "Alice",
+                    memberGroupId: "1",
+                    juz: 1,
+                    pages: 5,
+                },
+            ]);
+
+            const result = await reportServices.get(mockFilters);
+
+            expect(result).toEqual([
+                {
+                    memberName: "Alice",
+                    memberGroupId: "1",
+                    juz: 1,
+                    pages: 5,
+                },
+            ]);
+        });
+    });
+
     describe("findMany", () => {
         it("should find reports with the correct filters and order", async () => {
             const mockFilters = {

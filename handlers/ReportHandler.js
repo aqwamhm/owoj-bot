@@ -19,7 +19,7 @@ class ReportHandler {
     }
 
     async handleCreateReport(message, validation) {
-        const { name, pages, type, previousPeriods } = validate({
+        const { name, pages, type, period } = validate({
             command: message.body,
             validation,
             errorMessage: errorMessages.validation({
@@ -36,12 +36,38 @@ class ReportHandler {
             throw new NotFoundError(this.memberViews.error.notFound({ name }));
         }
 
-        const { startDate, endDate } = previousPeriods
-            ? getPeriodDate(-Math.abs(previousPeriods))
-            : getPeriodDate();
+        const inputPeriod = period ? -Math.abs(period) : 0;
+
+        const { startDate, endDate } = getPeriodDate(inputPeriod);
+        const { startDate: previousStartDate, endDate: previousEndDate } =
+            getPeriodDate(inputPeriod - 1);
+
+        const reportsOnPreviousPeriod = await this.reportServices.get({
+            memberName: name,
+            memberGroupId: groupId,
+            periodStartDate: previousStartDate,
+            periodEndDate: previousEndDate,
+        });
+
+        const finishedReportOnPreviousPeriod = reportsOnPreviousPeriod.filter(
+            (report) => report.pages == report.totalPages && report.pages > 0
+        );
+
+        if (
+            reportsOnPreviousPeriod.length > 0 &&
+            finishedReportOnPreviousPeriod.length === 0
+        ) {
+            throw new ConflictError(
+                this.reportViews.error.conflictReportOnPreviousPeriod({
+                    juz: reportsOnPreviousPeriod[0].juz,
+                    memberName: name,
+                    period: inputPeriod - 1,
+                })
+            );
+        }
 
         let juz;
-        if (previousPeriods) {
+        if (period) {
             const report = await this.reportServices.find({
                 memberName: name,
                 memberGroupId: groupId,
@@ -50,7 +76,7 @@ class ReportHandler {
             });
 
             juz = !report
-                ? decrementJuz(member.currentJuz, previousPeriods)
+                ? decrementJuz(member.currentJuz, period)
                 : report.juz;
         } else {
             juz = member.currentJuz;
@@ -226,7 +252,7 @@ class ReportHandler {
     }
 
     async handleRemoveReport(message, validation) {
-        const { name, pages, type, previousPeriods } = validate({
+        const { name, pages, type, period } = validate({
             command: message.body,
             validation,
             errorMessage: errorMessages.validation({
@@ -235,11 +261,11 @@ class ReportHandler {
             }),
         });
 
+        const inputPeriod = period ? -Math.abs(period) : 0;
+
         const groupId = message.id.remote;
 
-        const { startDate, endDate } = previousPeriods
-            ? getPeriodDate(-Math.abs(previousPeriods))
-            : getPeriodDate();
+        const { startDate, endDate } = getPeriodDate(inputPeriod);
 
         const [finishedPages, totalPages] = pages
             .split("/")

@@ -67,7 +67,7 @@ const commands = () => [
         handler: ReportHandler.handleCreateReport.bind(ReportHandler),
         middlewares: [verifyMessageInOWOJGroup],
         validation: {
-            regex: /^\/lapor\s+(?<name>[a-zA-Z\s]+?)#(?<pages>\d+\s*\/\s*\d+)(?:#(?<type>terjemah|murottal))?(?:\s*-\s*(?<previousPeriods>\d+))?\s*$/,
+            regex: /^\/lapor\s+(?<name>[a-zA-Z\s]+?)#(?<pages>\d+\s*\/\s*\d+)(?:#(?<type>terjemah|murottal))?(?:\s*-\s*(?<period>\d+))?\s*$/,
             multiple: false,
         },
     },
@@ -76,7 +76,7 @@ const commands = () => [
         handler: ReportHandler.handleRemoveReport.bind(ReportHandler),
         middlewares: [verifyMessageInOWOJGroup],
         validation: {
-            regex: /^\/batal-lapor\s+(?<name>[a-zA-Z\s]+?)#(?<pages>\d+\s*\/\s*\d+)(?:#(?<type>terjemah|murottal))?(?:\s*-\s*(?<previousPeriods>\d+))?\s*$/,
+            regex: /^\/batal-lapor\s+(?<name>[a-zA-Z\s]+?)#(?<pages>\d+\s*\/\s*\d+)(?:#(?<type>terjemah|murottal))?(?:\s*-\s*(?<period>\d+))?\s*$/,
             multiple: false,
         },
     },

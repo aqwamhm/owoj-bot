@@ -46,6 +46,17 @@ describe("reportViews", () => {
                 "Jumlah halaman tidak boleh lebih besar dari total halaman."
             );
         });
+
+        it("should return the correct message for conflictReportOnPreviousPeriod", () => {
+            const result = reportViews.error.conflictReportOnPreviousPeriod({
+                juz: 1,
+                memberName: "Aqwam",
+                period: -1,
+            });
+            expect(result).toContain("juz 1");
+            expect(result).toContain("Aqwam");
+            expect(result).toContain("1 periode");
+        });
     });
 
     describe("validation", () => {

@@ -38,7 +38,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "10/20",
                 type: "tilawah",
-                previousPeriods: null,
+                period: null,
             });
 
             memberServices.find.mockResolvedValue({
@@ -50,6 +50,8 @@ describe("ReportHandler", () => {
                 startDate: "2024-11-02T11:00:00.000Z",
                 endDate: "2024-11-09T10:59:59.999Z",
             });
+
+            reportServices.get.mockResolvedValue([]);
         });
 
         it('should call and return createTerjemahReport correctly if type is "terjemah"', async () => {
@@ -57,7 +59,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "10/20",
                 type: "terjemah",
-                previousPeriods: null,
+                period: null,
             });
 
             const [finishedPages, totalPages] = [10, 20];
@@ -90,7 +92,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "10/20",
                 type: "murottal",
-                previousPeriods: null,
+                period: null,
             });
 
             const [finishedPages, totalPages] = [10, 20];
@@ -149,7 +151,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "10/20",
                 type: "tilawah",
-                previousPeriods: 1,
+                period: 1,
             });
 
             reportServices.find.mockResolvedValue(null);
@@ -175,7 +177,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "10/20",
                 type: "tilawah",
-                previousPeriods: 1,
+                period: 1,
             });
 
             reportServices.find.mockResolvedValue({
@@ -202,12 +204,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "10/20",
                 type: "tilawah",
-                previousPeriods: 2,
-            });
-
-            getPeriodDate.mockReturnValue({
-                startDate: "2024-10-26T11:00:00.000Z",
-                endDate: "2024-11-02T10:59:59.999Z",
+                period: 2,
             });
 
             await ReportHandler.handleCreateReport(message, validation);
@@ -220,7 +217,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "5/20",
                 type: "tilawah",
-                previousPeriods: null,
+                period: null,
             });
 
             reportServices.find.mockResolvedValue({
@@ -241,12 +238,81 @@ describe("ReportHandler", () => {
             ).rejects.toThrow(NotFoundError);
         });
 
+        it("should throw ConflictError when there is no finished report on previous period", async () => {
+            validate.mockReturnValue({
+                name: "Aqwam",
+                pages: "10/20",
+                type: "TILAWAH",
+                period: 0,
+            });
+
+            reportServices.get.mockResolvedValue([
+                {
+                    juz: 5,
+                    memberName: "Aqwam",
+                    pages: 10,
+                    totalPages: 20,
+                },
+            ]);
+
+            reportViews.error.conflictReportOnPreviousPeriod.mockReturnValue(
+                "Cannot create report. Previous period has unfinished report."
+            );
+
+            await expect(
+                ReportHandler.handleCreateReport(message, validation)
+            ).rejects.toThrow(ConflictError);
+
+            expect(
+                reportViews.error.conflictReportOnPreviousPeriod
+            ).toHaveBeenCalledWith({
+                juz: 5,
+                memberName: "Aqwam",
+                period: -1,
+            });
+        });
+
+        it("should allow report creation when previous period has finished reports", async () => {
+            validate.mockReturnValue({
+                name: "Aqwam",
+                pages: "10/20",
+                type: "tilawah",
+                period: 1,
+            });
+
+            reportServices.get.mockResolvedValue([
+                {
+                    juz: 5,
+                    pages: 20,
+                    totalPages: 20,
+                    type: "TILAWAH",
+                },
+            ]);
+
+            reportServices.find.mockResolvedValue(null);
+
+            decrementJuz.mockReturnValue(30);
+
+            await ReportHandler.handleCreateReport(message, validation);
+
+            expect(reportServices.create).toHaveBeenCalledWith({
+                name: "Aqwam",
+                groupId: "groupId123",
+                pages: 10,
+                totalPages: 20,
+                juz: 30,
+                type: "TILAWAH",
+                startDate: "2024-11-02T11:00:00.000Z",
+                endDate: "2024-11-09T10:59:59.999Z",
+            });
+        });
+
         it("should throw ConflictError when finished pages exceed total pages", async () => {
             validate.mockReturnValue({
                 name: "Aqwam",
                 pages: "30/20",
                 type: "tilawah",
-                previousPeriods: null,
+                period: null,
             });
 
             reportViews.error.conflictTotalPages.mockReturnValue(
@@ -265,7 +331,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "5/20",
                 type: "tilawah",
-                previousPeriods: null,
+                period: null,
             });
 
             memberServices.find.mockResolvedValue({
@@ -293,7 +359,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "15/20",
                 type: "tilawah",
-                previousPeriods: null,
+                period: null,
             });
 
             memberServices.find.mockResolvedValue({
@@ -321,7 +387,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "10/20",
                 type: "tilawah",
-                previousPeriods: null,
+                period: null,
             });
 
             memberServices.find.mockResolvedValue({
@@ -361,12 +427,16 @@ describe("ReportHandler", () => {
             reportViews.success.remove.mockReturnValue("Success message");
         });
 
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+
         it("should handle report removal with multiple existing reports", async () => {
             validate.mockReturnValue({
                 name: "Aqwam",
                 pages: "10/20",
                 type: "tilawah",
-                previousPeriods: null,
+                period: null,
             });
 
             const [finishedPages, totalPages] = [10, 20];
@@ -406,7 +476,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "10/20",
                 type: "tilawah",
-                previousPeriods: null,
+                period: null,
             });
 
             const [finishedPages, totalPages] = [10, 20];
@@ -419,7 +489,7 @@ describe("ReportHandler", () => {
             });
 
             reportServices.findMany.mockResolvedValue([
-                { juz: 1, pages: finishedPages },
+                { juz: 1, pages: finishedPages, totalPages },
             ]);
 
             const result = await ReportHandler.handleRemoveReport(
@@ -438,6 +508,16 @@ describe("ReportHandler", () => {
                 endDate: "2024-11-09T10:59:59.999Z",
             });
 
+            expect(reportServices.delete).toHaveBeenCalledWith({
+                memberName: "Aqwam",
+                memberGroupId: "groupId123",
+                periodStartDate: "2024-11-02T11:00:00.000Z",
+                periodEndDate: "2024-11-09T10:59:59.999Z",
+                pages: finishedPages,
+                totalPages: totalPages,
+                type: "TILAWAH",
+            });
+
             expect(result).toBe("Success message");
         });
 
@@ -446,7 +526,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "20/20",
                 type: "terjemah",
-                previousPeriods: null,
+                period: null,
             });
 
             reportServices.find.mockResolvedValue({
@@ -479,7 +559,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "20/20",
                 type: "murottal",
-                previousPeriods: null,
+                period: null,
             });
 
             reportServices.find.mockResolvedValue({
@@ -512,12 +592,12 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "10/20",
                 type: "tilawah",
-                previousPeriods: 1,
+                period: 1,
             });
 
             getPeriodDate.mockReturnValue({
-                startDate: "2024-10-26T11:00:00.000Z",
-                endDate: "2024-11-02T10:59:59.999Z",
+                startDate: "2024-11-02T11:00:00.000Z",
+                endDate: "2024-11-09T10:59:59.999Z",
             });
 
             reportServices.find.mockResolvedValue({
@@ -539,7 +619,7 @@ describe("ReportHandler", () => {
                 name: "Aqwam",
                 pages: "10/20",
                 type: "tilawah",
-                previousPeriods: null,
+                period: null,
             });
 
             reportServices.find.mockResolvedValue(null);

@@ -130,6 +130,30 @@ const reportServices = {
         });
     },
 
+    async get({
+        memberName,
+        memberGroupId,
+        pages,
+        totalPages,
+        type,
+        periodStartDate,
+        periodEndDate,
+    }) {
+        const where = {
+            memberName,
+            memberGroupId,
+            ...(pages && { pages: parseInt(pages) }),
+            ...(totalPages && { totalPages: parseInt(totalPages) }),
+            ...(type && { type }),
+            ...(periodStartDate && { periodStartDate }),
+            ...(periodEndDate && { periodEndDate }),
+        };
+
+        return await prisma.report.findMany({
+            where,
+        });
+    },
+
     async find({
         memberName,
         memberGroupId,

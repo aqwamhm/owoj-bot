@@ -27,6 +27,19 @@ const reportViews = {
         conflictTotalPages() {
             return `Jumlah halaman tidak boleh lebih besar dari total halaman.`;
         },
+        conflictReportOnPreviousPeriod({ juz, memberName, period }) {
+            return `Anda belum tercatat khalas pada ${Math.abs(
+                period
+            )} periode sebelumnya (juz ${juz}). Silahkan laporan untuk ${Math.abs(
+                period
+            )} periode sebelumnya terlebih dahulu agar juz ${juz} tercatat khalas. 
+
+Untuk membuat laporan pada ${Math.abs(
+                period
+            )} periode sebelumnya, anda dapat menambahkan \`${period}\` pada format laporan, contoh:
+
+\`/lapor ${formatName(memberName)}#20/20 ${period}\``;
+        },
     },
     validation: {
         format() {
