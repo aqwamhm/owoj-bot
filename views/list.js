@@ -185,7 +185,7 @@ const groupList = ({ groups }) => {
     let result = `*Daftar grup yang terdaftar di sistem robot:*\n\n`;
 
     groups.forEach((group) => {
-        result += `OWOJ ${group.number} - ${group._count.members}\n`;
+        result += `- OWOJ ${group.number}: ${group._count.members} Peserta\n`;
     });
 
     return result;
