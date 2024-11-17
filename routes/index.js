@@ -3,7 +3,7 @@ const MemberHandler = require("../handlers/MemberHandler");
 const GroupHandler = require("../handlers/GroupHandler");
 const ReportHandler = require("../handlers/ReportHandler");
 const ListHandler = require("../handlers/ListHandler");
-const MotivationHandler = require("../handlers/MotivationHandler");
+const UtilityHandler = require("../handlers/UtilityHandler");
 const verifyMessageFromAdmin = require("../middlewares/verifyMessageFromAdmin");
 const verifyMessageInOWOJGroup = require("../middlewares/verifyMessageInOWOJGroup");
 
@@ -109,10 +109,18 @@ const commands = () => [
     },
     {
         prompt: "/semangat",
-        handler:
-            MotivationHandler.handleMotivationRequest.bind(MotivationHandler),
+        handler: UtilityHandler.handleMotivationRequest.bind(UtilityHandler),
         middlewares: [verifyMessageInOWOJGroup],
         validation: {},
+    },
+    {
+        prompt: "/waktu-sholat",
+        handler: UtilityHandler.handlePrayerTimeRequest.bind(UtilityHandler),
+        middlewares: [],
+        validation: {
+            regex: /^\/waktu-sholat\s+(?<location>Kota\s+[a-zA-Z\s]+|Kabupaten\s+[a-zA-Z\s]+|[a-zA-Z\s]+)\s*$/,
+            multiple: false,
+        },
     },
 ];
 

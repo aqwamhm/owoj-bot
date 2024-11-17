@@ -1,8 +1,12 @@
-const motivationViews = require("../views/motivation");
+const NotFoundError = require("../exceptions/NotFoundError");
+const { validate } = require("../utils/validator");
+const errorMessages = require("../views/error");
+const utilityViews = require("../views/utility");
 
-class MotivationHandler {
-    constructor(motivationViews) {
-        this.motivationViews = motivationViews;
+class UtilityHandler {
+    constructor(utilityViews) {
+        this.utilityViews = utilityViews;
+        this.prayerTimeUrl = "https://api.myquran.com/v2/sholat";
     }
 
     async handleMotivationRequest() {
@@ -71,9 +75,59 @@ class MotivationHandler {
             const result = await response.json();
             return result.choices[0].message.content;
         } catch {
-            return this.motivationViews.error.request();
+            return this.utilityViews.motivation.error.request();
+        }
+    }
+
+    async handlePrayerTimeRequest(message, validation) {
+        const { location } = validate({
+            command: message.body,
+            validation,
+            errorMessage: errorMessages.validation({
+                format: "/waktu-sholat nama kota/kabupaten",
+                example: "/waktu-sholat Kota Jakarta",
+            }),
+        });
+
+        const formattedLocation = location
+            .toUpperCase()
+            .replace(/\bKABUPATEN\b/, "KAB.")
+            .replace(/\s+/g, "%20");
+
+        const locationResponse = await fetch(
+            `${this.prayerTimeUrl}/kota/cari/${formattedLocation}`
+        );
+
+        const { data: locationData } = await locationResponse.json();
+
+        const locationId = locationData?.[0]?.id;
+
+        if (!locationId) {
+            throw new NotFoundError(
+                this.utilityViews.prayerTime.error.locationNotFound()
+            );
+        }
+
+        const currentDate = new Date()
+            .toLocaleDateString("id-ID")
+            .split("/")
+            .reverse()
+            .join("-");
+
+        try {
+            const prayerTimeResponse = await fetch(
+                `${this.prayerTimeUrl}/jadwal/${locationId}/${currentDate}`
+            );
+
+            const prayerTime = await prayerTimeResponse.json();
+
+            return this.utilityViews.prayerTime.success({
+                prayerTime: prayerTime.data,
+            });
+        } catch (error) {
+            throw new Error(error.message);
         }
     }
 }
 
-module.exports = new MotivationHandler(motivationViews);
+module.exports = new UtilityHandler(utilityViews);
