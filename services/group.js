@@ -40,6 +40,14 @@ const groupServices = {
             },
         });
     },
+
+    async remove({ id }) {
+        await prisma.group.delete({
+            where: {
+                id,
+            },
+        });
+    },
 };
 
 module.exports = groupServices;

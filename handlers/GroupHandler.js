@@ -1,3 +1,4 @@
+const NotFoundError = require("../exceptions/NotFoundError");
 const groupServices = require("../services/group");
 const validator = require("../utils/validator");
 const errorMessages = require("../views/error");
@@ -29,6 +30,31 @@ class GroupHandler {
         });
 
         return this.groupViews.success.create({ number: arg1 });
+    }
+
+    async handleRemoveGroup(message, validation) {
+        const arg1 = message.body.split(" ")[1];
+        this.validate({
+            command: message.body,
+            validation,
+            errorMessage: this.errorMessages.validation({
+                format: "/remove-group <nomor grup>",
+                example: "/remove-group 3",
+            }),
+        });
+
+        const group = await this.groupServices.find({ id: message.id.remote });
+
+        if (group.number !== parseInt(arg1)) {
+            throw new NotFoundError(this.groupViews.error.notFound(arg1));
+        }
+
+        await this.groupServices.remove({
+            id: message.id.remote,
+            number: parseInt(arg1),
+        });
+
+        return this.groupViews.success.remove({ number: arg1 });
     }
 }
 

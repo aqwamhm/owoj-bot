@@ -11,6 +11,7 @@ jest.mock("../../config/db", () => {
                 create: jest.fn(),
                 findUnique: jest.fn(),
                 findMany: jest.fn(),
+                delete: jest.fn(),
             },
             $connect: jest.fn(),
         },
@@ -87,6 +88,19 @@ describe("groupServices", () => {
 
             expect(prisma.group.findMany).toHaveBeenCalled();
             expect(result).toEqual(mockGroups);
+        });
+    });
+
+    describe("remove", () => {
+        it("should call prisma.group.delete with the correct ID", async () => {
+            const mockGroup = { id: "group1", number: 1 };
+            prisma.group.delete.mockResolvedValue(true);
+
+            await groupServices.remove(mockGroup);
+
+            expect(prisma.group.delete).toHaveBeenCalledWith({
+                where: { id: mockGroup.id },
+            });
         });
     });
 });

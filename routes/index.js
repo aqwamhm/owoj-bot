@@ -18,6 +18,15 @@ const commands = () => [
         },
     },
     {
+        prompt: "/remove-group",
+        handler: GroupHandler.handleRemoveGroup.bind(GroupHandler),
+        middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
+        validation: {
+            regex: /^\/remove-group\s+\d+\s*$/,
+            multiple: false,
+        },
+    },
+    {
         prompt: "/register",
         handler: MemberHandler.handleRegisterMember.bind(MemberHandler),
         middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
