@@ -84,8 +84,10 @@ class UtilityHandler {
             command: message.body,
             validation,
             errorMessage: errorMessages.validation({
-                format: "/waktu-sholat nama kota/kabupaten",
-                example: "/waktu-sholat Kota Jakarta",
+                format: "/waktu-sholat nama kota/kabupaten +jumlah hari kedepan",
+                example: `/waktu-sholat Kota Jakarta (untuk hari ini)
+/waktu-sholat Kota Jakarta +1 (untuk satu hari kedepan)
+/waktu-sholat Kota Jakarta +2 (untuk dua hari kedepan)`,
             }),
         });
 
