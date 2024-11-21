@@ -17,6 +17,7 @@ model Member {
   updatedAt  DateTime @updatedAt
 
   @@id([name, groupId])
+  @@map("members")
 }
 
 model Group {
@@ -24,6 +25,8 @@ model Group {
   number    Int      @unique
   members   Member[]
   createdAt DateTime @default(now())
+
+  @@map("groups")
 }
 
 model Report {
@@ -42,6 +45,7 @@ model Report {
   updatedAt       DateTime   @default(now()) @updatedAt
 
   @@unique([memberName, memberGroupId, pages, totalPages, type, periodStartDate, periodEndDate])
+  @@map("reports")
 }
 
 model Period {
@@ -51,11 +55,14 @@ model Period {
   createdAt DateTime @default(now())
 
   @@id([startDate, endDate])
+  @@map("periods")
 }
 
 model Admin {
   phoneNumber String @id
   name        String
+
+  @@map("admins")
 }
 
 enum ReportType {
