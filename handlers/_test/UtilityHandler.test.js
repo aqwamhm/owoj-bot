@@ -77,13 +77,7 @@ describe("UtilityHandler", () => {
     });
 
     describe("handlePrayerTimeRequest", () => {
-        const mockMessage = {
-            body: "/waktu-sholat Kota Jakarta",
-        };
-
-        const mockValidation = {
-            location: "Kota Jakarta",
-        };
+        const mockValidation = {};
 
         const mockLocationResponse = {
             data: [
@@ -106,8 +100,24 @@ describe("UtilityHandler", () => {
             },
         };
 
-        it("should return prayer times successfully", async () => {
-            validate.mockReturnValue({ location: "Kota Jakarta" });
+        function getExpectedDate(daysString) {
+            const days = parseInt(daysString, 10) || 0;
+            const date = new Date();
+            date.setDate(date.getDate() + days);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+
+        it("should return prayer times for today when days are not specified", async () => {
+            const message = { body: "/waktu-sholat Kota Jakarta" };
+            validate.mockReturnValue({
+                location: "Kota Jakarta",
+                days: undefined,
+            });
+
+            const expectedDate = getExpectedDate(undefined);
 
             global.fetch
                 .mockResolvedValueOnce({
@@ -120,7 +130,7 @@ describe("UtilityHandler", () => {
                 });
 
             const result = await UtilityHandler.handlePrayerTimeRequest(
-                mockMessage,
+                message,
                 mockValidation
             );
 
@@ -129,33 +139,16 @@ describe("UtilityHandler", () => {
                     prayerTime: mockPrayerTimeResponse.data,
                 })
             );
+            expect(global.fetch).toHaveBeenCalledWith(
+                expect.stringContaining(`jadwal/1301/${expectedDate}`)
+            );
         });
 
-        it("should throw NotFoundError if location is not found", async () => {
-            validate.mockReturnValue({ location: "Kota Jakarta" });
+        it("should return prayer times for tomorrow when days is '1'", async () => {
+            const message = { body: "/waktu-sholat Kota Jakarta 1" };
+            validate.mockReturnValue({ location: "Kota Jakarta", days: "1" });
 
-            global.fetch.mockResolvedValueOnce({
-                json: jest.fn().mockResolvedValueOnce({ data: [] }),
-            });
-
-            await expect(
-                UtilityHandler.handlePrayerTimeRequest(
-                    mockMessage,
-                    mockValidation
-                )
-            ).rejects.toThrow(NotFoundError);
-
-            expect(
-                utilityViews.prayerTime.error.locationNotFound
-            ).toHaveBeenCalled();
-        });
-
-        it("should format location correctly", async () => {
-            const messageWithKabupaten = {
-                body: "/waktu-sholat Kabupaten Bandung",
-            };
-
-            validate.mockReturnValue({ location: "Kabupaten Bandung" });
+            const expectedDate = getExpectedDate("1");
 
             global.fetch
                 .mockResolvedValueOnce({
@@ -167,18 +160,90 @@ describe("UtilityHandler", () => {
                         .mockResolvedValueOnce(mockPrayerTimeResponse),
                 });
 
-            await UtilityHandler.handlePrayerTimeRequest(
-                messageWithKabupaten,
+            const result = await UtilityHandler.handlePrayerTimeRequest(
+                message,
                 mockValidation
             );
 
+            expect(result).toEqual(
+                utilityViews.prayerTime.success({
+                    prayerTime: mockPrayerTimeResponse.data,
+                })
+            );
             expect(global.fetch).toHaveBeenCalledWith(
-                expect.stringContaining("KAB.%20BANDUNG")
+                expect.stringContaining(`jadwal/1301/${expectedDate}`)
             );
         });
 
+        it("should format location correctly with Kabupaten", async () => {
+            const message = { body: "/waktu-sholat Kabupaten Bandung" };
+            validate.mockReturnValue({
+                location: "Kabupaten Bandung",
+                days: undefined,
+            });
+
+            const expectedDate = getExpectedDate(undefined);
+
+            global.fetch
+                .mockResolvedValueOnce({
+                    json: jest.fn().mockResolvedValueOnce({
+                        data: [
+                            {
+                                id: "1201",
+                                lokasi: "KAB. BANDUNG",
+                            },
+                        ],
+                    }),
+                })
+                .mockResolvedValueOnce({
+                    json: jest
+                        .fn()
+                        .mockResolvedValueOnce(mockPrayerTimeResponse),
+                });
+
+            const result = await UtilityHandler.handlePrayerTimeRequest(
+                message,
+                mockValidation
+            );
+
+            expect(result).toEqual(
+                utilityViews.prayerTime.success({
+                    prayerTime: mockPrayerTimeResponse.data,
+                })
+            );
+            expect(global.fetch).toHaveBeenCalledWith(
+                expect.stringContaining(`kota/cari/KAB.%20BANDUNG`)
+            );
+            expect(global.fetch).toHaveBeenCalledWith(
+                expect.stringContaining(`jadwal/1201/${expectedDate}`)
+            );
+        });
+
+        it("should throw NotFoundError if location is not found", async () => {
+            const message = { body: "/waktu-sholat NonExistentLocation" };
+            validate.mockReturnValue({
+                location: "NonExistentLocation",
+                days: undefined,
+            });
+
+            global.fetch.mockResolvedValueOnce({
+                json: jest.fn().mockResolvedValueOnce({ data: [] }),
+            });
+
+            await expect(
+                UtilityHandler.handlePrayerTimeRequest(message, mockValidation)
+            ).rejects.toThrow(NotFoundError);
+            expect(
+                utilityViews.prayerTime.error.locationNotFound
+            ).toHaveBeenCalled();
+        });
+
         it("should handle prayer time API errors", async () => {
-            validate.mockReturnValue({ location: "Kota Jakarta" });
+            const message = { body: "/waktu-sholat Kota Jakarta" };
+            validate.mockReturnValue({
+                location: "Kota Jakarta",
+                days: undefined,
+            });
 
             global.fetch
                 .mockResolvedValueOnce({
@@ -187,11 +252,70 @@ describe("UtilityHandler", () => {
                 .mockRejectedValueOnce(new Error("Prayer time API error"));
 
             await expect(
-                UtilityHandler.handlePrayerTimeRequest(
-                    mockMessage,
-                    mockValidation
-                )
+                UtilityHandler.handlePrayerTimeRequest(message, mockValidation)
             ).rejects.toThrow("Prayer time API error");
+        });
+
+        it("should return prayer times for today when days is invalid 'abc'", async () => {
+            const message = { body: "/waktu-sholat Kota Jakarta abc" };
+            validate.mockReturnValue({ location: "Kota Jakarta", days: "abc" });
+
+            const expectedDate = getExpectedDate("abc");
+
+            global.fetch
+                .mockResolvedValueOnce({
+                    json: jest.fn().mockResolvedValueOnce(mockLocationResponse),
+                })
+                .mockResolvedValueOnce({
+                    json: jest
+                        .fn()
+                        .mockResolvedValueOnce(mockPrayerTimeResponse),
+                });
+
+            const result = await UtilityHandler.handlePrayerTimeRequest(
+                message,
+                mockValidation
+            );
+
+            expect(result).toEqual(
+                utilityViews.prayerTime.success({
+                    prayerTime: mockPrayerTimeResponse.data,
+                })
+            );
+            expect(global.fetch).toHaveBeenCalledWith(
+                expect.stringContaining(`jadwal/1301/${expectedDate}`)
+            );
+        });
+
+        it("should handle large days values '365'", async () => {
+            const message = { body: "/waktu-sholat Kota Jakarta 365" };
+            validate.mockReturnValue({ location: "Kota Jakarta", days: "365" });
+
+            const expectedDate = getExpectedDate("365");
+
+            global.fetch
+                .mockResolvedValueOnce({
+                    json: jest.fn().mockResolvedValueOnce(mockLocationResponse),
+                })
+                .mockResolvedValueOnce({
+                    json: jest
+                        .fn()
+                        .mockResolvedValueOnce(mockPrayerTimeResponse),
+                });
+
+            const result = await UtilityHandler.handlePrayerTimeRequest(
+                message,
+                mockValidation
+            );
+
+            expect(result).toEqual(
+                utilityViews.prayerTime.success({
+                    prayerTime: mockPrayerTimeResponse.data,
+                })
+            );
+            expect(global.fetch).toHaveBeenCalledWith(
+                expect.stringContaining(`jadwal/1301/${expectedDate}`)
+            );
         });
     });
 });

@@ -80,7 +80,7 @@ class UtilityHandler {
     }
 
     async handlePrayerTimeRequest(message, validation) {
-        const { location } = validate({
+        const { location, days } = validate({
             command: message.body,
             validation,
             errorMessage: errorMessages.validation({
@@ -108,8 +108,18 @@ class UtilityHandler {
             );
         }
 
-        const currentDate = new Date()
-            .toLocaleDateString("id-ID")
+        function addDays(date, days) {
+            const newDate = new Date(date);
+            newDate.setDate(newDate.getDate() + (days || 0));
+            return newDate;
+        }
+
+        const currentDate = addDays(new Date(), parseInt(days, 10))
+            .toLocaleDateString("en-CA", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+            })
             .split("/")
             .reverse()
             .join("-");

@@ -136,7 +136,7 @@ const commands = () => [
         handler: UtilityHandler.handlePrayerTimeRequest.bind(UtilityHandler),
         middlewares: [],
         validation: {
-            regex: /^\/waktu-sholat\s+(?<location>Kota\s+[a-zA-Z\s]+|Kabupaten\s+[a-zA-Z\s]+|[a-zA-Z\s]+)\s*$/,
+            regex: /^\/waktu-sholat\s+(?<location>Kota\s+[a-zA-Z\s]+|Kabupaten\s+[a-zA-Z\s]+|[a-zA-Z]+(?:\s+[a-zA-Z]+)*)\s*(?:\+\s*(?<days>\d+))?\s*$/,
             multiple: false,
         },
     },
