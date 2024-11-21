@@ -3,9 +3,14 @@ const { formatName } = require("../utils/name");
 const memberViews = {
     success: {
         setJuz({ name, currentJuz }) {
-            return `Data member merhasil diupdate, ${formatName(
+            return `Data member berhasil diupdate, ${formatName(
                 name
             )} akan membaca juz ${currentJuz}.`;
+        },
+        setName({ oldName, newName }) {
+            return `Data member merhasil diupdate, Nama "${formatName(
+                oldName
+            )}" berhasil diubah menjadi "${formatName(newName)}".`;
         },
         register({ name, currentJuz }) {
             return `${formatName(

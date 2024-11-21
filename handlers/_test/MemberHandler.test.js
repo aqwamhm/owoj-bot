@@ -85,6 +85,73 @@ describe("MemberHandler", () => {
         });
     });
 
+    describe("handleSetMemberName", () => {
+        it("should successfully rename a member", async () => {
+            const message = {
+                body: "/set-nama Fauziah#Fauziyah",
+                id: { remote: "groupId123" },
+            };
+            const validation = {};
+
+            validate.mockReturnValue({
+                oldName: "Fauziah",
+                newName: "Fauziyah",
+            });
+            memberServices.find.mockResolvedValueOnce({ name: "Fauziah" });
+            memberServices.find.mockResolvedValueOnce(null);
+            memberServices.set.mockResolvedValue(true);
+
+            const result = await MemberHandler.handleSetMemberName(
+                message,
+                validation
+            );
+
+            expect(result).toEqual(
+                memberViews.success.setName({
+                    oldName: "Fauziah",
+                    newName: "Fauziyah",
+                })
+            );
+        });
+
+        it("should throw ConflictError if new name already exists", async () => {
+            const message = {
+                body: "/set-nama Fauziah#Fauziyah",
+                id: { remote: "groupId123" },
+            };
+            const validation = {};
+
+            validate.mockReturnValue({
+                oldName: "Fauziah",
+                newName: "Fauziyah",
+            });
+            memberServices.find.mockResolvedValueOnce({ name: "Fauziah" });
+            memberServices.find.mockResolvedValueOnce({ name: "Fauziyah" });
+
+            await expect(
+                MemberHandler.handleSetMemberName(message, validation)
+            ).rejects.toThrow(ConflictError);
+        });
+
+        it("should throw NotFoundError if old member does not exist", async () => {
+            const message = {
+                body: "/set-nama Fauziah#Fauziyah",
+                id: { remote: "groupId123" },
+            };
+            const validation = {};
+
+            validate.mockReturnValue({
+                oldName: "Fauziah",
+                newName: "Fauziyah",
+            });
+            memberServices.find.mockResolvedValueOnce(null);
+
+            await expect(
+                MemberHandler.handleSetMemberName(message, validation)
+            ).rejects.toThrow(NotFoundError);
+        });
+    });
+
     describe("handleRegisterMember", () => {
         it("should register a new member successfully", async () => {
             const message = {

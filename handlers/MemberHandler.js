@@ -70,6 +70,52 @@ class MemberHandler {
         return this.memberViews.success.setJuz({ name, currentJuz: juz });
     }
 
+    async handleSetMemberName(message, validation) {
+        const { oldName, newName } = this.validate({
+            command: message.body,
+            validation,
+            errorMessage: this.errorMessages.validation({
+                format: "/set-nama <nama lama>#<nama baru>",
+                example: "/set-nama Fauziah#Fauziyah",
+            }),
+        });
+
+        const groupId = message.id.remote;
+
+        const member = await this.memberServices.find({
+            groupId,
+            name: oldName,
+        });
+
+        if (!member) {
+            throw new NotFoundError(
+                this.memberViews.error.notFound({ name: oldName })
+            );
+        }
+
+        const newMemberName = await this.memberServices.find({
+            groupId,
+            name: newName,
+        });
+
+        if (newMemberName) {
+            throw new ConflictError(
+                this.memberViews.error.nameConflict({ name: newName })
+            );
+        }
+
+        await this.memberServices.set({
+            groupId,
+            name: oldName,
+            newName,
+        });
+
+        return this.memberViews.success.setName({
+            oldName,
+            newName,
+        });
+    }
+
     async handleRegisterMember(message, validation) {
         let result = [];
         const members = this.validate({

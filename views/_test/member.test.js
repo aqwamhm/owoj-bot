@@ -2,12 +2,21 @@ const memberViews = require("../member");
 
 describe("memberViews", () => {
     describe("success", () => {
-        it("should return the correct message for set", () => {
+        it("should return the correct message for setJuz", () => {
             const result = memberViews.success.setJuz({
                 name: "John Doe",
                 currentJuz: "1",
             });
             expect(result).toContain("juz 1");
+        });
+
+        it("should return the correct message for setName", () => {
+            const result = memberViews.success.setName({
+                oldName: "Old Name",
+                newName: "New Name",
+            });
+            expect(result).toContain("Old Name");
+            expect(result).toContain("New Name");
         });
 
         it("should return the correct message for register", () => {

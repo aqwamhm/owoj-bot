@@ -25,7 +25,7 @@ describe("memberServices", () => {
     });
 
     describe("set", () => {
-        it("should update a member with the correct data", async () => {
+        it("should update member juz with the correct data", async () => {
             const mockData = {
                 name: "Test User",
                 groupId: "group1",
@@ -40,7 +40,26 @@ describe("memberServices", () => {
                         groupId: mockData.groupId,
                     },
                 },
-                data: { name: mockData.name, currentJuz: mockData.currentJuz },
+                data: { currentJuz: mockData.currentJuz },
+            });
+        });
+
+        it("should update member name with the correct data", async () => {
+            const mockData = {
+                name: "Old Name",
+                groupId: "group1",
+                newName: "New Name",
+            };
+            await memberServices.set(mockData);
+
+            expect(prisma.member.update).toHaveBeenCalledWith({
+                where: {
+                    name_groupId: {
+                        name: mockData.name,
+                        groupId: mockData.groupId,
+                    },
+                },
+                data: { name: mockData.newName },
             });
         });
     });

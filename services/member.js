@@ -1,7 +1,12 @@
 const { prisma } = require("../config/db");
 
 const memberServices = {
-    async set({ name, groupId, currentJuz }) {
+    async set({ name, groupId, currentJuz = null, newName = null }) {
+        const data = {
+            ...(newName && { name: newName }),
+            ...(currentJuz && { currentJuz: parseInt(currentJuz) }),
+        };
+
         await prisma.member.update({
             where: {
                 name_groupId: {
@@ -9,10 +14,7 @@ const memberServices = {
                     groupId,
                 },
             },
-            data: {
-                name,
-                currentJuz: parseInt(currentJuz),
-            },
+            data,
         });
     },
 
