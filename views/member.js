@@ -2,10 +2,10 @@ const { formatName } = require("../utils/name");
 
 const memberViews = {
     success: {
-        set({ name, currentJuz }) {
-            return `Data ${formatName(
+        setJuz({ name, currentJuz }) {
+            return `Data member merhasil diupdate, ${formatName(
                 name
-            )} berhasil diperbarui. Saat ini membaca juz ${currentJuz}.`;
+            )} akan membaca juz ${currentJuz}.`;
         },
         register({ name, currentJuz }) {
             return `${formatName(

@@ -24,7 +24,7 @@ class MemberHandler {
         this.getPeriodDate = getPeriodDate;
     }
 
-    async handleSetMember(message, validation) {
+    async handleSetMemberJuz(message, validation) {
         const { juz, name } = this.validate({
             command: message.body,
             validation,
@@ -67,7 +67,7 @@ class MemberHandler {
             groupId,
         });
 
-        return this.memberViews.success.set({ name, currentJuz: juz });
+        return this.memberViews.success.setJuz({ name, currentJuz: juz });
     }
 
     async handleRegisterMember(message, validation) {

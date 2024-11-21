@@ -36,11 +36,20 @@ const commands = () => [
         },
     },
     {
-        prompt: "/set",
-        handler: MemberHandler.handleSetMember.bind(MemberHandler),
+        prompt: "/set-juz",
+        handler: MemberHandler.handleSetMemberJuz.bind(MemberHandler),
         middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
         validation: {
-            regex: /^\/set\s+(?<juz>\d{1,3})#(?<name>[a-zA-Z\s]+?)\s*$/,
+            regex: /^\/set-juz\s+(?<juz>\d{1,3})#(?<name>[a-zA-Z\s]+?)\s*$/,
+            multiple: false,
+        },
+    },
+    {
+        prompt: "/set-nama",
+        handler: MemberHandler.handleSetMemberName.bind(MemberHandler),
+        middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
+        validation: {
+            regex: /^\/set-nama\s+(?<oldName>[a-zA-Z\s]+?)\s*#\s*(?<newName>[a-zA-Z\s]+?)\s*$/,
             multiple: false,
         },
     },

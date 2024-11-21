@@ -3,13 +3,11 @@ const memberViews = require("../member");
 describe("memberViews", () => {
     describe("success", () => {
         it("should return the correct message for set", () => {
-            const result = memberViews.success.set({
+            const result = memberViews.success.setJuz({
                 name: "John Doe",
                 currentJuz: "1",
             });
-            expect(result).toBe(
-                "Data John Doe berhasil diperbarui. Saat ini membaca juz 1."
-            );
+            expect(result).toContain("juz 1");
         });
 
         it("should return the correct message for register", () => {

@@ -15,7 +15,7 @@ jest.mock("../../views/error");
 jest.mock("../../views/member");
 
 describe("MemberHandler", () => {
-    describe("handleSetMember", () => {
+    describe("handleSetMemberJuz", () => {
         it("should set a member successfully", async () => {
             const message = {
                 body: "#set 12#Aqwam",
@@ -37,13 +37,13 @@ describe("MemberHandler", () => {
             reportServices.updateMany.mockResolvedValue(true);
             memberServices.set.mockResolvedValue(true);
 
-            const result = await MemberHandler.handleSetMember(
+            const result = await MemberHandler.handleSetMemberJuz(
                 message,
                 validation
             );
 
             expect(result).toEqual(
-                memberViews.success.set({ name: "Aqwam", currentJuz: 12 })
+                memberViews.success.setJuz({ name: "Aqwam", currentJuz: 12 })
             );
         });
 
@@ -58,7 +58,7 @@ describe("MemberHandler", () => {
             memberServices.find.mockResolvedValue(null);
 
             await expect(
-                MemberHandler.handleSetMember(message, validation)
+                MemberHandler.handleSetMemberJuz(message, validation)
             ).rejects.toThrow(NotFoundError);
         });
 
@@ -80,7 +80,7 @@ describe("MemberHandler", () => {
             });
 
             await expect(
-                MemberHandler.handleSetMember(message, validation)
+                MemberHandler.handleSetMemberJuz(message, validation)
             ).rejects.toThrow(ConflictError);
         });
     });
