@@ -110,7 +110,7 @@ const commands = () => [
     {
         prompt: "/list-admin",
         handler: ListHandler.handleShowAdminList.bind(ListHandler),
-        middlewares: [],
+        middlewares: [verifyMessageFromAdmin],
         validation: {
             regex: /^\/list-admin\s*$/,
             multiple: false,
@@ -119,7 +119,7 @@ const commands = () => [
     {
         prompt: "/list-group",
         handler: ListHandler.handleShowGroupList.bind(ListHandler),
-        middlewares: [],
+        middlewares: [verifyMessageFromAdmin],
         validation: {
             regex: /^\/list-group\s*$/,
             multiple: false,
