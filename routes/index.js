@@ -108,6 +108,15 @@ const commands = () => [
         },
     },
     {
+        prompt: "/list-progress",
+        handler: ListHandler.handleShowUncompletedMemberList.bind(ListHandler),
+        middlewares: [verifyMessageInOWOJGroup],
+        validation: {
+            regex: /^\/list-progress\s*$/,
+            multiple: false,
+        },
+    },
+    {
         prompt: "/list-admin",
         handler: ListHandler.handleShowAdminList.bind(ListHandler),
         middlewares: [verifyMessageFromAdmin],
