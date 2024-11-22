@@ -4,6 +4,7 @@ const {
     daysOfWeek,
 } = require("../utils/date");
 const { formatName } = require("../utils/name");
+const { formatPhoneNumber } = require("../utils/phone");
 
 const memberListWithReport = ({ members, periods }) => {
     const { startDate: currentPeriodStartDate, endDate: currentPeriodEndDate } =
@@ -236,10 +237,10 @@ Diharapkan kepada seluruh peserta yang tercantum di atas untuk segera membuat la
 const adminList = ({ admins }) => {
     let result = `*Daftar admin yang terdaftar di sistem robot:*\n\n`;
 
-    admins.forEach((admin, index) => {
-        result += `${index + 1}. ${formatName(admin.name)} - ${
+    admins.forEach((admin) => {
+        result += `- ${formatName(admin.name)} - ${formatPhoneNumber(
             admin.phoneNumber
-        }\n`;
+        )}\n`;
     });
 
     return result;

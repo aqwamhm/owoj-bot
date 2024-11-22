@@ -19,7 +19,7 @@ const adminServices = {
     },
 
     async getAll() {
-        return await prisma.admin.findMany();
+        return await prisma.admin.findMany({ orderBy: { name: "asc" } });
     },
 
     async find({ phoneNumber }) {
