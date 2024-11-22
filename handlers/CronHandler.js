@@ -47,12 +47,19 @@ class CronHandler {
     async handleOneDayBeforeNewPeriod() {
         try {
             const groups = await groupServices.getAll();
-            groups.forEach((group) => {
-                this.client.sendMessage(
-                    group.id,
-                    templateViews.oneDayReminder()
-                );
-            });
+            for (const group of groups) {
+                try {
+                    const uncompletedMemberList =
+                        await ListHandler.handleShowUncompletedMemberList({
+                            id: { remote: group.id },
+                        });
+                    const message = `${templateViews.oneDayReminder()}\n\n${uncompletedMemberList}`;
+
+                    this.client.sendMessage(group.id, message);
+                } catch (e) {
+                    console.error(e);
+                }
+            }
         } catch (e) {
             console.error(e);
         }

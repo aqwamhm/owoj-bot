@@ -169,6 +169,70 @@ const memberListWithReport = ({ members, periods }) => {
     return result;
 };
 
+const uncompletedMemberList = ({ members, periods }) => {
+    const { startDate: currentPeriodStartDate, endDate: currentPeriodEndDate } =
+        getPeriodDate();
+    const reportDeadline = `${daysOfWeek[process.env.PERIOD_START_DAY]} ${
+        process.env.PERIOD_START_HOUR
+    }:00`;
+
+    let result = `*Daftar peserta dan juz yang belum khalas:*\n`;
+
+    const previousPeriods = periods.filter(
+        (period) =>
+            period.startDate.toISOString() !== currentPeriodStartDate ||
+            period.endDate.toISOString() !== currentPeriodEndDate
+    );
+
+    for (let i = 1; i <= 30; i++) {
+        const member = members.find((m) => m.currentJuz === i);
+
+        if (member) {
+            const currentPeriodReports = member.reports.filter(
+                (report) =>
+                    report.periodStartDate.toISOString() ===
+                    currentPeriodStartDate
+            );
+
+            const hasCompletedReport = currentPeriodReports.some(
+                (report) =>
+                    report.pages === report.totalPages && report.pages > 0
+            );
+
+            if (!hasCompletedReport) {
+                result += `${member.currentJuz}. ${formatName(member.name)}\n`;
+
+                previousPeriods.forEach((period) => {
+                    const previousPeriodReports = member.reports.filter(
+                        (report) =>
+                            report.periodStartDate.toISOString() ===
+                            period.startDate.toISOString()
+                    );
+
+                    if (
+                        previousPeriodReports.length > 0 &&
+                        previousPeriodReports.every(
+                            (report) =>
+                                report.pages < report.totalPages ||
+                                report.pages === 0
+                        )
+                    ) {
+                        const previousReport = previousPeriodReports[0];
+                        result += `    ↪️ ${previousReport.juz}. ${formatName(
+                            member.name
+                        )}\n`;
+                    }
+                });
+            }
+        }
+    }
+
+    result += `
+Diharapkan kepada seluruh peserta yang tercantum di atas untuk segera membuat laporan khalas sebelum ${reportDeadline} agar tidak tercatat sebagai hutang di periode berikutnya.`;
+
+    return result;
+};
+
 const adminList = ({ admins }) => {
     let result = `*Daftar admin yang terdaftar di sistem robot:*\n\n`;
 
@@ -191,4 +255,9 @@ const groupList = ({ groups }) => {
     return result;
 };
 
-module.exports = { memberListWithReport, adminList, groupList };
+module.exports = {
+    memberListWithReport,
+    uncompletedMemberList,
+    adminList,
+    groupList,
+};

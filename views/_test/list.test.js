@@ -1,4 +1,9 @@
-const { memberListWithReport, adminList, groupList } = require("../list");
+const {
+    memberListWithReport,
+    uncompletedMemberList,
+    adminList,
+    groupList,
+} = require("../list");
 
 const {
     getPeriodDate,
@@ -383,6 +388,154 @@ describe("memberListWithReport", () => {
         expect(result).toContain("1. Aqwam 🥇");
         expect(result).toContain("2. Ivo 🥈");
         expect(result).toContain("3. Melni 🥉");
+    });
+});
+
+describe("uncompletedMemberList", () => {
+    const periods = [
+        {
+            startDate: new Date("2024-11-02"),
+            endDate: new Date("2024-11-09"),
+        },
+        {
+            startDate: new Date("2024-10-26"),
+            endDate: new Date("2024-11-02"),
+        },
+        {
+            startDate: new Date("2024-10-19"),
+            endDate: new Date("2024-10-26"),
+        },
+    ];
+
+    beforeEach(() => {
+        getPeriodDate.mockReturnValue({
+            startDate: new Date("2024-11-02").toISOString(),
+            endDate: new Date("2024-11-09").toISOString(),
+        });
+
+        process.env.PERIOD_START_DAY = "6";
+        process.env.PERIOD_START_HOUR = "18";
+    });
+
+    afterEach(() => {
+        delete process.env.PERIOD_START_DAY;
+        delete process.env.PERIOD_START_HOUR;
+    });
+
+    it("should list members who haven't completed their reports", () => {
+        const members = [
+            {
+                name: "Aqwam",
+                currentJuz: 1,
+                reports: [
+                    {
+                        periodStartDate: new Date("2024-11-02"),
+                        periodEndDate: new Date("2024-11-09"),
+                        juz: 1,
+                        pages: 10,
+                        totalPages: 20,
+                        type: "TILAWAH",
+                    },
+                ],
+            },
+            {
+                name: "Ivo",
+                currentJuz: 2,
+                reports: [
+                    {
+                        periodStartDate: new Date("2024-11-02"),
+                        periodEndDate: new Date("2024-11-09"),
+                        juz: 2,
+                        pages: 5,
+                        totalPages: 20,
+                        type: "TILAWAH",
+                    },
+                ],
+            },
+        ];
+
+        const result = uncompletedMemberList({ members, periods });
+
+        expect(result).toContain("*Daftar peserta dan juz yang belum khalas:*");
+        expect(result).toContain("1. Aqwam");
+        expect(result).toContain("2. Ivo");
+        expect(result).toContain(
+            "Diharapkan kepada seluruh peserta yang tercantum di atas untuk segera membuat laporan khalas sebelum Sabtu 18:00"
+        );
+    });
+
+    it("should indicate no members are uncompleted", () => {
+        const members = [
+            {
+                name: "Aqwam",
+                currentJuz: 1,
+                reports: [
+                    {
+                        periodStartDate: new Date("2024-11-02"),
+                        periodEndDate: new Date("2024-11-09"),
+                        juz: 1,
+                        pages: 20,
+                        totalPages: 20,
+                        type: "TILAWAH",
+                    },
+                ],
+            },
+            {
+                name: "Ivo",
+                currentJuz: 2,
+                reports: [
+                    {
+                        periodStartDate: new Date("2024-11-02"),
+                        periodEndDate: new Date("2024-11-09"),
+                        juz: 2,
+                        pages: 20,
+                        totalPages: 20,
+                        type: "TILAWAH",
+                    },
+                ],
+            },
+        ];
+
+        const result = uncompletedMemberList({ members, periods });
+
+        expect(result).toContain("*Daftar peserta dan juz yang belum khalas:*");
+        expect(result).not.toContain("1. Aqwam");
+        expect(result).not.toContain("2. Ivo");
+        expect(result).toContain(
+            "Diharapkan kepada seluruh peserta yang tercantum di atas untuk segera membuat laporan khalas sebelum Sabtu 18:00"
+        );
+    });
+
+    it("should include previous period reports for uncompleted members", () => {
+        const members = [
+            {
+                name: "Aqwam",
+                currentJuz: 1,
+                reports: [
+                    {
+                        periodStartDate: new Date("2024-11-02"),
+                        periodEndDate: new Date("2024-11-09"),
+                        juz: 1,
+                        pages: 10,
+                        totalPages: 20,
+                        type: "TILAWAH",
+                    },
+                    {
+                        periodStartDate: new Date("2024-10-26"),
+                        periodEndDate: new Date("2024-11-02"),
+                        juz: 30,
+                        pages: 0,
+                        totalPages: 0,
+                        type: "TILAWAH",
+                    },
+                ],
+            },
+        ];
+
+        const result = uncompletedMemberList({ members, periods });
+
+        expect(result).toContain("1. Aqwam");
+        expect(result).toContain("    ↪️ 30. Aqwam");
     });
 });
 

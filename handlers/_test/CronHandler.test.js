@@ -84,19 +84,40 @@ describe("CronHandler", () => {
     });
 
     describe("handleOneDayBeforeNewPeriod", () => {
-        it("should send a reminder message to all groups", async () => {
-            groupServices.getAll.mockResolvedValue([{ id: "groupId1" }]);
+        it("should send a reminder message with uncompleted member list to all groups", async () => {
+            const groups = [{ id: "groupId1" }];
+            groupServices.getAll.mockResolvedValue(groups);
             templateViews.oneDayReminder.mockReturnValue("Reminder message");
+            ListHandler.handleShowUncompletedMemberList.mockResolvedValue(
+                "Uncompleted members list"
+            );
 
             await cronHandler.handleOneDayBeforeNewPeriod();
 
+            const expectedMessage = `Reminder message\n\nUncompleted members list`;
             expect(client.sendMessage).toHaveBeenCalledWith(
                 "groupId1",
-                "Reminder message"
+                expectedMessage
             );
         });
 
-        it("should log an error if an exception is thrown", async () => {
+        it("should handle error when fetching uncompleted member list", async () => {
+            const consoleSpy = jest
+                .spyOn(console, "error")
+                .mockImplementation(() => {});
+            const groups = [{ id: "groupId1" }];
+            groupServices.getAll.mockResolvedValue(groups);
+            ListHandler.handleShowUncompletedMemberList.mockRejectedValue(
+                new Error("List fetch error")
+            );
+
+            await cronHandler.handleOneDayBeforeNewPeriod();
+
+            expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error));
+            consoleSpy.mockRestore();
+        });
+
+        it("should log an error if getting groups fails", async () => {
             const consoleSpy = jest
                 .spyOn(console, "error")
                 .mockImplementation(() => {});

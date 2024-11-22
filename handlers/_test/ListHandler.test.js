@@ -5,6 +5,7 @@ const adminServices = require("../../services/admin");
 const groupServices = require("../../services/group");
 const {
     memberListWithReport,
+    uncompletedMemberList,
     adminList,
     groupList,
 } = require("../../views/list");
@@ -33,6 +34,28 @@ describe("ListHandler", () => {
             const result = await ListHandler.handleShowMemberList(message);
 
             expect(result).toEqual("List of members with reports");
+        });
+    });
+
+    describe("handleShowMemberList", () => {
+        it("should return a list of uncompleted members successfully", async () => {
+            const message = { id: { remote: "groupId123" } };
+
+            periodServices.getAll.mockResolvedValue([
+                { id: 1, name: "Period 1" },
+            ]);
+            memberServices.getWithReports.mockResolvedValue([
+                { id: 1, name: "Member 1", reports: [] },
+            ]);
+            uncompletedMemberList.mockReturnValue(
+                "List of uncompleted members"
+            );
+
+            const result = await ListHandler.handleShowUncompletedMemberList(
+                message
+            );
+
+            expect(result).toEqual("List of uncompleted members");
         });
     });
 

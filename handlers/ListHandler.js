@@ -31,6 +31,18 @@ class ListHandler {
         });
     }
 
+    async handleShowUncompletedMemberList(message) {
+        const periods = await this.periodServices.getAll();
+        const memberReportsData = await this.memberServices.getWithReports({
+            groupId: message.id.remote,
+        });
+
+        return this.listView.uncompletedMemberList({
+            members: memberReportsData,
+            periods,
+        });
+    }
+
     async handleShowAdminList(message) {
         const admins = await this.adminServices.getAll();
 
