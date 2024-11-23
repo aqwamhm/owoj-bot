@@ -502,12 +502,7 @@ describe("uncompletedMemberList", () => {
 
         const result = uncompletedMemberList({ members, periods });
 
-        expect(result).toContain("*Daftar peserta dan juz yang belum khalas:*");
-        expect(result).not.toContain("1. Aqwam");
-        expect(result).not.toContain("2. Ivo");
-        expect(result).toContain(
-            "Diharapkan kepada seluruh peserta yang tercantum di atas untuk segera membuat laporan khalas sebelum Sabtu 18:00"
-        );
+        expect(result).toBe("Alhamdulillah, seluruh peserta sudah khalas ✅");
     });
 
     it("should include previous period reports for uncompleted members", () => {

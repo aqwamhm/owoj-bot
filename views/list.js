@@ -177,7 +177,8 @@ const uncompletedMemberList = ({ members, periods }) => {
         process.env.PERIOD_START_HOUR
     }:00`;
 
-    let result = `*Daftar peserta dan juz yang belum khalas:*\n`;
+    let resultHeader = `*Daftar peserta dan juz yang belum khalas:*\n\n`;
+    let resultBody = "";
 
     const previousPeriods = periods.filter(
         (period) =>
@@ -201,7 +202,9 @@ const uncompletedMemberList = ({ members, periods }) => {
             );
 
             if (!hasCompletedReport) {
-                result += `${member.currentJuz}. ${formatName(member.name)}\n`;
+                resultBody += `${member.currentJuz}. ${formatName(
+                    member.name
+                )}\n`;
 
                 previousPeriods.forEach((period) => {
                     const previousPeriodReports = member.reports.filter(
@@ -219,19 +222,24 @@ const uncompletedMemberList = ({ members, periods }) => {
                         )
                     ) {
                         const previousReport = previousPeriodReports[0];
-                        result += `    ↪️ ${previousReport.juz}. ${formatName(
-                            member.name
-                        )}\n`;
+                        resultBody += `    ↪️ ${
+                            previousReport.juz
+                        }. ${formatName(member.name)}\n`;
                     }
                 });
             }
         }
     }
 
-    result += `
-Diharapkan kepada seluruh peserta yang tercantum di atas untuk segera membuat laporan khalas sebelum ${reportDeadline} agar tidak tercatat sebagai hutang di periode berikutnya.`;
-
-    return result;
+    if (resultBody === "") {
+        return "Alhamdulillah, seluruh peserta sudah khalas ✅";
+    } else {
+        let result =
+            resultHeader +
+            resultBody +
+            `\nDiharapkan kepada seluruh peserta yang tercantum di atas untuk segera membuat laporan khalas sebelum ${reportDeadline} agar tidak tercatat sebagai hutang di periode berikutnya.`;
+        return result;
+    }
 };
 
 const adminList = ({ admins }) => {
