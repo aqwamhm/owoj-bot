@@ -29,16 +29,32 @@ class CronHandler {
             });
 
             const groups = await groupServices.getAll();
-            groups.forEach(async (group) => {
-                this.client.sendMessage(group.id, templateViews.doaKhatamQuran);
-                this.client.sendMessage(group.id, templateViews.pembukaan);
-                const list = await ListHandler.handleShowMemberList({
-                    id: {
-                        remote: group.id,
-                    },
-                });
-                this.client.sendMessage(group.id, list);
-            });
+
+            await Promise.all(
+                groups.map(async (group) => {
+                    try {
+                        await this.client.sendMessage(
+                            group.id,
+                            templateViews.doaKhatamQuran
+                        );
+                        await this.client.sendMessage(
+                            group.id,
+                            templateViews.pembukaan
+                        );
+
+                        const list = await ListHandler.handleShowMemberList({
+                            id: { remote: group.id },
+                        });
+
+                        await this.client.sendMessage(group.id, list);
+                    } catch (e) {
+                        console.error(
+                            `Failed to send messages to group ${group.id}:`,
+                            e
+                        );
+                    }
+                })
+            );
         } catch (e) {
             console.error(e);
         }

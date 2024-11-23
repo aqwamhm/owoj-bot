@@ -34,6 +34,8 @@ describe("CronHandler", () => {
         it("should create a new period, increment member juz, create reports, and notify groups", async () => {
             const mockStartDate = "2023-01-01";
             const mockEndDate = "2023-01-07";
+            const mockGroups = [{ id: "groupId1" }, { id: "groupId2" }];
+
             getPeriodDate.mockReturnValue({
                 startDate: mockStartDate,
                 endDate: mockEndDate,
@@ -41,7 +43,7 @@ describe("CronHandler", () => {
             memberServices.findAll.mockResolvedValue([
                 { id: 1, name: "Member 1" },
             ]);
-            groupServices.getAll.mockResolvedValue([{ id: "groupId1" }]);
+            groupServices.getAll.mockResolvedValue(mockGroups);
             ListHandler.handleShowMemberList.mockResolvedValue("List message");
 
             await cronHandler.handleNewPeriod();
@@ -56,18 +58,25 @@ describe("CronHandler", () => {
                 startDate: mockStartDate,
                 endDate: mockEndDate,
             });
-            expect(client.sendMessage).toHaveBeenCalledWith(
-                "groupId1",
-                templateViews.doaKhatamQuran
+
+            expect(client.sendMessage).toHaveBeenCalledTimes(
+                mockGroups.length * 3
             );
-            expect(client.sendMessage).toHaveBeenCalledWith(
-                "groupId1",
-                templateViews.pembukaan
-            );
-            expect(client.sendMessage).toHaveBeenCalledWith(
-                "groupId1",
-                "List message"
-            );
+
+            mockGroups.forEach((group) => {
+                expect(client.sendMessage).toHaveBeenCalledWith(
+                    group.id,
+                    templateViews.doaKhatamQuran
+                );
+                expect(client.sendMessage).toHaveBeenCalledWith(
+                    group.id,
+                    templateViews.pembukaan
+                );
+                expect(client.sendMessage).toHaveBeenCalledWith(
+                    group.id,
+                    "List message"
+                );
+            });
         });
 
         it("should log an error if an exception is thrown", async () => {
