@@ -148,13 +148,13 @@ class MemberHandler {
             }
 
             await this.memberServices.create({
-                name,
+                name: name.trim(),
                 currentJuz,
                 groupId,
             });
 
             await this.reportServices.create({
-                name,
+                name: name.trim(),
                 groupId,
                 juz: currentJuz,
                 pages: 0,
