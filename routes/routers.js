@@ -3,7 +3,7 @@ const { commands } = require(".");
 
 const commandRouter = async (message) => {
     message.body = message.body.toLowerCase();
-    const prompt = message.body.split(" ")[0];
+    const prompt = message.body.split(/[\s\u00A0]+/)[0];
     const command = commands().find((command) => command.prompt === prompt);
 
     if (command) {
