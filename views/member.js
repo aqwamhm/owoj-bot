@@ -8,7 +8,7 @@ const memberViews = {
             )} akan membaca juz ${currentJuz}.`;
         },
         setName({ oldName, newName }) {
-            return `Data member merhasil diupdate, Nama "${formatName(
+            return `Data member berhasil diupdate, Nama "${formatName(
                 oldName
             )}" berhasil diubah menjadi "${formatName(newName)}".`;
         },
