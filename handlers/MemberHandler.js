@@ -142,7 +142,10 @@ class MemberHandler {
             });
             if (memberJuzConflict) {
                 result.push(
-                    this.memberViews.error.juzConflict({ name, currentJuz })
+                    this.memberViews.error.juzConflict({
+                        name: memberJuzConflict.name,
+                        currentJuz: memberJuzConflict.currentJuz,
+                    })
                 );
                 continue;
             }
