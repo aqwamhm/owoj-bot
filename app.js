@@ -22,7 +22,7 @@ client.on("qr", (qr) => {
     qrcode.generate(qr, { small: true });
 });
 
-client.on("message_create", async (message) => {
+const routeCommand = async (message) => {
     if (process.env.NODE_ENV === "production") {
         await commandRouter(message);
     } else {
@@ -39,6 +39,14 @@ client.on("message_create", async (message) => {
 
         console.log(result);
     }
+};
+
+client.on("message_create", async (message) => {
+    await routeCommand(message);
+});
+
+client.on("message_edit", async (message) => {
+    await routeCommand(message);
 });
 
 client.initialize();
