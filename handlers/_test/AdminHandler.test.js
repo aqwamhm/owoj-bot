@@ -38,10 +38,10 @@ describe("AdminHandler", () => {
             adminServices.find.mockResolvedValue(null);
             adminServices.create.mockResolvedValue(true);
 
-            const result = await AdminHandler.handleRegisterAdmin(
+            const result = await AdminHandler.handleRegisterAdmin({
                 message,
-                validation
-            );
+                validation,
+            });
 
             expect(result).toEqual(
                 adminViews.success.create({
@@ -64,7 +64,7 @@ describe("AdminHandler", () => {
             });
 
             await expect(
-                AdminHandler.handleRegisterAdmin(message, validation)
+                AdminHandler.handleRegisterAdmin({ message, validation })
             ).rejects.toThrow(AuthenticationError);
         });
 
@@ -82,7 +82,7 @@ describe("AdminHandler", () => {
             adminServices.find.mockResolvedValue({ phoneNumber: "6281234567" });
 
             await expect(
-                AdminHandler.handleRegisterAdmin(message, validation)
+                AdminHandler.handleRegisterAdmin({ message, validation })
             ).rejects.toThrow(ConflictError);
         });
     });
@@ -99,10 +99,10 @@ describe("AdminHandler", () => {
             });
             adminServices.remove.mockResolvedValue(true);
 
-            const result = await AdminHandler.handleRemoveAdmin(
+            const result = await AdminHandler.handleRemoveAdmin({
                 message,
-                validation
-            );
+                validation,
+            });
 
             expect(result).toEqual(
                 adminViews.success.remove({
@@ -120,7 +120,7 @@ describe("AdminHandler", () => {
             adminServices.find.mockResolvedValue(null);
 
             await expect(
-                AdminHandler.handleRemoveAdmin(message, validation)
+                AdminHandler.handleRemoveAdmin({ message, validation })
             ).rejects.toThrow(NotFoundError);
         });
     });

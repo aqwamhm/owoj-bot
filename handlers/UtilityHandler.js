@@ -79,7 +79,7 @@ class UtilityHandler {
         }
     }
 
-    async handlePrayerTimeRequest(message, validation) {
+    async handlePrayerTimeRequest({ message, validation }) {
         const { location, days } = validate({
             command: message.body,
             validation,

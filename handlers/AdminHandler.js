@@ -14,7 +14,7 @@ class AdminHandler {
         this.adminViews = adminViews;
     }
 
-    async handleRegisterAdmin(message, validation) {
+    async handleRegisterAdmin({ message, validation }) {
         const { name, phone, password } = this.validate({
             command: message.body,
             validation,
@@ -40,7 +40,7 @@ class AdminHandler {
         return this.adminViews.success.create({ name, phone });
     }
 
-    async handleRemoveAdmin(message, validation) {
+    async handleRemoveAdmin({ message, validation }) {
         const { phone } = this.validate({
             command: message.body,
             validation,

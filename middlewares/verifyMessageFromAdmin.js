@@ -11,6 +11,8 @@ const verifyMessageFromAdmin = async (message) => {
             `Tidak dapat menjalankan command ini. Nomor anda tidak terdaftar sebagai admin.`
         );
     }
+
+    return { admin };
 };
 
 module.exports = verifyMessageFromAdmin;

@@ -129,10 +129,10 @@ describe("UtilityHandler", () => {
                         .mockResolvedValueOnce(mockPrayerTimeResponse),
                 });
 
-            const result = await UtilityHandler.handlePrayerTimeRequest(
+            const result = await UtilityHandler.handlePrayerTimeRequest({
                 message,
-                mockValidation
-            );
+                validation: mockValidation,
+            });
 
             expect(result).toEqual(
                 utilityViews.prayerTime.success({
@@ -160,10 +160,10 @@ describe("UtilityHandler", () => {
                         .mockResolvedValueOnce(mockPrayerTimeResponse),
                 });
 
-            const result = await UtilityHandler.handlePrayerTimeRequest(
+            const result = await UtilityHandler.handlePrayerTimeRequest({
                 message,
-                mockValidation
-            );
+                validation: mockValidation,
+            });
 
             expect(result).toEqual(
                 utilityViews.prayerTime.success({
@@ -201,10 +201,10 @@ describe("UtilityHandler", () => {
                         .mockResolvedValueOnce(mockPrayerTimeResponse),
                 });
 
-            const result = await UtilityHandler.handlePrayerTimeRequest(
+            const result = await UtilityHandler.handlePrayerTimeRequest({
                 message,
-                mockValidation
-            );
+                validation: mockValidation,
+            });
 
             expect(result).toEqual(
                 utilityViews.prayerTime.success({
@@ -231,7 +231,10 @@ describe("UtilityHandler", () => {
             });
 
             await expect(
-                UtilityHandler.handlePrayerTimeRequest(message, mockValidation)
+                UtilityHandler.handlePrayerTimeRequest({
+                    message,
+                    validation: mockValidation,
+                })
             ).rejects.toThrow(NotFoundError);
             expect(
                 utilityViews.prayerTime.error.locationNotFound
@@ -252,7 +255,10 @@ describe("UtilityHandler", () => {
                 .mockRejectedValueOnce(new Error("Prayer time API error"));
 
             await expect(
-                UtilityHandler.handlePrayerTimeRequest(message, mockValidation)
+                UtilityHandler.handlePrayerTimeRequest({
+                    message,
+                    validation: mockValidation,
+                })
             ).rejects.toThrow("Prayer time API error");
         });
 
@@ -272,10 +278,10 @@ describe("UtilityHandler", () => {
                         .mockResolvedValueOnce(mockPrayerTimeResponse),
                 });
 
-            const result = await UtilityHandler.handlePrayerTimeRequest(
+            const result = await UtilityHandler.handlePrayerTimeRequest({
                 message,
-                mockValidation
-            );
+                validation: mockValidation,
+            });
 
             expect(result).toEqual(
                 utilityViews.prayerTime.success({
@@ -303,10 +309,10 @@ describe("UtilityHandler", () => {
                         .mockResolvedValueOnce(mockPrayerTimeResponse),
                 });
 
-            const result = await UtilityHandler.handlePrayerTimeRequest(
+            const result = await UtilityHandler.handlePrayerTimeRequest({
                 message,
-                mockValidation
-            );
+                validation: mockValidation,
+            });
 
             expect(result).toEqual(
                 utilityViews.prayerTime.success({

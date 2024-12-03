@@ -12,7 +12,7 @@ class GroupHandler {
         this.groupViews = groupViews;
     }
 
-    async handleCreateGroup(message, validation) {
+    async handleCreateGroup({ message, validation }) {
         const arg1 = message.body.split(" ")[1];
 
         this.validate({
@@ -32,7 +32,7 @@ class GroupHandler {
         return this.groupViews.success.create({ number: arg1 });
     }
 
-    async handleRemoveGroup(message, validation) {
+    async handleRemoveGroup({ message, validation }) {
         const arg1 = message.body.split(" ")[1];
         this.validate({
             command: message.body,

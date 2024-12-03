@@ -64,7 +64,7 @@ describe("ReportHandler", () => {
 
             const [finishedPages, totalPages] = [10, 20];
 
-            await ReportHandler.handleCreateReport(message, validation);
+            await ReportHandler.handleCreateReport({ message, validation });
 
             expect(reportServices.create).toHaveBeenCalledWith({
                 name: "Aqwam",
@@ -97,7 +97,7 @@ describe("ReportHandler", () => {
 
             const [finishedPages, totalPages] = [10, 20];
 
-            await ReportHandler.handleCreateReport(message, validation);
+            await ReportHandler.handleCreateReport({ message, validation });
 
             expect(reportServices.create).toHaveBeenCalledWith({
                 name: "Aqwam",
@@ -123,7 +123,7 @@ describe("ReportHandler", () => {
         it("should call and return createTilawahReport for default case", async () => {
             const [finishedPages, totalPages] = [10, 20];
 
-            await ReportHandler.handleCreateReport(message, validation);
+            await ReportHandler.handleCreateReport({ message, validation });
 
             expect(reportServices.create).toHaveBeenCalledWith({
                 name: "Aqwam",
@@ -157,7 +157,7 @@ describe("ReportHandler", () => {
             reportServices.find.mockResolvedValue(null);
             decrementJuz.mockReturnValue(30);
 
-            await ReportHandler.handleCreateReport(message, validation);
+            await ReportHandler.handleCreateReport({ message, validation });
 
             expect(decrementJuz).toHaveBeenCalledWith(1, 1);
             expect(reportServices.create).toHaveBeenCalledWith({
@@ -185,7 +185,7 @@ describe("ReportHandler", () => {
                 juz: 30,
             });
 
-            await ReportHandler.handleCreateReport(message, validation);
+            await ReportHandler.handleCreateReport({ message, validation });
 
             expect(reportServices.create).toHaveBeenCalledWith({
                 name: "Aqwam",
@@ -207,7 +207,7 @@ describe("ReportHandler", () => {
                 period: 2,
             });
 
-            await ReportHandler.handleCreateReport(message, validation);
+            await ReportHandler.handleCreateReport({ message, validation });
 
             expect(getPeriodDate).toHaveBeenCalledWith(-2);
         });
@@ -226,7 +226,7 @@ describe("ReportHandler", () => {
             });
 
             await expect(
-                ReportHandler.handleCreateReport(message, validation)
+                ReportHandler.handleCreateReport({ message, validation })
             ).rejects.toThrow(ConflictError);
         });
 
@@ -234,7 +234,7 @@ describe("ReportHandler", () => {
             memberServices.find.mockResolvedValue(null);
 
             await expect(
-                ReportHandler.handleCreateReport(message, validation)
+                ReportHandler.handleCreateReport({ message, validation })
             ).rejects.toThrow(NotFoundError);
         });
 
@@ -260,7 +260,7 @@ describe("ReportHandler", () => {
             );
 
             await expect(
-                ReportHandler.handleCreateReport(message, validation)
+                ReportHandler.handleCreateReport({ message, validation })
             ).rejects.toThrow(ConflictError);
 
             expect(
@@ -293,7 +293,7 @@ describe("ReportHandler", () => {
 
             decrementJuz.mockReturnValue(30);
 
-            await ReportHandler.handleCreateReport(message, validation);
+            await ReportHandler.handleCreateReport({ message, validation });
 
             expect(reportServices.create).toHaveBeenCalledWith({
                 name: "Aqwam",
@@ -320,7 +320,7 @@ describe("ReportHandler", () => {
             );
 
             await expect(
-                ReportHandler.handleCreateReport(message, validation)
+                ReportHandler.handleCreateReport({ message, validation })
             ).rejects.toThrow(ConflictError);
 
             expect(reportViews.error.conflictTotalPages).toHaveBeenCalled();
@@ -348,7 +348,7 @@ describe("ReportHandler", () => {
             );
 
             await expect(
-                ReportHandler.handleCreateReport(message, validation)
+                ReportHandler.handleCreateReport({ message, validation })
             ).rejects.toThrow(ConflictError);
 
             expect(reportViews.error.conflictPages).toHaveBeenCalled();
@@ -371,7 +371,7 @@ describe("ReportHandler", () => {
                 pages: 10,
             });
 
-            await ReportHandler.handleCreateReport(message, validation);
+            await ReportHandler.handleCreateReport({ message, validation });
 
             expect(reportServices.create).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -397,7 +397,7 @@ describe("ReportHandler", () => {
 
             reportServices.find.mockResolvedValue(null);
 
-            await ReportHandler.handleCreateReport(message, validation);
+            await ReportHandler.handleCreateReport({ message, validation });
 
             expect(reportServices.create).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -453,10 +453,10 @@ describe("ReportHandler", () => {
                 { juz: 1, pages: 10 },
             ]);
 
-            const result = await ReportHandler.handleRemoveReport(
+            const result = await ReportHandler.handleRemoveReport({
                 message,
-                validation
-            );
+                validation,
+            });
 
             expect(reportServices.delete).toHaveBeenCalledWith({
                 memberName: "Aqwam",
@@ -492,10 +492,10 @@ describe("ReportHandler", () => {
                 { juz: 1, pages: finishedPages, totalPages },
             ]);
 
-            const result = await ReportHandler.handleRemoveReport(
+            const result = await ReportHandler.handleRemoveReport({
                 message,
-                validation
-            );
+                validation,
+            });
 
             expect(reportServices.create).toHaveBeenCalledWith({
                 name: "Aqwam",
@@ -538,10 +538,10 @@ describe("ReportHandler", () => {
 
             reportServices.findMany.mockResolvedValue([{ juz: 1, pages: 20 }]);
 
-            const result = await ReportHandler.handleRemoveReport(
+            const result = await ReportHandler.handleRemoveReport({
                 message,
-                validation
-            );
+                validation,
+            });
 
             expect(reportServices.delete).toHaveBeenCalledWith({
                 memberName: "Aqwam",
@@ -571,10 +571,10 @@ describe("ReportHandler", () => {
 
             reportServices.findMany.mockResolvedValue([{ juz: 1, pages: 20 }]);
 
-            const result = await ReportHandler.handleRemoveReport(
+            const result = await ReportHandler.handleRemoveReport({
                 message,
-                validation
-            );
+                validation,
+            });
 
             expect(reportServices.delete).toHaveBeenCalledWith({
                 memberName: "Aqwam",
@@ -609,7 +609,7 @@ describe("ReportHandler", () => {
 
             reportServices.findMany.mockResolvedValue([{ juz: 1, pages: 10 }]);
 
-            await ReportHandler.handleRemoveReport(message, validation);
+            await ReportHandler.handleRemoveReport({ message, validation });
 
             expect(getPeriodDate).toHaveBeenCalledWith(-1);
         });
@@ -625,7 +625,7 @@ describe("ReportHandler", () => {
             reportServices.find.mockResolvedValue(null);
 
             await expect(
-                ReportHandler.handleRemoveReport(message, validation)
+                ReportHandler.handleRemoveReport({ message, validation })
             ).rejects.toThrow(NotFoundError);
         });
     });

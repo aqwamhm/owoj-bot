@@ -19,7 +19,7 @@ class ListHandler {
         this.listView = listView;
     }
 
-    async handleShowMemberList(message) {
+    async handleShowMemberList({ message }) {
         const periods = await this.periodServices.getAll();
         const memberReportsData = await this.memberServices.getWithReports({
             groupId: message.id.remote,
@@ -31,7 +31,7 @@ class ListHandler {
         });
     }
 
-    async handleShowUncompletedMemberList(message) {
+    async handleShowUncompletedMemberList({ message }) {
         const periods = await this.periodServices.getAll();
         const memberReportsData = await this.memberServices.getWithReports({
             groupId: message.id.remote,
@@ -43,7 +43,7 @@ class ListHandler {
         });
     }
 
-    async handleShowAdminList(message) {
+    async handleShowAdminList({ message }) {
         const admins = await this.adminServices.getAll();
 
         return this.listView.adminList({
@@ -51,7 +51,7 @@ class ListHandler {
         });
     }
 
-    async handleShowGroupList(message) {
+    async handleShowGroupList({ message }) {
         const groups = await this.groupServices.getAll();
 
         return this.listView.groupList({

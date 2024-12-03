@@ -9,6 +9,8 @@ const verifyMessageInOWOJGroup = async (message) => {
     if (!group) {
         throw new NotFoundError(groupViews.error.notFound());
     }
+
+    return { group };
 };
 
 module.exports = verifyMessageInOWOJGroup;

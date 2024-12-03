@@ -24,7 +24,7 @@ class MemberHandler {
         this.getPeriodDate = getPeriodDate;
     }
 
-    async handleSetMemberJuz(message, validation) {
+    async handleSetMemberJuz({ message, validation }) {
         const { juz, name } = this.validate({
             command: message.body,
             validation,
@@ -70,7 +70,7 @@ class MemberHandler {
         return this.memberViews.success.setJuz({ name, currentJuz: juz });
     }
 
-    async handleSetMemberName(message, validation) {
+    async handleSetMemberName({ message, validation }) {
         const { oldName, newName } = this.validate({
             command: message.body,
             validation,
@@ -116,7 +116,7 @@ class MemberHandler {
         });
     }
 
-    async handleRegisterMember(message, validation) {
+    async handleRegisterMember({ message, validation }) {
         let result = [];
         const members = this.validate({
             command: message.body,
@@ -172,7 +172,7 @@ class MemberHandler {
         return result.join("\n");
     }
 
-    async handleRemoveMember(message, validation) {
+    async handleRemoveMember({ message, validation }) {
         const { name } = this.validate({
             command: message.body,
             validation,

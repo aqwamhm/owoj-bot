@@ -90,6 +90,47 @@ describe("CronHandler", () => {
             expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error));
             consoleSpy.mockRestore();
         });
+
+        it("should log an error when failing to send messages to a group", async () => {
+            const consoleSpy = jest
+                .spyOn(console, "error")
+                .mockImplementation(() => {});
+
+            const mockStartDate = "2023-01-01";
+            const mockEndDate = "2023-01-07";
+            const mockGroups = [{ id: "groupId1" }, { id: "groupId2" }];
+            const errorMessage = "Failed to send message";
+
+            getPeriodDate.mockReturnValue({
+                startDate: mockStartDate,
+                endDate: mockEndDate,
+            });
+            memberServices.findAll.mockResolvedValue([
+                { id: 1, name: "Member 1" },
+            ]);
+            groupServices.getAll.mockResolvedValue(mockGroups);
+            ListHandler.handleShowMemberList.mockResolvedValue("List message");
+
+            periodServices.create.mockResolvedValue({});
+            memberServices.incrementAllCurrentJuz.mockResolvedValue();
+            reportServices.createMany.mockResolvedValue();
+
+            client.sendMessage.mockImplementation((id, message) => {
+                if (id === "groupId2") {
+                    throw new Error(errorMessage);
+                }
+                return Promise.resolve();
+            });
+
+            await cronHandler.handleNewPeriod();
+
+            expect(consoleSpy).toHaveBeenCalledWith(
+                `Failed to send messages to group groupId2:`,
+                new Error(errorMessage)
+            );
+
+            consoleSpy.mockRestore(); // Restore console.error after the test
+        });
     });
 
     describe("handleOneDayBeforeNewPeriod", () => {

@@ -31,7 +31,7 @@ describe("ListHandler", () => {
                 "List of members with reports"
             );
 
-            const result = await ListHandler.handleShowMemberList(message);
+            const result = await ListHandler.handleShowMemberList({ message });
 
             expect(result).toEqual("List of members with reports");
         });
@@ -51,9 +51,9 @@ describe("ListHandler", () => {
                 "List of uncompleted members"
             );
 
-            const result = await ListHandler.handleShowUncompletedMemberList(
-                message
-            );
+            const result = await ListHandler.handleShowUncompletedMemberList({
+                message,
+            });
 
             expect(result).toEqual("List of uncompleted members");
         });
@@ -71,7 +71,7 @@ describe("ListHandler", () => {
 
             adminList.mockReturnValue("List of admins");
 
-            const result = await ListHandler.handleShowAdminList(message);
+            const result = await ListHandler.handleShowAdminList({ message });
 
             expect(result).toEqual("List of admins");
         });
@@ -89,7 +89,7 @@ describe("ListHandler", () => {
 
             groupList.mockReturnValue("List of groups");
 
-            const result = await ListHandler.handleShowGroupList(message);
+            const result = await ListHandler.handleShowGroupList({ message });
 
             expect(result).toEqual("List of groups");
         });

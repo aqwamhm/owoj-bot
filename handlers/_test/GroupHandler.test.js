@@ -22,10 +22,10 @@ describe("GroupHandler", () => {
             groupServices.find.mockResolvedValue(null);
             groupServices.create.mockResolvedValue(true);
 
-            const result = await GroupHandler.handleCreateGroup(
+            const result = await GroupHandler.handleCreateGroup({
                 message,
-                validation
-            );
+                validation,
+            });
 
             expect(result).toEqual(groupViews.success.create({ number: 123 }));
         });
@@ -44,10 +44,10 @@ describe("GroupHandler", () => {
             groupServices.find.mockResolvedValue(group);
             groupServices.remove.mockResolvedValue(true);
 
-            const result = await GroupHandler.handleRemoveGroup(
+            const result = await GroupHandler.handleRemoveGroup({
                 message,
-                validation
-            );
+                validation,
+            });
 
             expect(result).toEqual(groupViews.success.remove({ number: 3 }));
         });
@@ -64,7 +64,7 @@ describe("GroupHandler", () => {
             groupServices.find.mockResolvedValue(group);
 
             await expect(() =>
-                GroupHandler.handleRemoveGroup(message, validation)
+                GroupHandler.handleRemoveGroup({ message, validation })
             ).rejects.toThrow(new NotFoundError());
         });
     });

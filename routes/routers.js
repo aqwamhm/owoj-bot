@@ -8,15 +8,22 @@ const commandRouter = async (message) => {
 
     if (command) {
         try {
+            let middlewareData = {};
+
             if (command.middlewares) {
                 for (const middleware of command.middlewares) {
-                    await middleware(message);
+                    const result = await middleware(message);
+                    if (result) {
+                        middlewareData = { ...middlewareData, ...result };
+                    }
                 }
             }
-            const result = await command.handler(
+
+            const result = await command.handler({
                 message,
-                command.validation || {}
-            );
+                validation: command.validation || {},
+                middlewareData,
+            });
 
             if (result) {
                 message.reply(result);

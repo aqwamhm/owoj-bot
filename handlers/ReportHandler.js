@@ -18,7 +18,7 @@ class ReportHandler {
         this.memberViews = memberViews;
     }
 
-    async handleCreateReport(message, validation) {
+    async handleCreateReport({ message, validation }) {
         const { name, pages, type, period } = validate({
             command: message.body,
             validation,
@@ -251,7 +251,7 @@ class ReportHandler {
         });
     }
 
-    async handleRemoveReport(message, validation) {
+    async handleRemoveReport({ message, validation }) {
         const { name, pages, type, period } = validate({
             command: message.body,
             validation,
