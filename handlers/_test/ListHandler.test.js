@@ -20,6 +20,7 @@ describe("ListHandler", () => {
     describe("handleShowMemberList", () => {
         it("should return a list of members with reports successfully", async () => {
             const message = { id: { remote: "groupId123" } };
+            const middlewareData = { group: { number: 1 } };
 
             periodServices.getAll.mockResolvedValue([
                 { id: 1, name: "Period 1" },
@@ -31,7 +32,10 @@ describe("ListHandler", () => {
                 "List of members with reports"
             );
 
-            const result = await ListHandler.handleShowMemberList({ message });
+            const result = await ListHandler.handleShowMemberList({
+                message,
+                middlewareData,
+            });
 
             expect(result).toEqual("List of members with reports");
         });

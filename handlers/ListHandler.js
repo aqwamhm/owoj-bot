@@ -19,7 +19,8 @@ class ListHandler {
         this.listView = listView;
     }
 
-    async handleShowMemberList({ message }) {
+    async handleShowMemberList({ message, middlewareData }) {
+        const { group } = middlewareData;
         const periods = await this.periodServices.getAll();
         const memberReportsData = await this.memberServices.getWithReports({
             groupId: message.id.remote,
@@ -28,6 +29,7 @@ class ListHandler {
         return this.listView.memberListWithReport({
             members: memberReportsData,
             periods,
+            group,
         });
     }
 

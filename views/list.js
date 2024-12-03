@@ -6,7 +6,7 @@ const {
 const { formatName } = require("../utils/name");
 const { formatPhoneNumber } = require("../utils/phone");
 
-const memberListWithReport = ({ members, periods }) => {
+const memberListWithReport = ({ members, periods, group }) => {
     const { startDate: currentPeriodStartDate, endDate: currentPeriodEndDate } =
         getPeriodDate();
     const reportDeadline = `${daysOfWeek[process.env.PERIOD_START_DAY]}, ${
@@ -15,7 +15,7 @@ const memberListWithReport = ({ members, periods }) => {
 
     let result = `بسم الله الرحمن الرحيم
 
-*REKAP OWOJ on WA*
+*REKAP OWOJ ${group.number} on WA*
 
 - *Kordinator:* 👨‍🏫 Sutomo Budi Santoso
 - *Bot Developer:* 👨‍💻 Aqwam Hizbal Muhshiy

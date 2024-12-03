@@ -62,8 +62,13 @@ describe("memberListWithReport", () => {
     });
 
     it("should generate the report header correctly", () => {
-        const result = memberListWithReport({ members: [], periods });
+        const result = memberListWithReport({
+            group: { number: 1 },
+            members: [],
+            periods,
+        });
 
+        expect(result).toContain("OWOJ 1");
         expect(showFormattedDate).toHaveBeenNthCalledWith(
             1,
             periods[0].startDate.toISOString()
@@ -81,6 +86,7 @@ describe("memberListWithReport", () => {
 
     it("should display correct juz for each member", () => {
         const result = memberListWithReport({
+            group: { number: 1 },
             members: [
                 {
                     name: "Aqwam",
@@ -140,6 +146,7 @@ describe("memberListWithReport", () => {
 
     it("should display empty members in the list correctly", () => {
         const result = memberListWithReport({
+            group: { number: 1 },
             members: [],
             periods: [
                 {
@@ -156,6 +163,7 @@ describe("memberListWithReport", () => {
 
     it("should display member's reports correctly", () => {
         const result = memberListWithReport({
+            group: { number: 1 },
             members: [
                 {
                     name: "Aqwam",
@@ -231,6 +239,7 @@ describe("memberListWithReport", () => {
 
     it("should display khalas report with emoji correctly", () => {
         const result = memberListWithReport({
+            group: { number: 1 },
             members: [
                 {
                     name: "Aqwam",
@@ -290,6 +299,7 @@ describe("memberListWithReport", () => {
 
     it("should display previous period reports correctly", () => {
         const result = memberListWithReport({
+            group: { number: 1 },
             members: [
                 {
                     name: "Aqwam",
@@ -323,6 +333,7 @@ describe("memberListWithReport", () => {
 
     it("should display weekly champions correctly", () => {
         const result = memberListWithReport({
+            group: { number: 1 },
             members: [
                 {
                     name: "Aqwam",
