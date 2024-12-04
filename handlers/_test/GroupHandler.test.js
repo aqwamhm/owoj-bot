@@ -1,13 +1,16 @@
 const GroupHandler = require("../GroupHandler");
 const groupServices = require("../../services/group");
+const adminServices = require("../../services/admin");
 const { validate } = require("../../utils/validator");
 const groupViews = require("../../views/group");
 const NotFoundError = require("../../exceptions/NotFoundError");
 
 jest.mock("../../services/group");
+jest.mock("../../services/admin");
 jest.mock("../../utils/validator");
 jest.mock("../../views/error");
 jest.mock("../../views/group");
+jest.mock("../../views/admin");
 
 describe("GroupHandler", () => {
     describe("handleCreateGroup", () => {
@@ -65,6 +68,63 @@ describe("GroupHandler", () => {
 
             await expect(() =>
                 GroupHandler.handleRemoveGroup({ message, validation })
+            ).rejects.toThrow(new NotFoundError());
+        });
+    });
+
+    describe("handleSetGroupAdmin", () => {
+        it("should set group admin successfully", async () => {
+            const message = {
+                body: "/set-admin 621234567890",
+                id: { remote: "group-id" },
+            };
+            const validation = {};
+            const middlewareData = {
+                group: { id: "group-id", number: 5 },
+            };
+            const admin = { name: "Admin Name", phoneNumber: "621234567890" };
+
+            validate.mockReturnValue({ phone: "621234567890" });
+            adminServices.find.mockResolvedValue(admin);
+            groupServices.update.mockResolvedValue(true);
+
+            const result = await GroupHandler.handleSetGroupAdmin({
+                message,
+                validation,
+                middlewareData,
+            });
+
+            expect(result).toEqual(
+                groupViews.success.setGroupAdmin({
+                    name: admin.name,
+                    number: middlewareData.group.number,
+                })
+            );
+            expect(groupServices.update).toHaveBeenCalledWith({
+                adminPhoneNumber: "621234567890",
+                id: "group-id",
+            });
+        });
+
+        it("should throw NotFoundError if admin is not found", async () => {
+            const message = {
+                body: "/set-admin 629876543210",
+                id: { remote: "group-id" },
+            };
+            const validation = {};
+            const middlewareData = {
+                group: { id: "group-id", number: 5 },
+            };
+
+            validate.mockReturnValue({ phone: "629876543210" });
+            adminServices.find.mockResolvedValue(null);
+
+            await expect(() =>
+                GroupHandler.handleSetGroupAdmin({
+                    message,
+                    validation,
+                    middlewareData,
+                })
             ).rejects.toThrow(new NotFoundError());
         });
     });

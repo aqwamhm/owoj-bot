@@ -1,3 +1,5 @@
+const { formatName } = require("../utils/name");
+
 const groupViews = {
     success: {
         create({ number }) {
@@ -5,6 +7,11 @@ const groupViews = {
         },
         remove({ number }) {
             return `OWOJ ${number} berhasil di hapus dari sistem.`;
+        },
+        setGroupAdmin({ name, number }) {
+            return `Berhasil menetapkan admin ${formatName(
+                name
+            )} sebagai admin grup OWOJ ${number}.`;
         },
     },
     error: {

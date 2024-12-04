@@ -1,15 +1,26 @@
 const NotFoundError = require("../exceptions/NotFoundError");
 const groupServices = require("../services/group");
+const adminServices = require("../services/admin");
 const validator = require("../utils/validator");
 const errorMessages = require("../views/error");
 const groupViews = require("../views/group");
+const adminViews = require("../views/admin");
 
 class GroupHandler {
-    constructor(groupServices, validator, errorMessages, groupViews) {
+    constructor(
+        groupServices,
+        adminServices,
+        validator,
+        errorMessages,
+        groupViews,
+        adminViews
+    ) {
         this.groupServices = groupServices;
+        this.adminServices = adminServices;
         this.validate = validator.validate;
         this.errorMessages = errorMessages;
         this.groupViews = groupViews;
+        this.adminViews = adminViews;
     }
 
     async handleCreateGroup({ message, validation }) {
@@ -56,11 +67,41 @@ class GroupHandler {
 
         return this.groupViews.success.remove({ number: arg1 });
     }
+
+    async handleSetGroupAdmin({ message, validation, middlewareData }) {
+        const { phone } = this.validate({
+            command: message.body,
+            validation,
+            errorMessage: this.errorMessages.validation({
+                format: "/set-admin <nomor menggunakan kode negara (62)>",
+                example: "/set-admin 621234567890",
+            }),
+        });
+
+        const { group } = middlewareData;
+
+        const admin = await this.adminServices.find({ phoneNumber: phone });
+        if (!admin) {
+            throw new NotFoundError(this.adminViews.error.notFound({ phone }));
+        }
+
+        await this.groupServices.update({
+            adminPhoneNumber: phone,
+            id: group.id,
+        });
+
+        return this.groupViews.success.setGroupAdmin({
+            name: admin.name,
+            number: group.number,
+        });
+    }
 }
 
 module.exports = new GroupHandler(
     groupServices,
+    adminServices,
     validator,
     errorMessages,
-    groupViews
+    groupViews,
+    adminViews
 );

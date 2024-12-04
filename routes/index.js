@@ -81,6 +81,15 @@ const commands = () => [
         },
     },
     {
+        prompt: "/set-admin",
+        handler: GroupHandler.handleSetGroupAdmin.bind(GroupHandler),
+        middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
+        validation: {
+            regex: /^\/set-admin\s+(?<phone>\+?\d+)\s*$/,
+            multiple: false,
+        },
+    },
+    {
         prompt: "/lapor",
         handler: ReportHandler.handleCreateReport.bind(ReportHandler),
         middlewares: [verifyMessageInOWOJGroup],

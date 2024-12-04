@@ -63,12 +63,13 @@ describe("memberListWithReport", () => {
 
     it("should generate the report header correctly", () => {
         const result = memberListWithReport({
-            group: { number: 1 },
+            group: { number: 1, admin: { name: "Aqwam" } },
             members: [],
             periods,
         });
 
         expect(result).toContain("OWOJ 1");
+        expect(result).toContain("Aqwam");
         expect(showFormattedDate).toHaveBeenNthCalledWith(
             1,
             periods[0].startDate.toISOString()

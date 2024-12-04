@@ -11,6 +11,16 @@ describe("groupViews", () => {
             const result = groupViews.success.remove({ number: "123" });
             expect(result).toBe("OWOJ 123 berhasil di hapus dari sistem.");
         });
+
+        it("should return the correct message for setGroupAdmin", () => {
+            const result = groupViews.success.setGroupAdmin({
+                name: "Aqwam",
+                number: "123",
+            });
+            expect(result).toBe(
+                "Berhasil menetapkan admin Aqwam sebagai admin grup OWOJ 123."
+            );
+        });
     });
 
     describe("error", () => {

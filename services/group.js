@@ -25,6 +25,9 @@ const groupServices = {
             where: {
                 id,
             },
+            include: {
+                admin: true,
+            },
         });
     },
 
@@ -45,6 +48,17 @@ const groupServices = {
         await prisma.group.delete({
             where: {
                 id,
+            },
+        });
+    },
+
+    async update({ id, adminPhoneNumber }) {
+        await prisma.group.update({
+            where: {
+                id,
+            },
+            data: {
+                adminPhoneNumber,
             },
         });
     },

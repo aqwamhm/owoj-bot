@@ -19,6 +19,11 @@ const memberListWithReport = ({ members, periods, group }) => {
 
 - *Kordinator:* 👨‍🏫 Sutomo Budi Santoso
 - *Bot Developer:* 👨‍💻 Aqwam Hizbal Muhshiy
+${
+    group?.admin?.name
+        ? `- *Admin Grup:* 👤 ${formatName(group.admin.name)}\n`
+        : ""
+}
 - *Periode:* ${showFormattedDate(currentPeriodStartDate)} - ${showFormattedDate(
         currentPeriodEndDate
     )}

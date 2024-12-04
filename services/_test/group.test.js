@@ -12,6 +12,7 @@ jest.mock("../../config/db", () => {
                 findUnique: jest.fn(),
                 findMany: jest.fn(),
                 delete: jest.fn(),
+                update: jest.fn(),
             },
             $connect: jest.fn(),
         },
@@ -33,6 +34,7 @@ describe("groupServices", () => {
             );
 
             expect(prisma.group.findUnique).toHaveBeenCalledWith({
+                include: { admin: true },
                 where: { id: mockGroup.id },
             });
             expect(prisma.group.create).not.toHaveBeenCalled();
@@ -46,6 +48,7 @@ describe("groupServices", () => {
             await groupServices.create(mockGroup);
 
             expect(prisma.group.findUnique).toHaveBeenCalledWith({
+                include: { admin: true },
                 where: { id: mockGroup.id },
             });
             expect(prisma.group.create).toHaveBeenCalledWith({
@@ -62,6 +65,7 @@ describe("groupServices", () => {
             const result = await groupServices.find({ id: mockGroup.id });
 
             expect(prisma.group.findUnique).toHaveBeenCalledWith({
+                include: { admin: true },
                 where: { id: mockGroup.id },
             });
             expect(result).toEqual(mockGroup);
@@ -99,6 +103,23 @@ describe("groupServices", () => {
             await groupServices.remove(mockGroup);
 
             expect(prisma.group.delete).toHaveBeenCalledWith({
+                where: { id: mockGroup.id },
+            });
+        });
+    });
+
+    describe("update", () => {
+        it("should call prisma.group.update with the correct ID and admin phone number", async () => {
+            const mockGroup = { id: "group1", number: 1 };
+            prisma.group.update.mockResolvedValue(true);
+
+            await groupServices.update({
+                id: mockGroup.id,
+                adminPhoneNumber: "123456789",
+            });
+
+            expect(prisma.group.update).toHaveBeenCalledWith({
+                data: { adminPhoneNumber: "123456789" },
                 where: { id: mockGroup.id },
             });
         });
