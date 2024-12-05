@@ -30,6 +30,10 @@ jest.mock("../../utils/phone", () => ({
     formatPhoneNumber: jest.fn().mockReturnValue("Formatted phone number"),
 }));
 
+jest.mock("../../utils/number", () => ({
+    numberToEmoji: jest.fn((number) => number),
+}));
+
 describe("memberListWithReport", () => {
     const periods = [
         {
@@ -566,6 +570,7 @@ describe("adminList", () => {
         expect(result).toContain("Aqwam - Formatted phone number");
         expect(result).toContain("Budi - Formatted phone number");
         expect(result).toContain("Ivo - Formatted phone number");
+        expect(result).toContain("*Total Admin:* 3");
     });
 });
 
@@ -597,8 +602,10 @@ describe("groupList", () => {
             ],
         });
 
-        expect(result).toContain("OWOJ 1: 5");
-        expect(result).toContain("OWOJ 2: 10");
-        expect(result).toContain("OWOJ 3: 20");
+        expect(result).toContain("*OWOJ 1:* 5");
+        expect(result).toContain("*OWOJ 2:* 10");
+        expect(result).toContain("*OWOJ 3:* 20");
+        expect(result).toContain("*Total Grup:* 3");
+        expect(result).toContain("*Total Peserta:* 35");
     });
 });

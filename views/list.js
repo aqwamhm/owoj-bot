@@ -5,6 +5,7 @@ const {
 } = require("../utils/date");
 const { formatName } = require("../utils/name");
 const { formatPhoneNumber } = require("../utils/phone");
+const { numberToEmoji } = require("../utils/number");
 
 const memberListWithReport = ({ members, periods, group }) => {
     const { startDate: currentPeriodStartDate, endDate: currentPeriodEndDate } =
@@ -15,7 +16,7 @@ const memberListWithReport = ({ members, periods, group }) => {
 
     let result = `بسم الله الرحمن الرحيم
 
-*REKAP OWOJ ${group.number} on WA*
+*REKAP OWOJ ${numberToEmoji(group.number)} on WA*
 
 - *Kordinator:* 👨‍🏫 Sutomo Budi Santoso
 - *Bot Developer:* 👨‍💻 Aqwam Hizbal Muhshiy
@@ -256,15 +257,27 @@ const adminList = ({ admins }) => {
         )}\n`;
     });
 
+    result += `\n\n*Total Admin:* ${numberToEmoji(admins.length)}`;
+
     return result;
 };
 
 const groupList = ({ groups }) => {
+    let groupCount = 0;
+    let memberCount = 0;
     let result = `*Daftar grup yang terdaftar di sistem robot:*\n\n`;
 
     groups.forEach((group) => {
-        result += `- OWOJ ${group.number}: ${group._count.members} Peserta\n`;
+        groupCount++;
+        memberCount += group._count.members;
+        result += `- *OWOJ ${numberToEmoji(group.number)}:* ${
+            group._count.members
+        } Peserta\n`;
     });
+
+    result += `\n*Total Grup:* ${numberToEmoji(
+        groupCount
+    )}\n*Total Peserta:* ${numberToEmoji(memberCount)}`;
 
     return result;
 };
