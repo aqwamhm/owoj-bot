@@ -43,7 +43,7 @@ class CronHandler {
                         );
 
                         const list = await ListHandler.handleShowMemberList({
-                            id: { remote: group.id },
+                            message: { id: { remote: group.id } },
                         });
 
                         await this.client.sendMessage(group.id, list);
@@ -67,7 +67,7 @@ class CronHandler {
                 try {
                     const uncompletedMemberList =
                         await ListHandler.handleShowUncompletedMemberList({
-                            id: { remote: group.id },
+                            message: { id: { remote: group.id } },
                         });
                     const message = `${templateViews.oneDayReminder()}\n\n${uncompletedMemberList}`;
 
