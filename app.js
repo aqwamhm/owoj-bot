@@ -1,7 +1,7 @@
 require("dotenv").config();
 const cron = require("node-cron");
 const { Client, LocalAuth } = require("whatsapp-web.js");
-const { commandRouter } = require("./routes/routers");
+const { commandRouter, cronRouter } = require("./routes/routers");
 const qrcode = require("qrcode-terminal");
 const CronHandler = require("./handlers/CronHandler");
 
@@ -22,9 +22,12 @@ client.on("qr", (qr) => {
     qrcode.generate(qr, { small: true });
 });
 
+const cronHandler = new CronHandler(client);
+
 const routeCommand = async (message) => {
     if (process.env.NODE_ENV === "production") {
         await commandRouter(message);
+        await cronRouter({ message, cronHandler });
     } else {
         let result = "";
         message.reply = (text) => {
@@ -33,6 +36,7 @@ const routeCommand = async (message) => {
 
         try {
             await commandRouter(message);
+            await cronRouter({ message, cronHandler });
         } catch (e) {
             result = e.message;
         }
@@ -50,8 +54,6 @@ client.on("message_edit", async (message) => {
 });
 
 client.initialize();
-
-const cronHandler = new CronHandler(client);
 
 const newPeriod = `0 ${process.env.PERIOD_START_HOUR} * * ${process.env.PERIOD_START_DAY}`;
 cron.schedule(newPeriod, async () => {

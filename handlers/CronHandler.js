@@ -1,3 +1,4 @@
+const ConflictError = require("../exceptions/ConflictError");
 const groupServices = require("../services/group");
 const memberServices = require("../services/member");
 const periodServices = require("../services/period");
@@ -14,6 +15,18 @@ class CronHandler {
     async handleNewPeriod() {
         try {
             const { startDate, endDate } = getPeriodDate();
+
+            const verifyPeriodExists = await periodServices.find({
+                startDate,
+                endDate,
+            });
+
+            if (verifyPeriodExists) {
+                throw new ConflictError(
+                    "Periode sudah ada, tidak dapat membuat periode baru."
+                );
+            }
+
             await periodServices.create({
                 startDate,
                 endDate,
@@ -44,6 +57,12 @@ class CronHandler {
 
                         const list = await ListHandler.handleShowMemberList({
                             message: { id: { remote: group.id } },
+                            middlewareData: {
+                                group: {
+                                    number: group.number,
+                                    admin: group.admin,
+                                },
+                            },
                         });
 
                         await this.client.sendMessage(group.id, list);

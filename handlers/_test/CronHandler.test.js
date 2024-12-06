@@ -6,6 +6,7 @@ const templateViews = require("../../views/template");
 const { getPeriodDate } = require("../../utils/date");
 const ListHandler = require("../ListHandler");
 const CronHandler = require("../CronHandler");
+const ConflictError = require("../../exceptions/ConflictError");
 
 jest.mock("../../services/group");
 jest.mock("../../services/member");
@@ -31,6 +32,42 @@ describe("CronHandler", () => {
     });
 
     describe("handleNewPeriod", () => {
+        it("should throw ConflictError when period already exists", async () => {
+            const mockStartDate = "2023-01-01";
+            const mockEndDate = "2023-01-07";
+            const consoleSpy = jest
+                .spyOn(console, "error")
+                .mockImplementation(() => {});
+
+            getPeriodDate.mockReturnValue({
+                startDate: mockStartDate,
+                endDate: mockEndDate,
+            });
+
+            periodServices.find.mockResolvedValue({
+                id: 1,
+                startDate: mockStartDate,
+                endDate: mockEndDate,
+            });
+
+            await cronHandler.handleNewPeriod();
+
+            expect(periodServices.find).toHaveBeenCalledWith({
+                startDate: mockStartDate,
+                endDate: mockEndDate,
+            });
+            expect(periodServices.create).not.toHaveBeenCalled();
+            expect(
+                memberServices.incrementAllCurrentJuz
+            ).not.toHaveBeenCalled();
+            expect(reportServices.createMany).not.toHaveBeenCalled();
+            expect(groupServices.getAll).not.toHaveBeenCalled();
+            expect(client.sendMessage).not.toHaveBeenCalled();
+            expect(consoleSpy).toHaveBeenCalledWith(expect.any(ConflictError));
+
+            consoleSpy.mockRestore();
+        });
+
         it("should create a new period, increment member juz, create reports, and notify groups", async () => {
             const mockStartDate = "2023-01-01";
             const mockEndDate = "2023-01-07";
@@ -40,6 +77,7 @@ describe("CronHandler", () => {
                 startDate: mockStartDate,
                 endDate: mockEndDate,
             });
+            periodServices.find.mockResolvedValue(null);
             memberServices.findAll.mockResolvedValue([
                 { id: 1, name: "Member 1" },
             ]);
@@ -105,6 +143,7 @@ describe("CronHandler", () => {
                 startDate: mockStartDate,
                 endDate: mockEndDate,
             });
+            periodServices.find.mockResolvedValue(null);
             memberServices.findAll.mockResolvedValue([
                 { id: 1, name: "Member 1" },
             ]);

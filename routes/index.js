@@ -160,4 +160,17 @@ const commands = () => [
     },
 ];
 
-module.exports = { commands };
+const crons = (handler) => [
+    {
+        prompt: "!one-day-reminder!",
+        middlewares: [verifyMessageFromAdmin],
+        handler: handler.handleOneDayBeforeNewPeriod.bind(handler),
+    },
+    {
+        prompt: "!new-period!",
+        middlewares: [verifyMessageFromAdmin],
+        handler: handler.handleNewPeriod.bind(handler),
+    },
+];
+
+module.exports = { commands, crons };

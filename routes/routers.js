@@ -1,5 +1,5 @@
 const ClientError = require("../exceptions/ClientError");
-const { commands } = require(".");
+const { commands, crons } = require("./index");
 
 const commandRouter = async (message) => {
     message.body = message.body.toLowerCase();
@@ -40,4 +40,32 @@ const commandRouter = async (message) => {
     }
 };
 
-module.exports = { commandRouter };
+const cronRouter = async ({ message, cronHandler }) => {
+    const cron = crons(cronHandler).find(
+        (cron) => message.body === cron.prompt
+    );
+
+    if (cron) {
+        try {
+            if (cron.middlewares) {
+                for (const middleware of cron.middlewares) {
+                    await middleware(message);
+                }
+            }
+
+            await cron.handler();
+
+            message?.reply("Cron job ran successfully");
+        } catch (e) {
+            if (e instanceof ClientError) {
+                message.reply(e.message);
+                return;
+            }
+
+            message?.reply("Terjadi kesalahan");
+            console.error(e);
+        }
+    }
+};
+
+module.exports = { commandRouter, cronRouter };

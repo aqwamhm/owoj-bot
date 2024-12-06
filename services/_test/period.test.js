@@ -9,6 +9,7 @@ jest.mock("../../config/db", () => {
             period: {
                 create: jest.fn(),
                 findMany: jest.fn(),
+                findFirst: jest.fn(),
             },
             $connect: jest.fn(),
         },
@@ -18,6 +19,51 @@ jest.mock("../../config/db", () => {
 describe("periodServices", () => {
     afterEach(() => {
         jest.clearAllMocks();
+    });
+
+    describe("find", () => {
+        it("should find a period with matching start and end dates", async () => {
+            const mockPeriod = {
+                id: 1,
+                startDate: new Date("2024-01-01"),
+                endDate: new Date("2024-01-07"),
+            };
+            const searchParams = {
+                startDate: new Date("2024-01-01"),
+                endDate: new Date("2024-01-07"),
+            };
+
+            prisma.period.findFirst.mockResolvedValue(mockPeriod);
+
+            const result = await periodServices.find(searchParams);
+
+            expect(prisma.period.findFirst).toHaveBeenCalledWith({
+                where: {
+                    startDate: searchParams.startDate,
+                    endDate: searchParams.endDate,
+                },
+            });
+            expect(result).toEqual(mockPeriod);
+        });
+
+        it("should return null if no matching period is found", async () => {
+            const searchParams = {
+                startDate: new Date("2024-01-01"),
+                endDate: new Date("2024-01-07"),
+            };
+
+            prisma.period.findFirst.mockResolvedValue(null);
+
+            const result = await periodServices.find(searchParams);
+
+            expect(prisma.period.findFirst).toHaveBeenCalledWith({
+                where: {
+                    startDate: searchParams.startDate,
+                    endDate: searchParams.endDate,
+                },
+            });
+            expect(result).toBeNull();
+        });
     });
 
     describe("create", () => {
