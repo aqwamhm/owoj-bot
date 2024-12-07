@@ -54,4 +54,58 @@ describe("utilityViews", () => {
             });
         });
     });
+
+    describe("tafsir", () => {
+        describe("success", () => {
+            it("should format the tafsir content correctly", () => {
+                const mockTafsir = {
+                    verses: [
+                        {
+                            chapter: 1,
+                            verse: 1,
+                            interpretation: "Interpretation of verse 1:1",
+                        },
+                        {
+                            chapter: 1,
+                            verse: 2,
+                            interpretation: "Interpretation of verse 1:2",
+                        },
+                    ],
+                    benefits: "Benefits of reading this tafsir",
+                };
+                const mockChapters = [
+                    {
+                        id: 1,
+                        intro: "Introduction to Chapter 1",
+                    },
+                ];
+                const result = utilityViews.tafsir.success({
+                    tafsir: mockTafsir,
+                    chapters: mockChapters,
+                });
+                expect(result).toBe(
+                    `-----
+Introduction to Chapter 1-----
+
+*1:1*
+Interpretation of verse 1:1
+
+*1:2*
+Interpretation of verse 1:2
+
+-----
+Benefits of reading this tafsir`
+                );
+            });
+        });
+
+        describe("error", () => {
+            it("should return the correct message when page is not found", () => {
+                const result = utilityViews.tafsir.error.pageNotFound();
+                expect(result).toBe(
+                    "Halaman tidak tersedia, halaman yang tersedia adalah 1 sampai 604."
+                );
+            });
+        });
+    });
 });

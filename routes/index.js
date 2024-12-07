@@ -158,6 +158,15 @@ const commands = () => [
             multiple: false,
         },
     },
+    {
+        prompt: "/tafsir",
+        handler: UtilityHandler.handleTafsirRequest.bind(UtilityHandler),
+        middlewares: [],
+        validation: {
+            regex: /^\/tafsir\s+(?<page>\d+)\s*$/,
+            multiple: false,
+        },
+    },
 ];
 
 const crons = (handler) => [

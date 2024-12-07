@@ -2,6 +2,8 @@ const NotFoundError = require("../exceptions/NotFoundError");
 const { validate } = require("../utils/validator");
 const errorMessages = require("../views/error");
 const utilityViews = require("../views/utility");
+const tafsir = require("../resources/tafsir/pages.json");
+const { chapters } = require("../resources/tafsir/chapters.json");
 
 class UtilityHandler {
     constructor(utilityViews) {
@@ -139,6 +141,30 @@ class UtilityHandler {
         } catch (error) {
             throw new Error(error.message);
         }
+    }
+
+    async handleTafsirRequest({ message, validation }) {
+        const { page } = validate({
+            command: message.body,
+            validation,
+            errorMessage: errorMessages.validation({
+                format: "/tafsir halaman",
+                example: "/tafsir 1",
+            }),
+        });
+
+        if (page > 604 || page < 1) {
+            throw new NotFoundError(
+                this.utilityViews.tafsir.error.pageNotFound()
+            );
+        }
+
+        const tafsirPage = tafsir.pages.find((p) => p.id == page);
+
+        return this.utilityViews.tafsir.success({
+            tafsir: tafsirPage,
+            chapters: chapters,
+        });
     }
 }
 

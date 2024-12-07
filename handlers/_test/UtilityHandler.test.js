@@ -324,4 +324,38 @@ describe("UtilityHandler", () => {
             );
         });
     });
+
+    describe("handleTafsirRequest", () => {
+        const mockValidation = {};
+
+        it("should return tafsir for a valid page number", async () => {
+            const message = { body: "/tafsir 1" };
+            validate.mockReturnValue({ page: 1 });
+
+            const result = await UtilityHandler.handleTafsirRequest({
+                message,
+                validation: mockValidation,
+            });
+
+            expect(result).toEqual(
+                utilityViews.tafsir.success({
+                    tafsir: { id: 1, content: "Tafsir content" },
+                    chapters: expect.any(Array),
+                })
+            );
+        });
+
+        it("should throw NotFoundError for an invalid page number", async () => {
+            const message = { body: "/tafsir 605" };
+            validate.mockReturnValue({ page: 605 });
+
+            await expect(
+                UtilityHandler.handleTafsirRequest({
+                    message,
+                    validation: mockValidation,
+                })
+            ).rejects.toThrow(NotFoundError);
+            expect(utilityViews.tafsir.error.pageNotFound).toHaveBeenCalled();
+        });
+    });
 });

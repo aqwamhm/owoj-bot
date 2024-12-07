@@ -28,6 +28,30 @@ const utilityViews = {
             },
         },
     },
+    tafsir: {
+        success({ tafsir, chapters }) {
+            let result = "";
+
+            tafsir.verses.forEach((verse) => {
+                if (verse.verse == 1) {
+                    result += `-----\n${
+                        chapters.find((c) => c.id == verse.chapter).intro
+                    }-----\n\n`;
+                }
+
+                result += `*${verse.chapter}:${verse.verse}*\n${verse.interpretation}\n\n`;
+            });
+
+            result += `-----\n${tafsir.benefits}`;
+
+            return result;
+        },
+        error: {
+            pageNotFound() {
+                return "Halaman tidak tersedia, halaman yang tersedia adalah 1 sampai 604.";
+            },
+        },
+    },
 };
 
 module.exports = utilityViews;

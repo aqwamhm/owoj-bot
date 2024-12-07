@@ -1,0 +1,574 @@
+{
+    "chapters": [
+        {
+            "id": 1,
+            "name": "Al-Fatihah",
+            "intro": "SURAH AL-FĀTIḤAH\nMakkiyah\n- TUJUAN POKOK\nMewujudkan orientasi penghambaan yang murni hanya kepada Allah -Ta'ālā-.\n\nSurah ini dinamakan surah Al-Fātiḥah (Pembuka) karena posisinya sebagai pembuka Kitab Allah -Ta'ālā-. Surah ini juga dinamakan Ummul Qur’an (Induk Al-Qur`ān) karena ia berisi topik-topik utama Al-Qur`ān yang meliputi aspek keimanan, ibadah, kisah-kisah dan lain-lain. Dan surah ini merupakan surah yang paling agung di dalam Al-Qur`ān, dan surah ini disebut pula dengan as-sab’ul matsani (tujuh ayat yang di ulang-ulang)."
+        },
+        {
+            "id": 2,
+            "name": "Al-Baqarah",
+            "intro": "SURAH AL-BAQARAH\nMadaniah\n- TUJUAN POKOK\nPerintah untuk mewujudkan kekhalifahan di muka bumi dengan cara menerapkan ajaran Islam, perintah untuk berserah diri kepada Allah, dan peringatan dari kondisi Bani Israil.\n\nSurah ini dinamakan surah Al-Baqarah (Sapi Betina) karena menceritakan  kisah tentang sapi betina milik kaum Bani Israil."
+        },
+        {
+            "id": 3,
+            "name": "Ali 'Imran",
+            "intro": "SURAH ALI ‘IMRAN\nMadaniah\n- TUJUAN POKOK\nMembuktikan bahwa agama Islam adalah agama yang benar; dengan tujuan membantah syubhat-syubhat yang dilancarkan oleh kalangan Ahli Kitab dan untuk meneguhkan keimanan orang-orang mukmin.\n\nSurah ini termasuk Surah madaniyah. Disebut Surah Ali Imran karena menceritakan keluarga Imran pada ayat 33."
+        },
+        {
+            "id": 4,
+            "name": "An-Nisa",
+            "intro": "SURAH AN-NISĀ`\nMadaniah\n- TUJUAN POKOK\nPenataan masyarakat muslim, pengeratan hubungan sesama mereka, penjagaan terhadap hak-hak mereka, motivasi untuk berjihad, dan bantahan terhadap klaim pembunuhan Almasih Isa.\n\nDisebut surah An-Nisā` karena banyak membahas tentang kaum wanita dan menjelaskan ketentuan-ketentuan hukum yang berkenaan dengan kaum wanita secara rinci."
+        },
+        {
+            "id": 5,
+            "name": "Al-Ma'idah",
+            "intro": "SURAH AL-MĀ`IDAH\nMadaniah\n- TUJUAN POKOK\nPerintah memenuhi akad yang disepakati dan peringatan dari menyerupai Ahli Kitab dalam mengkhianati dan membatalkannya sepihak.\n"
+        },
+        {
+            "id": 6,
+            "name": "Al-An'am",
+            "intro": "SURAH AL-AN’ĀM\nMakkiyah\n- TUJUAN POKOK\nMenjelaskan dan mengukuhkan akidah tauhid dan membantah berbagai kesesatan kaum musyrikin.\n"
+        },
+        {
+            "id": 7,
+            "name": "Al-A'raf",
+            "intro": "SURAH AL-A’RĀF\nMakkiyah\n- TUJUAN POKOK\nKemenangan kebenaran dalam pertarungannya dengan kebatilan, serta penjelasan tentang akibat yang akan didapatkan oleh orang-orang yang membangkang terhadap kebenaran di dunia dan di akhirat.\n"
+        },
+        {
+            "id": 8,
+            "name": "Al-Anfal",
+            "intro": "SURAH AL-ANFĀL\nMadaniah\n- TUJUAN POKOK\nPenyebutan karunia Allah terhadap kaum mukminin dengan memenangkan mereka di Badar, serta penjelasan tentang sunatullah dalam persoalan kemenangan dan kekalahan.\n"
+        },
+        {
+            "id": 9,
+            "name": "At-Tawbah",
+            "intro": "SURAH AT-TAUBAH\nMadaniah\n- TUJUAN POKOK\nBerlepas diri dari kaum musyrikin dan munafikin, dan berjihad melawan mereka, serta terbukanya pintu tobat bagi mereka yang bertobat.\n"
+        },
+        {
+            "id": 10,
+            "name": "Yunus",
+            "intro": "SURAH YŪNUS\nMakiyah\n- TUJUAN POKOK\nPembuktian adanya kenabian dengan beragam dalil dan seruan kepada orang-orang kafir yang mendustakannya untuk beriman disertai ancaman azab terhadap mereka.\n"
+        },
+        {
+            "id": 11,
+            "name": "Hud",
+            "intro": "SURAH HŪD\nMakiyah\n- TUJUAN POKOK\nPenguatan hati Nabi -ṣallallāhu 'alaihi wa sallam- dan orang-orang mukmin dengan kisah-kisah para nabi sebelumnya serta pemberian ancaman keras terhadap orang-orang yang mendustakan beliau.\n"
+        },
+        {
+            "id": 12,
+            "name": "Yusuf",
+            "intro": "SURAH YŪSUF\nMakiyah\n- TUJUAN POKOK\nMengambil pelajaran dari indahnya pemeliharaan Allah terhadap para walinya dan pemberian kekuasaan kepada mereka, serta baiknya hasil akhir perjuangan yang mereka raih.\n"
+        },
+        {
+            "id": 13,
+            "name": "Ar-Ra'd",
+            "intro": "SURAH AR-RA’D\nMadaniyah\n- TUJUAN POKOK\nBantahan terhadap orang-orang yang mengingkari eksistensi wahyu dan kenabian dengan penjelasan banyaknya fenomena yang memperlihatkan keagungan Allah.\n"
+        },
+        {
+            "id": 14,
+            "name": "Ibrahim",
+            "intro": "SURAH IBRAHIM\nMakiyah\n- TUJUAN POKOK\nPenetapan bahwa para rasul sudah menjelaskan dan menyampaikan (tugas mereka), dan ancaman azab bagi orang yang berpaling dari mereka.\n"
+        },
+        {
+            "id": 15,
+            "name": "Al-Hijr",
+            "intro": "SURAH AL-ḤIJR\nMakkiyah\n- TUJUAN POKOK\nAncaman terhadap orang-orang yang mengolok-olok Al-Qur`ān, dan janji bahwa Allah menjaga Al-Qur`ān sebagai bentuk penguatan dan peneguhan hari Nabi Muhammad -ṣallallāhu 'alaihi wa sallam-.\n"
+        },
+        {
+            "id": 16,
+            "name": "An-Nahl",
+            "intro": "SURAH AN-NAḤL\nMakkiyah\n- TUJUAN POKOK\nMengingatkan manusia tentang nikmat-nikmat Allah yang menuntun mereka untuk mengenal Sang Pemberi nikmat, Allah -Subḥānahu wa Ta'ālā-.\n"
+        },
+        {
+            "id": 17,
+            "name": "Al-Isra",
+            "intro": "SURAH AL-ISRĀ`\nMakkiyah\n- TUJUAN POKOK\nPenguatan dan pertolongan Allah terhadap Rasul-Nya -ṣallallāhu 'alaihi wa sallam- dengan adanya mukjizat yang jelas dan pemberian kabar gembira padanya berupa kemenangan dan keteguhan. \n"
+        },
+        {
+            "id": 18,
+            "name": "Al-Kahf",
+            "intro": "SURAH AL-KAHF\nMakkiyah\n- TUJUAN POKOK\nPenjelasan metode menghadapi berbagai macam fitnah.\n"
+        },
+        {
+            "id": 19,
+            "name": "Maryam",
+            "intro": "SURAH MARYAM\nMakkiyah\n- TUJUAN POKOK\nBantahan terhadap keyakinan kaum musyrikin dan kaum Nasrani yang menisbahkan kepemilikan anak kepada Allah serta penjelasan luasnya rahmat Allah terhadap para hamba-Nya.\n"
+        },
+        {
+            "id": 20,
+            "name": "Taha",
+            "intro": "SURAH ṬĀ-HĀ\nMakkiyah\n- TUJUAN POKOK\nKebahagiaan diraih dengan mengikuti tuntunan Al-Qur`ān dan mengemban ajarannya, sedangkan kesengsaraan didapat dengan menyelisihinya.\n"
+        },
+        {
+            "id": 21,
+            "name": "Al-Anbya",
+            "intro": "SURAH AL-ANBIYĀ`\nMakkiyah\n- TUJUAN POKOK\nPenetapan kerasulan, penjelasan kesamaan misi para nabi, dan pertolongan Allah terhadap mereka.\n"
+        },
+        {
+            "id": 22,
+            "name": "Al-Hajj",
+            "intro": "SURAH AL-ḤAJJ\nMadaniyah\n- TUJUAN POKOK\nPengagungan terhadap Allah -Subḥānahu wa Ta'ālā-, pengagungan terhadap syiar-syiar agama-Nya, dan ketundukan terhadap perintah-Nya. \n"
+        },
+        {
+            "id": 23,
+            "name": "Al-Mu'minun",
+            "intro": "SURAH AL-MU`MINŪN\nMakkiyah\n- TUJUAN POKOK\nPenjelasan tentang keselamatan orang-orang mukmin dan kesengsaraan orang-orang kafir.\n"
+        },
+        {
+            "id": 24,
+            "name": "An-Nur",
+            "intro": "SURAH AN-NŪR\nMadaniyah\n- TUJUAN POKOK\nSeruan untuk menjaga ifah (kesucian diri dari maksiat) dan menjaga kehormatan manusia.\n"
+        },
+        {
+            "id": 25,
+            "name": "Al-Furqan",
+            "intro": "SURAH AL-FURQĀN\nMakkiyah\n- TUJUAN POKOK\nPerjuangan membela Rasulullah -ṣallallāhu 'alaihi wa sallam- dan Al-Qur`ān dan membantah berbagai syubhat dan doktrin kaum musyrikin.\n"
+        },
+        {
+            "id": 26,
+            "name": "Ash-Shu'ara",
+            "intro": "SURAH ASY-SYU'ARĀ`\nMakkiyah\n- TUJUAN POKOK\nPenjelasan ayat-ayat Allah tentang pertolongan terhadap para rasul dan pembinasaan terhadap kaum yang mendustakan mereka.\n"
+        },
+        {
+            "id": 27,
+            "name": "An-Naml",
+            "intro": "SURAH AN-NAML\nMakkiyah\n- TUJUAN POKOK\nPemaparan anugerah Al-Qur`ān yang diberikan kepada Nabi -ṣallallāhu 'alaihi wa sallam-, serta motivasi kepada beliau agar mensyukurinya dan bersabar dalam menyampaikannya.\n"
+        },
+        {
+            "id": 28,
+            "name": "Al-Qasas",
+            "intro": "SURAH AL-QAṢAṢ\nMakkiyah\n- TUJUAN POKOK\nSunatullah dalam memberikan kemenangan terhadap orang-orang mukmin yang tertindas dan memberikan kebinasaan terhadap orang-orang kafir yang sombong.\n"
+        },
+        {
+            "id": 29,
+            "name": "Al-'Ankabut",
+            "intro": "SURAH AL-'ANKABŪT\nMakkiyah\n- TUJUAN POKOK\nPerintah bersabar dan berpendirian teguh ketika mendapat cobaan dan ujian, serta penjelasan tentang indahnya ganjaran kesabaran.\n"
+        },
+        {
+            "id": 30,
+            "name": "Ar-Rum",
+            "intro": "SURAH AR-RŪM\nMakkiyah\n- TUJUAN POKOK\nPenegasan monopoli Allah dalam mengatur berbagai urusan dan penjelasan sunatullah dalam kehidupan makhluk-Nya.\n"
+        },
+        {
+            "id": 31,
+            "name": "Luqman",
+            "intro": "SURAH LUQMĀN\nMakkiyah\n- TUJUAN POKOK\nPerintah untuk mengikuti berbagai hikmah yang ada dalam Al-Qur`ān dan peringatan dari berpaling darinya.\n"
+        },
+        {
+            "id": 32,
+            "name": "As-Sajdah",
+            "intro": "SURAH AS-SAJDAH\nMakkiyah\n- TUJUAN POKOK\nPenjelasan tentang hakikat penciptaan dan kondisi manusia di dunia dan di akhirat.\n"
+        },
+        {
+            "id": 33,
+            "name": "Al-Ahzab",
+            "intro": "SURAH AL-AḤZĀB\nMadaniyah\n- TUJUAN POKOK\nPenjelasan tentang  pertolongan Allah terhadap Nabi-Nya -ṣallallāhu 'alaihi wa sallam- dan penjagaan-Nya terhadap diri dan keluarganya.\n"
+        },
+        {
+            "id": 34,
+            "name": "Saba",
+            "intro": "SURAH SABA`\nMakkiyah\n- TUJUAN POKOK\nPenjelasan kondisi manusia dalam menyikapi karunia Allah dan sunatullah dalam pergantiannya.\n"
+        },
+        {
+            "id": 35,
+            "name": "Fatir",
+            "intro": "SURAH FĀṬIR\nMakkiyah\n- TUJUAN POKOK\nPembahasan kebutuhan mutlak para hamba terhadap pertolongan Sang Pencipta langit dan bumi dan tidak butuhnya Dia secara mutlak kepada para hamba.\n"
+        },
+        {
+            "id": 36,
+            "name": "Ya-Sin",
+            "intro": "SURAH YĀ-SĪN\nMakkiyah\n- TUJUAN POKOK\nPenegasan perkara kerasulan dan kebangkitan beserta bukti-bukti keduanya.\n"
+        },
+        {
+            "id": 37,
+            "name": "As-Saffat",
+            "intro": "SURAH AṢ-ṢĀFFĀT\nMakkiyah\n- TUJUAN POKOK\nPenyucian Allah dari apa yang kaum musyrikin nisbatkan kepada-Nya dan membatalkan angapan-anggapan mereka terhadap malaikat-malaikat dan jin.\n"
+        },
+        {
+            "id": 38,
+            "name": "Sad",
+            "intro": "SURAH ṢĀD\nMakkiyah\n- TUJUAN POKOK\nPenjelasan tentang berbantah-bantahan dalam kebatilan beserta akibatnya.\n"
+        },
+        {
+            "id": 39,
+            "name": "Az-Zumar",
+            "intro": "SURAT AZ-ZUMAR\nMakkiyah\n- TUJUAN POKOK\nSeruan untuk mentauhidkan Allah, berbuat ikhlas, dan mencampakkan syirik.\n"
+        },
+        {
+            "id": 40,
+            "name": "Ghafir",
+            "intro": "SURAH GĀFIR\nMakkiyah\n- TUJUAN POKOK\nMenjelaskan kondisi orang-orang yang menentang ayat-ayat Allah dan bantahan terhadap mereka.\n"
+        },
+        {
+            "id": 41,
+            "name": "Fussilat",
+            "intro": "SURAH FUṢṢILAT\nMakkiyah\n- TUJUAN POKOK\nPenjelasan tentang keadaan orang-orang yang berpaling dari Allah dan akhir kehidupan mereka.\n"
+        },
+        {
+            "id": 42,
+            "name": "Ash-Shuraa",
+            "intro": "SURAH ASY-SYŪRĀ\nMakkiyah\n- TUJUAN POKOK\nPenjelasan tentang kesempurnaan syariat Allah, kewajiban mengikutinya, dan peringatan dari menyelisihinya.\n"
+        },
+        {
+            "id": 43,
+            "name": "Az-Zukhruf",
+            "intro": "SURAH AZ-ZUKHRUF\nMakkiyah\n- TUJUAN POKOK\nPeringatan dari fitnah perhiasan dunia agar tidak menjadi sarana kesyirikan.\n"
+        },
+        {
+            "id": 44,
+            "name": "Ad-Dukhan",
+            "intro": "SURAT AD-DUKHĀN\nMakkiyah\n- TUJUAN POKOK\nAncaman terhadap kaum musyrikin dengan menjelaskan azab yang menanti mereka di dunia dan di akhirat.\n"
+        },
+        {
+            "id": 45,
+            "name": "Al-Jathiyah",
+            "intro": "SURAH AL-JĀṠIYAH\nMakkiyah\n- TUJUAN POKOK\nPenjelasan tentang sikap manusia terhadap ayat-ayat syariat (wahyu) dan ayat-ayat kauniah serta bantahan terhadap hujah kaum sombong yang mengingkari kebangkitan dan ancaman terhadap mereka.\n"
+        },
+        {
+            "id": 46,
+            "name": "Al-Ahqaf",
+            "intro": "SURAH AL-AḤQĀF\nMakkiyah\n- TUJUAN POKOK\nPenjelasan kebutuhan manusia terhadap risalah Allah dan peringatan terhadap orang-orang yang berpaling darinya.\n"
+        },
+        {
+            "id": 47,
+            "name": "Muhammad",
+            "intro": "SURAH MUḤAMMAD\nMadaniah\n- TUJUAN POKOK\nMenjelaskan tentang pengobaran semangat orang-orang yang beriman untuk berperang untuk memperkuat mereka dan melemahkan orang-orang kafir.\n"
+        },
+        {
+            "id": 48,
+            "name": "Al-Fath",
+            "intro": "SURAH AL-FATḤ\nMadaniyah\n- TUJUAN POKOK\nPemberian kabar gembira kepada Nabi -ṣallallāhu 'alaihi wa sallam- dan kaum mukminin dengan adanya kemenangan dan kejayaan.\n"
+        },
+        {
+            "id": 49,
+            "name": "Al-Hujurat",
+            "intro": "SURAT AL-ḤUJURĀT\nMadaniyah\n- TUJUAN POKOK\nPenjagaan lisan dan penjelasan dampak positifnya terhadap keimanan individu dan masyarakat.\n"
+        },
+        {
+            "id": 50,
+            "name": "Qaf",
+            "intro": "SURAT QĀF\nMakkiyah\n- TUJUAN POKOK\nMenasihati dan menghidupkan hati dengan perkara kematian dan kebangkitan.\n"
+        },
+        {
+            "id": 51,
+            "name": "Adh-Dhariyat",
+            "intro": "SURAT AŻ-ŻĀRIYĀT\nMakkiyah\n- TUJUAN POKOK\nMemperkenalkan pada jin dan manusia bahwa sumber rezeki mereka berasal dari Allah semata agar mereka memurnikan ibadah kepada-Nya.\n"
+        },
+        {
+            "id": 52,
+            "name": "At-Tur",
+            "intro": "SURAT AṬ-ṬŪR\nMakkiyah\n- TUJUAN POKOK\nPemaparan hujah-hujah dan bukti-bukti kebenaran untuk membantah doktrin orang-orang yang mendustakan Nabi -ṣallallāhu 'alaihi wa sallam-.\n"
+        },
+        {
+            "id": 53,
+            "name": "An-Najm",
+            "intro": "SURAH AN-NAJM\nMakkiyah\n- TUJUAN POKOK\nPengukuhan kebenaran wahyu, yaitu bahwa sumbernya dari sisi Allah.\n"
+        },
+        {
+            "id": 54,
+            "name": "Al-Qamar",
+            "intro": "SURAH AL-QAMAR\nMakkiyah\n- TUJUAN POKOK\nMengingatkan tentang nikmat berupa dimudahkannya Al-Qur`ān serta kandungannya yang berupa tanda-tanda kebesaran Allah dan peringatan-Nya.\n"
+        },
+        {
+            "id": 55,
+            "name": "Ar-Rahman",
+            "intro": "SURAT AR-RAḤMĀN\nMadaniyah\n- TUJUAN POKOK\nPeringatan kepada jin dan manusia tentang banyaknya karunia Allah yang lahir dan yang batin serta berbagai jejak rahmat itu di dunia dan akhirat.\n"
+        },
+        {
+            "id": 56,
+            "name": "Al-Waqi'ah",
+            "intro": "SURAT AL-WĀQI’AH\nMakkiyah\n- TUJUAN POKOK\nPenjelasan tentang kondisi-kondisi para hamba di hari Kiamat.\n"
+        },
+        {
+            "id": 57,
+            "name": "Al-Hadid",
+            "intro": "SURAT AL-ḤADĪD\nMadaniyah\n- TUJUAN POKOK\nPeningkatan kualitas diri dengan keimanan dan berinfak di jalan Allah.\n"
+        },
+        {
+            "id": 58,
+            "name": "Al-Mujadila",
+            "intro": "SURAH AL-MUJĀDILAH\nMadaniyah\n- TUJUAN POKOK\nMenjelaskan tentang ilmu Allah yang menyeluruh dan pengetahuan-Nya yang luas, untuk mendidik manusia supaya merasa diawasi oleh-Nya dan peringatan supaya mereka tidak menyelisihi-Nya.\n"
+        },
+        {
+            "id": 59,
+            "name": "Al-Hashr",
+            "intro": "SURAT AL-ḤASYR\nMadaniyah\n- TUJUAN POKOK\nMenjelaskan tentang kekuatan Allah dan keperkasaan-Nya dalam melemahkan orang-orang Yahudi dan kaum munafik dan memperlihatkan perpecahan mereka, dan sebaliknya Dia memperlihatkan persatuan kaum mukminin.\n"
+        },
+        {
+            "id": 60,
+            "name": "Al-Mumtahanah",
+            "intro": "SURAT AL-MUMTAḤANAH\nMadaniyah\n- TUJUAN POKOK\nPeringatan terhadap orang-orang beriman dari menjadikan orang-orang kafir sebagai teman setia dan pelindung.\n"
+        },
+        {
+            "id": 61,
+            "name": "As-Saf",
+            "intro": "SURAT AṢ-ṢAFF\nMadaniyah\n- TUJUAN POKOK\nMotivasi terhadap orang-orang yang beriman untuk menolong agama Allah.\n"
+        },
+        {
+            "id": 62,
+            "name": "Al-Jumu'ah",
+            "intro": "SURAH AL-JUMU’AH\nMadaniyah\n- TUJUAN POKOK\nKarunia besar Allah kepada umat ini dan mengistimewakannya dengan sebab Rasul-Nya, serta penjelasan keutamaan hari Jumat.\n"
+        },
+        {
+            "id": 63,
+            "name": "Al-Munafiqun",
+            "intro": "SURAT AL-MUNĀFIQŪN\nMadaniyah\n- TUJUAN POKOK\nPenjelasan hakikat kaum munafikin serta peringatan untuk mewaspadai mereka.\n"
+        },
+        {
+            "id": 64,
+            "name": "At-Taghabun",
+            "intro": "SURAT AT-TAGĀBŪN\nMadaniyah\n- TUJUAN POKOK\nPeringatan tentang adanya penyesalan dan kerugian pada hari Kiamat kelak.\n"
+        },
+        {
+            "id": 65,
+            "name": "At-Talaq",
+            "intro": "SURAT AṬ-ṬALĀQ\nMadaniyah\n- TUJUAN POKOK\nKeterangan hukum-hukum talak, pengagungan terhadap batasan-batasannya, dan penjelasan buah ketakwaan.\n"
+        },
+        {
+            "id": 66,
+            "name": "At-Tahrim",
+            "intro": "SURAT AT-TAḤRĪM\nMadaniyah\n- TUJUAN POKOK\nSeruan agar di rumah-rumah ditegakkan pengagungan terhadap batasan-batasan Allah dan memprioritaskan keridaan-Nya semata.\n"
+        },
+        {
+            "id": 67,
+            "name": "Al-Mulk",
+            "intro": "SURAH AL-MULK\nMadaniyah\n- TUJUAN POKOK\nMenunjukkan kesempurnaan kerajaan Allah dan kekuasaan-Nya, sebagai matovasi agar takut kepada-Nya dan peringatan dari siksa-Nya.\n"
+        },
+        {
+            "id": 68,
+            "name": "Al-Qalam",
+            "intro": "SURAH AL-QALAM\nMakkiyah\n- TUJUAN POKOK\nKesaksian Allah terhadap akhlak baik Nabi -ṣallallāhu 'alaihi wa sallam- serta pembelaan dan penguatan-Nya terhadap beliau.\n"
+        },
+        {
+            "id": 69,
+            "name": "Al-Haqqah",
+            "intro": "SURAH AL-ḤĀQQAH\nMakkiyah\n- TUJUAN POKOK\nPenegasan bahwa peristiwa hari Kiamat dan pembalasan amalan di dalamnya adalah benar dan tidak ada keraguan padanya.\n"
+        },
+        {
+            "id": 70,
+            "name": "Al-Ma'arij",
+            "intro": "SURAH AL-MA’ĀRIJ\nMakkiyah\n- TUJUAN POKOK\nKeterangan kondisi para hamba dan pembalasan amalan mereka pada hari Kiamat.\n"
+        },
+        {
+            "id": 71,
+            "name": "Nuh",
+            "intro": "SURAH NŪḤ\nMakkiyah\n- TUJUAN POKOK\nPenjelasan metode berdakwah kepada para dai melalui kisah Nabi Nuh -'alaihissalām-.\n"
+        },
+        {
+            "id": 72,
+            "name": "Al-Jinn",
+            "intro": "SURAH AL-JIN\nMakkiyah\n- TUJUAN POKOK\nPenjelasan batilnya agama kaum musyrikan dengan memaparkan kondisi dan keimanan bangsa jin ketika mereka mendengarkan Al-Qur`ān.\n"
+        },
+        {
+            "id": 73,
+            "name": "Al-Muzzammil",
+            "intro": "SURAH AL-MUZZAMMIL\nMakkiyah\n- TUJUAN POKOK\nKeterangan tentang hal-hal yang membantu para dai dalam mengemban amanah dakwah.\n"
+        },
+        {
+            "id": 74,
+            "name": "Al-Muddaththir",
+            "intro": "SURAH AL-MUDDAṠṠIR\nMakkiyah\n- TUJUAN POKOK\nPerintah untuk bersungguh-sungguh dalam mendakwahi orang-orang yang mendustakan para rasul dan memperingatkan mereka dengan akhirat dan Al-Qur`ān.\n"
+        },
+        {
+            "id": 75,
+            "name": "Al-Qiyamah",
+            "intro": "SURAH AL-QIYĀMAH\nMakkiyah\n- TUJUAN POKOK\nMenunjukkan kekuasaan Allah dalam membangkitkan dan mengumpulkan seluruh manusia pada hari Kiamat.\n"
+        },
+        {
+            "id": 76,
+            "name": "Al-Insan",
+            "intro": "SURAH AL-INSĀN\nMAKKIYAH\n- TUJUAN POKOK\nMengingatkan manusia tentang asal usul penciptaannya dan tempat kembalinya, serta keterangan segala yang disiapkan Allah di surga untuk orang-orang saleh yang menaati-Nya.\n"
+        },
+        {
+            "id": 77,
+            "name": "Al-Mursalat",
+            "intro": "SURAH AL-MURSALĀT\nMakkiyah\n- TUJUAN POKOK\nAncaman kebinasaan terhadap orang-orang yang mendustakan hari Kiamat.\n"
+        },
+        {
+            "id": 78,
+            "name": "An-Naba",
+            "intro": "SURAH AN-NABA`\nMakiyah\n- TUJUAN POKOK\nPenjelasan dalil-dalil tentang adanya kebangkitan dan ancaman dari akhir kehidupan di akhirat.\n"
+        },
+        {
+            "id": 79,
+            "name": "An-Nazi'at",
+            "intro": "SURAH AN-NĀZI’ĀT\nMakkiyah\n- TUJUAN POKOK\nMengingatkan tentang Allah dan hari akhirat.\n"
+        },
+        {
+            "id": 80,
+            "name": "'Abasa",
+            "intro": "SURAH 'ABASA\nMakiyah\n- TUJUAN POKOK\nMengingatkan orang-orang kafir yang berpaling dari Tuhan mereka dengan penyebutan bukti-bukti kebangkitan.\n"
+        },
+        {
+            "id": 81,
+            "name": "At-Takwir",
+            "intro": "SURAH AT-TAKWĪR\nMakkiyah\n- TUJUAN POKOK\nKesempurnaan Al-Qur`ān dalam mengingatkan seluruh manusia dengan adanya kekacauan alam semesta ketika hari Kebangkitan.\n"
+        },
+        {
+            "id": 82,
+            "name": "Al-Infitar",
+            "intro": "SURAH AL-INFIṬĀR\nMakkiyah\n- TUJUAN POKOK\nPeringatan terhadap manusia agar tidak lalai dan melupakan hari Kiamat.\n"
+        },
+        {
+            "id": 83,
+            "name": "Al-Mutaffifin",
+            "intro": "SURAH AL-MUṬAFFIFĪN\nMakkiyah\n- TUJUAN POKOK\nAncaman terhadap orang-orang zalim yang mendustakan Allah tentang adanya hari Kiamat serta kabar gembira bagi orang-orang yang beriman kepadanya.\n"
+        },
+        {
+            "id": 84,
+            "name": "Al-Inshiqaq",
+            "intro": "SURAH AL-INSYIQĀQ\nMakkiyah\n- TUJUAN POKOK\nPeringatan kepada manusia agar kembali kepada Tuhannya serta penjelasan kelemahan dirinya dalam menghadapi berbagai kondisi yang berubah-ubah.\n"
+        },
+        {
+            "id": 85,
+            "name": "Al-Buruj",
+            "intro": "SURAH AL-BURŪJ\nMakkiyah\n- TUJUAN POKOK\nPenjelasan kemahakuatan dan keluasan ilmu Allah, serta pertolongan-Nya terhadap para wali-Nya dan azab terhadap para musuh-Nya.\n"
+        },
+        {
+            "id": 86,
+            "name": "At-Tariq",
+            "intro": "SURAH AṬ-ṬĀRIQ\nMakkiyah\n- TUJUAN POKOK\nPenjelasan tentang kekuasaan Allah dalam menciptakan manusia dan membangkitkannya kembali.\n"
+        },
+        {
+            "id": 87,
+            "name": "Al-A'la",
+            "intro": "SURAH AL-A’LĀ\nMakkiyah\n- TUJUAN POKOK\nMengingatkan jiwa tentang kehidupan akhirat serta melepaskannya dari ketergantungan terhadap dunia.\n"
+        },
+        {
+            "id": 88,
+            "name": "Al-Ghashiyah",
+            "intro": "SURAH AL-GĀSYIYAH\nMakkiyah\n- TUJUAN POKOK\nMengingatkan tentang akhirat beserta pahala dan azab yang ada di dalamnya, serta ajakan untuk memperhatikan bukti-bukti kekuasaan Allah.\n"
+        },
+        {
+            "id": 89,
+            "name": "Al-Fajr",
+            "intro": "SURAH AL-FAJR\nMakkiyah\n- TUJUAN POKOK\nKeterangan tentang balasan orang-orang zalim, hikmah adanya ujian, dan peringatan terhadap akhirat.\n"
+        },
+        {
+            "id": 90,
+            "name": "Al-Balad",
+            "intro": "SURAH AL-BALAD\nMakkiyah\n- TUJUAN POKOK\nPenjelasan tentang kebutuhan dan kesulitan manusia, serta jalan untuk keselamatannya.\n"
+        },
+        {
+            "id": 91,
+            "name": "Ash-Shams",
+            "intro": "SURAH ASY-SYAMS\nMakkiyah\n- TUJUAN POKOK\nPenyebutan sumpah terbanyak dalam Al-Qur`ān untuk menegaskan pentingnya penyucian jiwa dan kerugian mengotorinya lewat berbagai maksiat.\n"
+        },
+        {
+            "id": 92,
+            "name": "Al-Layl",
+            "intro": "SURAH AL-LAIL\nMakkiyah\n- TUJUAN POKOK\nPenjelasan tentang kondisi manusia dalam hal keimanan dan infak, serta kondisi masing-masing kelompok.\n"
+        },
+        {
+            "id": 93,
+            "name": "Ad-Duhaa",
+            "intro": "SURAH AḌ-ḌUḤĀ\nMakkiyah\n- TUJUAN POKOK\nPenjelasan pertolongan Allah terhadap Nabi-Nya -ṣallallāhu 'alaihi wa sallam- dari awal hingga akhir kehidupannya.\n"
+        },
+        {
+            "id": 94,
+            "name": "Ash-Sharh",
+            "intro": "SURAH ASY-SYARḤ\nMakkiyah\n- TUJUAN POKOK\nKarunia Allah kepada Nabi-Nya -ṣallallāhu 'alaihi wa sallam- dengan sempurnanya kenikmatan maknawi terhadap beliau.\n"
+        },
+        {
+            "id": 95,
+            "name": "At-Tin",
+            "intro": "SURAH AT-TĪN\nMakkiyah\n- TUJUAN POKOK\nPenyebutan karunia Allah terhadap manusia berupa kelurusan fitrah dan penciptaannya, serta kesempurnaan syariat penutup (Islam).\n"
+        },
+        {
+            "id": 96,
+            "name": "Al-'Alaq",
+            "intro": "SURAH AL-‘ALAQ\nMakkiyah\n- TUJUAN POKOK\nManusia berada di antara hidayah karena wahyu dan kesesatan karena kedurhakaan dan kebodohan.\n"
+        },
+        {
+            "id": 97,
+            "name": "Al-Qadr",
+            "intro": "SURAH AL-QADAR\nMakkiyah\n- TUJUAN POKOK\nPenjelasan keutamaan Lailatulqadar.\n"
+        },
+        {
+            "id": 98,
+            "name": "Al-Bayyinah",
+            "intro": "SURAH AL-BAYYINAH\nMadaniyah\n- TUJUAN POKOK\nPenjelasan kesempurnaan dan kejelasan risalah Muhammad -ṣallallāhu 'alaihi wa sallam-.\n"
+        },
+        {
+            "id": 99,
+            "name": "Az-Zalzalah",
+            "intro": "SURAH AZ-ZALZALAH\nMadaniyah\n- TUJUAN POKOK\nPeringatan tentang huru-hara hari Kiamat dan kedetailan hisab amal perbuatan pada hari itu.\n"
+        },
+        {
+            "id": 100,
+            "name": "Al-'Adiyat",
+            "intro": "SURAH AL-‘ĀDIYĀT\nMakkiyah\n- TUJUAN POKOK\nMemperingatkan manusia dari sikap pembangkangan dan kedurhakaan dengan mengingatkan mereka tentang kehidupan akhirat.\n"
+        },
+        {
+            "id": 101,
+            "name": "Al-Qari'ah",
+            "intro": "SURAH AL-QĀRI’AH\nMakkiyah\n- TUJUAN POKOK\nSentuhan terhadap hati agar teringat huru-hara Kiamat dan kondisi manusia dalam timbangan amal mereka.\n"
+        },
+        {
+            "id": 102,
+            "name": "At-Takathur",
+            "intro": "SURAH AT-TAKĀṠUR\nMakkiyah\n- TUJUAN POKOK\nPeringatan kepada orang yang bermegah-megahan dan sibuk dengan urusan dunia agar mengingat kondisi kuburan dan hari Perhitungan.\n"
+        },
+        {
+            "id": 103,
+            "name": "Al-'Asr",
+            "intro": "SURAH AL-‘AṢR\nMakkiyah\n- TUJUAN POKOK\nSebab-sebab keselamatan dari kerugian.\n"
+        },
+        {
+            "id": 104,
+            "name": "Al-Humazah",
+            "intro": "SURAH AL-HUMAZAH\nMakkiyah\n- TUJUAN POKOK\nAncaman terhadap sikap mengolok-olok kaum mukminin karena menganggap diri memiliki banyak harta.\n"
+        },
+        {
+            "id": 105,
+            "name": "Al-Fil",
+            "intro": "SURAH AL-FĪL\nMakkiyah\n- TUJUAN POKOK\nPenjelasan kekuasaan dan kekuatan Allah dalam membinasakan kaum yang berencana menghancurkan Baitullah yang suci.\n"
+        },
+        {
+            "id": 106,
+            "name": "Quraysh",
+            "intro": "SURAH QURAISY\nMakkiyah\n- TUJUAN POKOK\nPemaparan karunia Allah terhadap kaum Quraisy dan kewajiban mereka terhadap-Nya.\n"
+        },
+        {
+            "id": 107,
+            "name": "Al-Ma'un",
+            "intro": "SURAH AL-MĀ’ŪN\nMakkiyah\n- TUJUAN POKOK\nPenjelasan sifat orang-orang yang mendustakan agama.\n"
+        },
+        {
+            "id": 108,
+            "name": "Al-Kawthar",
+            "intro": "SURAH AL-KAUTSAR\nMakkiyah\n- TUJUAN POKOK\nPenjelasan banyaknya karunia Allah terhadap Nabi -ṣallallāhu 'alaihi wa sallam- dan pembelaan-Nya terhadapnya.\n"
+        },
+        {
+            "id": 109,
+            "name": "Al-Kafirun",
+            "intro": "SURAH AL-KĀFIRŪN\nMakkiyah\n- TUJUAN POKOK\nBerlepas diri dari kekafiran dan penganutnya.\n"
+        },
+        {
+            "id": 110,
+            "name": "An-Nasr",
+            "intro": "SURAH AN-NAṢR\nMadaniyah\n- TUJUAN POKOK\nKabar gembira untuk Nabi -ṣallallāhu 'alaihi wa sallam- dengan kemenangan dan kesempurnaan risalah Allah.\n"
+        },
+        {
+            "id": 111,
+            "name": "Al-Masad",
+            "intro": "SURAH AL-MASAD\nMakkiyah\n- TUJUAN POKOK\nPenjelasan kerugian Abu Lahab dan istrinya.\n"
+        },
+        {
+            "id": 112,
+            "name": "Al-Ikhlas",
+            "intro": "SURAH AL-IKHLĀṢ\nMakkiyah\n- TUJUAN POKOK\nKe-Esaan Allah dalam sifat keilahian dan kesempurnaan, serta kesucian-Nya dari kepemilikan anak, orang tua, dan sekutu.\n"
+        },
+        {
+            "id": 113,
+            "name": "Al-Falaq",
+            "intro": "SURAH AL-FALAQ\nMakkiyah\n- TUJUAN POKOK\nMotivasi untuk berlindung kepada Allah dari berbagai keburukan.\n"
+        },
+        {
+            "id": 114,
+            "name": "An-Nas",
+            "intro": "SURAH AN-NĀS\nMakkiyah\n- TUJUAN POKOK\nMotivasi untuk berlindung kepada Allah dari kejahatan setan dan bisikannya.\n"
+        }
+    ]
+}
