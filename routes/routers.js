@@ -2,6 +2,11 @@ const ClientError = require("../exceptions/ClientError");
 const { commands, crons } = require("./index");
 
 const commandRouter = async (message) => {
+    const currentTimeStamp = Math.floor(Date.now() / 1000);
+    if (currentTimeStamp - message.timestamp > 5) {
+        return;
+    }
+
     message.body = message.body.toLowerCase();
     const prompt = message.body.split(/[\s\u00A0]+/)[0];
     const command = commands().find((command) => command.prompt === prompt);
@@ -41,6 +46,11 @@ const commandRouter = async (message) => {
 };
 
 const cronRouter = async ({ message, cronHandler }) => {
+    const currentTimeStamp = Math.floor(Date.now() / 1000);
+    if (currentTimeStamp - message.timestamp > 5) {
+        return;
+    }
+
     const cron = crons(cronHandler).find(
         (cron) => message.body === cron.prompt
     );
