@@ -6,6 +6,7 @@ const qrcode = require("qrcode-terminal");
 const CronHandler = require("./handlers/CronHandler");
 
 const puppeteer = {
+    headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
 };
 
