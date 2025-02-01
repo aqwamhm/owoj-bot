@@ -21,25 +21,21 @@ class CronHandler {
                 endDate,
             });
 
-            if (verifyPeriodExists) {
-                throw new ConflictError(
-                    "Periode sudah ada, tidak dapat membuat periode baru."
-                );
+            if (!verifyPeriodExists) {
+                await periodServices.create({
+                    startDate,
+                    endDate,
+                });
+
+                await memberServices.incrementAllCurrentJuz();
+
+                const members = await memberServices.findAll();
+                await reportServices.createMany({
+                    members,
+                    startDate,
+                    endDate,
+                });
             }
-
-            await periodServices.create({
-                startDate,
-                endDate,
-            });
-
-            await memberServices.incrementAllCurrentJuz();
-
-            const members = await memberServices.findAll();
-            await reportServices.createMany({
-                members,
-                startDate,
-                endDate,
-            });
 
             const groups = await groupServices.getAll();
 
