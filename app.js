@@ -7,7 +7,37 @@ const CronHandler = require("./handlers/CronHandler");
 
 const puppeteer = {
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: [
+        "--disable-setuid-sandbox",
+        "--disable-accelerated-2d-canvas",
+        "--disable-background-timer-throttling",
+        "--disable-backgrounding-occluded-windows",
+        "--disable-breakpad",
+        "--disable-cache",
+        "--disable-component-extensions-with-background-pages",
+        "--disable-crash-reporter",
+        "--disable-dev-shm-usage",
+        "--disable-extensions",
+        "--disable-gpu",
+        "--disable-hang-monitor",
+        "--disable-ipc-flooding-protection",
+        "--disable-mojo-local-storage",
+        "--disable-notifications",
+        "--disable-popup-blocking",
+        "--disable-print-preview",
+        "--disable-prompt-on-repost",
+        "--disable-renderer-backgrounding",
+        "--disable-software-rasterizer",
+        "--ignore-certificate-errors",
+        "--log-level=3",
+        "--no-default-browser-check",
+        "--no-first-run",
+        "--no-sandbox",
+        "--no-zygote",
+        "--renderer-process-limit=100",
+        "--enable-gpu-rasterization",
+        "--enable-zero-copy",
+    ],
 };
 
 const client = new Client({
