@@ -53,16 +53,6 @@ client.on("qr", (qr) => {
     qrcode.generate(qr, { small: true });
 });
 
-const reInitializeCount = 1;
-client.on("disconnected", (reason) => {
-    console.log("Disconnected!");
-    if (reInitializeCount === 1 && reason === "NAVIGATION") {
-        reInitializeCount++;
-        client.initialize();
-        return;
-    }
-});
-
 const cronHandler = new CronHandler(client);
 
 const routeCommand = async (message) => {
