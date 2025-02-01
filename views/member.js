@@ -25,7 +25,7 @@ const memberViews = {
         notFound({ name }) {
             return `Nama (${formatName(
                 name
-            )}) tidak terdaftar di dalam grup ini.`;
+            )}) tidak terdaftar di dalam grup ini. Pastikan nama yang Anda tulis sesuai dengan yang terdaftar di list. Jika nama yang terdaftar di list tidak tepat, silahkan hubungi admin grup untuk memperbaharui nama Anda.`;
         },
         juzConflict({ name, currentJuz }) {
             return `${formatName(
