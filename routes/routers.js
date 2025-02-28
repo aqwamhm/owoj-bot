@@ -2,9 +2,10 @@ const ClientError = require("../exceptions/ClientError");
 const { commands, crons } = require("./index");
 
 const commandRouter = async (message, client) => {
+    let result = undefined;
     const currentTimeStamp = Math.floor(Date.now() / 1000);
     if (currentTimeStamp - message.messageTimestamp > 5) {
-        return;
+        return result;
     }
 
     const messageBody =
@@ -27,27 +28,47 @@ const commandRouter = async (message, client) => {
                 }
             }
 
-            const result = await command.handler({
+            result = await command.handler({
                 message: { ...message, body: messageBody },
                 validation: command.validation || {},
                 middlewareData: middlewareData,
             });
 
             if (result) {
-                client.sendMessage(message.key.remoteJid, { text: result });
+                if (process.env.NODE_ENV === "production") {
+                    client.sendMessage(
+                        message.key.remoteJid,
+                        { text: result },
+                        { quoted: message }
+                    );
+                }
             }
         } catch (e) {
             if (e instanceof ClientError) {
-                client.sendMessage(message.key.remoteJid, { text: e.message });
-                return;
+                result = e.message;
+                if (process.env.NODE_ENV === "production") {
+                    client.sendMessage(
+                        message.key.remoteJid,
+                        { text: result },
+                        { quoted: message }
+                    );
+                }
+            } else {
+                result = "Terjadi kesalahan";
+                if (process.env.NODE_ENV === "production") {
+                    client.sendMessage(
+                        message.key.remoteJid,
+                        {
+                            text: result,
+                        },
+                        { quoted: message }
+                    );
+                }
             }
-
-            client.sendMessage(message.key.remoteJid, {
-                text: "Terjadi kesalahan",
-            });
             console.error(e);
         }
     }
+    return result;
 };
 
 const cronRouter = async ({ message, cronHandler }, client) => {
@@ -72,18 +93,36 @@ const cronRouter = async ({ message, cronHandler }, client) => {
 
             await cron.handler();
 
-            client.sendMessage(message.key.remoteJid, {
-                text: "Cron job ran successfully",
-            });
+            if (process.env.NODE_ENV === "production") {
+                client.sendMessage(
+                    message.key.remoteJid,
+                    {
+                        text: "Cron job ran successfully",
+                    },
+                    { quoted: message }
+                );
+            }
         } catch (e) {
             if (e instanceof ClientError) {
-                client.sendMessage(message.key.remoteJid, { text: e.message });
+                if (process.env.NODE_ENV === "production") {
+                    client.sendMessage(
+                        message.key.remoteJid,
+                        { text: e.message },
+                        { quoted: message }
+                    );
+                }
                 return;
             }
 
-            client.sendMessage(message.key.remoteJid, {
-                text: "Terjadi kesalahan",
-            });
+            if (process.env.NODE_ENV === "production") {
+                client.sendMessage(
+                    message.key.remoteJid,
+                    {
+                        text: "Terjadi kesalahan",
+                    },
+                    { quoted: message }
+                );
+            }
             console.error(e);
         }
     }

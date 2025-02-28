@@ -73,6 +73,7 @@ const startSock = async () => {
             }
         } else if (connection === "open") {
             console.log("opened connection");
+            console.log(process.env.NODE_ENV);
         }
     });
 
@@ -96,23 +97,18 @@ let client;
 const cronHandler = new CronHandler(client);
 
 const routeCommand = async (message, client) => {
-    if (process.env.NODE_ENV === "production") {
-        await commandRouter(message, client);
-        await cronRouter({ message, cronHandler }, client);
-    } else {
-        let result = "";
-        message.reply = (text) => {
-            result = text;
-        };
-
-        try {
+    let result = "";
+    try {
+        if (process.env.NODE_ENV === "production") {
             await commandRouter(message, client);
             await cronRouter({ message, cronHandler }, client);
-        } catch (e) {
-            result = e.message;
+        } else {
+            result = await commandRouter(message, client);
+            console.log("Result:", result);
         }
-
-        console.log(result);
+    } catch (e) {
+        result = e.message;
+        console.error("Error:", result);
     }
 };
 
