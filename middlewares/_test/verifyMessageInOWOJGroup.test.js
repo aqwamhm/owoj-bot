@@ -14,8 +14,9 @@ describe("verifyMessageInOWOJGroup", () => {
 
     beforeEach(() => {
         message = {
-            id: {
-                remote: "groupId",
+            body: "",
+            key: {
+                remoteJid: "groupId",
             },
         };
     });

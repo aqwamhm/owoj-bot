@@ -19,7 +19,7 @@ describe("MemberHandler", () => {
         it("should set a member successfully", async () => {
             const message = {
                 body: "#set 12#Aqwam",
-                id: { remote: "groupId123" },
+                key: { remoteJid: "groupId123" },
             };
             const validation = {};
 
@@ -49,8 +49,8 @@ describe("MemberHandler", () => {
 
         it("should throw NotFoundError if member does not exist", async () => {
             const message = {
-                body: "#set 12#Aqwam",
-                id: { remote: "groupId123" },
+                body: "/remove Aqwam",
+                key: { remoteJid: "groupId123" },
             };
             const validation = {};
 
@@ -65,7 +65,7 @@ describe("MemberHandler", () => {
         it("should throw ConflictError if member juz conflict", async () => {
             const message = {
                 body: "#set 12#Aqwam",
-                id: { remote: "groupId123" },
+                key: { remoteJid: "groupId123" },
             };
             const validation = {};
 
@@ -89,7 +89,7 @@ describe("MemberHandler", () => {
         it("should successfully rename a member", async () => {
             const message = {
                 body: "/set-nama Fauziah#Fauziyah",
-                id: { remote: "groupId123" },
+                key: { remoteJid: "groupId123" },
             };
             const validation = {};
 
@@ -117,7 +117,7 @@ describe("MemberHandler", () => {
         it("should throw ConflictError if new name already exists", async () => {
             const message = {
                 body: "/set-nama Fauziah#Fauziyah",
-                id: { remote: "groupId123" },
+                key: { remoteJid: "groupId123" },
             };
             const validation = {};
 
@@ -136,7 +136,7 @@ describe("MemberHandler", () => {
         it("should throw NotFoundError if old member does not exist", async () => {
             const message = {
                 body: "/set-nama Fauziah#Fauziyah",
-                id: { remote: "groupId123" },
+                key: { remoteJid: "groupId123" },
             };
             const validation = {};
 
@@ -156,7 +156,7 @@ describe("MemberHandler", () => {
         it("should register a new member successfully", async () => {
             const message = {
                 body: "/register 1#Aqwam 2#John Doe 3#Maria",
-                id: { remote: "groupId123" },
+                key: { remoteJid: "groupId123" },
             };
             const validation = {};
 
@@ -199,7 +199,7 @@ describe("MemberHandler", () => {
         it("should handle name conflict", async () => {
             const message = {
                 body: "/register 1#Aqwam 2#John Doe 3#Maria",
-                id: { remote: "groupId123" },
+                key: { remoteJid: "groupId123" },
             };
             const validation = {};
 
@@ -234,7 +234,7 @@ describe("MemberHandler", () => {
         it("should handle juz conflict", async () => {
             const message = {
                 body: "/register 1#Aqwam 2#John Doe 3#Maria",
-                id: { remote: "groupId123" },
+                key: { remoteJid: "groupId123" },
             };
             const validation = {};
 
@@ -277,7 +277,7 @@ describe("MemberHandler", () => {
         it("should remove a member successfully", async () => {
             const message = {
                 body: "/remove Aqwam",
-                id: { remote: "groupId123" },
+                key: { remoteJid: "groupId123" },
             };
             const validation = {};
 
@@ -298,7 +298,7 @@ describe("MemberHandler", () => {
         it("should throw NotFoundError if member does not exist", async () => {
             const message = {
                 body: "/remove Aqwam",
-                id: { remote: "groupId123" },
+                key: { remoteJid: "groupId123" },
             };
             const validation = {};
 

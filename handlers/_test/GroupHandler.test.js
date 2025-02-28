@@ -17,7 +17,7 @@ describe("GroupHandler", () => {
         it("should create a new group successfully", async () => {
             const message = {
                 body: "/register-group 123",
-                id: { remote: "123" },
+                key: { remoteJid: "123" },
             };
             const validation = {};
 
@@ -38,7 +38,7 @@ describe("GroupHandler", () => {
         it("should remove an existing group successfully", async () => {
             const message = {
                 body: "/remove-group 3",
-                id: { remote: "group-id" },
+                key: { remoteJid: "group-id" },
             };
             const validation = {};
             const group = { id: "group-id", number: 3 };
@@ -58,7 +58,7 @@ describe("GroupHandler", () => {
         it("should throw NotFoundError if group number does not match", async () => {
             const message = {
                 body: "/remove-group 4",
-                id: { remote: "group-id" },
+                key: { remoteJid: "group-id" },
             };
             const validation = {};
             const group = { id: "group-id", number: 3 };
@@ -76,7 +76,7 @@ describe("GroupHandler", () => {
         it("should set group admin successfully", async () => {
             const message = {
                 body: "/set-admin 621234567890",
-                id: { remote: "group-id" },
+                key: { remoteJid: "group-id" },
             };
             const validation = {};
             const middlewareData = {
@@ -109,7 +109,7 @@ describe("GroupHandler", () => {
         it("should throw NotFoundError if admin is not found", async () => {
             const message = {
                 body: "/set-admin 629876543210",
-                id: { remote: "group-id" },
+                key: { remoteJid: "group-id" },
             };
             const validation = {};
             const middlewareData = {

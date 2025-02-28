@@ -19,7 +19,10 @@ jest.mock("../../views/list");
 describe("ListHandler", () => {
     describe("handleShowMemberList", () => {
         it("should return a list of members with reports successfully", async () => {
-            const message = { id: { remote: "groupId123" } };
+            const message = {
+                body: "",
+                key: { remoteJid: "groupId123" },
+            };
             const middlewareData = { group: { number: 1 } };
 
             periodServices.getAll.mockResolvedValue([
@@ -43,7 +46,10 @@ describe("ListHandler", () => {
 
     describe("handleShowMemberList", () => {
         it("should return a list of uncompleted members successfully", async () => {
-            const message = { id: { remote: "groupId123" } };
+            const message = {
+                body: "",
+                key: { remoteJid: "groupId123" },
+            };
 
             periodServices.getAll.mockResolvedValue([
                 { id: 1, name: "Period 1" },
@@ -65,7 +71,10 @@ describe("ListHandler", () => {
 
     describe("handleShowAdminList", () => {
         it("should return a list of admins successfully", async () => {
-            const message = { id: { remote: "groupId123" } };
+            const message = {
+                body: "",
+                key: { remoteJid: "groupId123" },
+            };
 
             adminServices.getAll.mockResolvedValue([
                 { id: "id-1", name: "Aqwam", phoneNumber: "123456789" },
@@ -83,7 +92,10 @@ describe("ListHandler", () => {
 
     describe("handleShowGroupList", () => {
         it("should return a list of groups successfully", async () => {
-            const message = { id: { remote: "groupId123" } };
+            const message = {
+                body: "",
+                key: { remoteJid: "groupId123" },
+            };
 
             groupServices.getAll.mockResolvedValue([
                 { id: "id-1", number: 1 },

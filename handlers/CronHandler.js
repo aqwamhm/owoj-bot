@@ -39,37 +39,41 @@ class CronHandler {
 
             const groups = await groupServices.getAll();
 
-            await Promise.all(
-                groups.map(async (group) => {
-                    try {
-                        await this.client.sendMessage(
-                            group.id,
-                            templateViews.doaKhatamQuran
-                        );
-                        await this.client.sendMessage(
-                            group.id,
-                            templateViews.pembukaan
-                        );
+            if (Array.isArray(groups)) {
+                await Promise.all(
+                    groups.map(async (group) => {
+                        try {
+                            await this.client.sendMessage(
+                                group.id,
+                                templateViews.doaKhatamQuran
+                            );
+                            await this.client.sendMessage(
+                                group.id,
+                                templateViews.pembukaan
+                            );
 
-                        const list = await ListHandler.handleShowMemberList({
-                            message: { key: { remoteJid: group.id } },
-                            middlewareData: {
-                                group: {
-                                    number: group.number,
-                                    admin: group.admin,
-                                },
-                            },
-                        });
+                            const list = await ListHandler.handleShowMemberList(
+                                {
+                                    message: { key: { remoteJid: group.id } },
+                                    middlewareData: {
+                                        group: {
+                                            number: group.number,
+                                            admin: group.admin,
+                                        },
+                                    },
+                                }
+                            );
 
-                        await this.client.sendMessage(group.id, list);
-                    } catch (e) {
-                        console.error(
-                            `Failed to send messages to group ${group.id}:`,
-                            e
-                        );
-                    }
-                })
-            );
+                            await this.client.sendMessage(group.id, list);
+                        } catch (e) {
+                            console.error(
+                                `Failed to send messages to group ${group.id}:`,
+                                e
+                            );
+                        }
+                    })
+                );
+            }
         } catch (e) {
             console.error(e);
         }

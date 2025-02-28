@@ -111,7 +111,10 @@ describe("UtilityHandler", () => {
         }
 
         it("should return prayer times for today when days are not specified", async () => {
-            const message = { body: "/waktu-sholat Kota Jakarta" };
+            const message = {
+                body: "/waktu-sholat Kota Jakarta",
+                key: { remoteJid: "groupId123" },
+            };
             validate.mockReturnValue({
                 location: "Kota Jakarta",
                 days: undefined,
@@ -329,7 +332,10 @@ describe("UtilityHandler", () => {
         const mockValidation = {};
 
         it("should return tafsir for a valid page number", async () => {
-            const message = { body: "/tafsir 1" };
+            const message = {
+                body: "/tafsir 1",
+                key: { remoteJid: "groupId123" },
+            };
             validate.mockReturnValue({ page: 1 });
 
             const result = await UtilityHandler.handleTafsirRequest({

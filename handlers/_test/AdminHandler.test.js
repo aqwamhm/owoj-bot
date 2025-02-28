@@ -27,6 +27,7 @@ describe("AdminHandler", () => {
         it("should register a new admin successfully", async () => {
             const message = {
                 body: "/register-admin Aqwam#6281234567 mock-password",
+                key: { remoteJid: "groupId" },
             };
             const validation = {};
 
@@ -54,6 +55,7 @@ describe("AdminHandler", () => {
         it("should throw AuthenticationError if password is incorrect", async () => {
             const message = {
                 body: "/register-admin Aqwam#6281234567 wrong-password",
+                key: { remoteJid: "groupId" },
             };
             const validation = {};
 
@@ -71,6 +73,7 @@ describe("AdminHandler", () => {
         it("should throw ConflictError if admin already exists", async () => {
             const message = {
                 body: "/register-admin Aqwam#6281234567 mock-password",
+                key: { remoteJid: "groupId" },
             };
             const validation = {};
 
@@ -89,7 +92,10 @@ describe("AdminHandler", () => {
 
     describe("handleRemoveAdmin", () => {
         it("should remove an admin successfully", async () => {
-            const message = { body: "/remove-admin 6212345678" };
+            const message = {
+                body: "/remove-admin 6212345678",
+                key: { remoteJid: "groupId" },
+            };
             const validation = {};
 
             validate.mockReturnValue({ phone: "6212345678" });

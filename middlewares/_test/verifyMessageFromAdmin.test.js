@@ -9,7 +9,10 @@ describe("verifyMessageFromAdmin", () => {
 
     beforeEach(() => {
         message = {
-            getContact: jest.fn().mockResolvedValue({ number: "1234567890" }),
+            body: "",
+            key: {
+                remoteJid: "groupId",
+            },
         };
     });
 

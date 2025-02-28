@@ -39,7 +39,7 @@ describe("memberViews", () => {
         it("should return the correct message for notFound", () => {
             const result = memberViews.error.notFound({ name: "John Doe" });
             expect(result).toBe(
-                "Nama (John Doe) tidak terdaftar di dalam grup ini. tidak terdaftar di dalam grup ini. Pastikan nama yang Anda tulis sesuai dengan yang terdaftar di list. Jika nama yang terdaftar di list tidak tepat, silahkan hubungi admin grup untuk memperbaharui nama Anda."
+                "Nama (John Doe) tidak terdaftar di dalam grup ini. Pastikan nama yang Anda tulis sesuai dengan yang terdaftar di list. Jika nama yang terdaftar di list tidak tepat, silahkan hubungi admin grup untuk memperbaharui nama Anda."
             );
         });
 

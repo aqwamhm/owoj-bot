@@ -29,7 +29,7 @@ describe("ReportHandler", () => {
         beforeEach(() => {
             message = {
                 body: "/lapor command",
-                id: { remote: "groupId123" },
+                key: { remoteJid: "groupId123" },
             };
 
             validation = {};
@@ -416,7 +416,7 @@ describe("ReportHandler", () => {
         beforeEach(() => {
             message = {
                 body: "",
-                id: { remote: "groupId123" },
+                key: { remoteJid: "groupId123" },
             };
             validation = {};
 
