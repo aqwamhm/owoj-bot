@@ -36,7 +36,7 @@ class GroupHandler {
         });
 
         await this.groupServices.create({
-            id: message.id.remote,
+            id: message.key.remoteJid,
             number: parseInt(arg1),
         });
 
@@ -54,14 +54,16 @@ class GroupHandler {
             }),
         });
 
-        const group = await this.groupServices.find({ id: message.id.remote });
+        const group = await this.groupServices.find({
+            id: message.key.remoteJid,
+        });
 
         if (group.number !== parseInt(arg1)) {
             throw new NotFoundError(this.groupViews.error.notFound(arg1));
         }
 
         await this.groupServices.remove({
-            id: message.id.remote,
+            id: message.key.remoteJid,
             number: parseInt(arg1),
         });
 

@@ -1,9 +1,14 @@
 require("dotenv").config();
 const cron = require("node-cron");
-const { Client, LocalAuth } = require("whatsapp-web.js");
 const { commandRouter, cronRouter } = require("./routes/routers");
 const qrcode = require("qrcode-terminal");
 const CronHandler = require("./handlers/CronHandler");
+const {
+    default: makeWASocket,
+    useMultiFileAuthState,
+    DisconnectReason,
+} = require("baileys");
+const { Boom } = require("@hapi/boom");
 
 const puppeteer = {
     headless: true,
@@ -40,25 +45,60 @@ const puppeteer = {
     ],
 };
 
-const client = new Client({
-    authStrategy: new LocalAuth(),
-    ...(process.env.NODE_ENV === "production" ? { puppeteer } : {}),
-});
+const startSock = async () => {
+    const { state, saveCreds } = await useMultiFileAuthState(
+        "auth_info_baileys"
+    );
 
-client.once("ready", () => {
-    console.log("Client is ready!");
-});
+    const client = makeWASocket({
+        auth: state,
+        printQRInTerminal: true,
+        browser: ["Chrome (Linux)", "", ""],
+    });
 
-client.on("qr", (qr) => {
-    qrcode.generate(qr, { small: true });
-});
+    client.ev.on("connection.update", (update) => {
+        const { connection, lastDisconnect } = update;
+        if (connection === "close") {
+            const shouldReconnect =
+                (lastDisconnect.error instanceof Boom)?.output?.statusCode !==
+                DisconnectReason.loggedOut;
+            console.log(
+                "connection closed due to ",
+                lastDisconnect.error,
+                ", reconnecting ",
+                shouldReconnect
+            );
+            if (shouldReconnect) {
+                startSock();
+            }
+        } else if (connection === "open") {
+            console.log("opened connection");
+        }
+    });
+
+    client.ev.on("creds.update", saveCreds);
+
+    client.ev.on("messages.upsert", async (m) => {
+        const messages = m.messages;
+        for (const message of messages) {
+            await routeCommand(message, client);
+        }
+    });
+
+    return client;
+};
+
+let client;
+(async () => {
+    client = await startSock();
+})();
 
 const cronHandler = new CronHandler(client);
 
-const routeCommand = async (message) => {
+const routeCommand = async (message, client) => {
     if (process.env.NODE_ENV === "production") {
-        await commandRouter(message);
-        await cronRouter({ message, cronHandler });
+        await commandRouter(message, client);
+        await cronRouter({ message, cronHandler }, client);
     } else {
         let result = "";
         message.reply = (text) => {
@@ -66,8 +106,8 @@ const routeCommand = async (message) => {
         };
 
         try {
-            await commandRouter(message);
-            await cronRouter({ message, cronHandler });
+            await commandRouter(message, client);
+            await cronRouter({ message, cronHandler }, client);
         } catch (e) {
             result = e.message;
         }
@@ -76,15 +116,7 @@ const routeCommand = async (message) => {
     }
 };
 
-client.on("message_create", async (message) => {
-    await routeCommand(message);
-});
-
-client.on("message_edit", async (message) => {
-    await routeCommand(message);
-});
-
-client.initialize();
+// client.initialize();
 
 const newPeriod = `0 ${process.env.PERIOD_START_HOUR} * * ${process.env.PERIOD_START_DAY}`;
 cron.schedule(newPeriod, async () => {

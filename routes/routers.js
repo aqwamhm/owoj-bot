@@ -1,14 +1,17 @@
 const ClientError = require("../exceptions/ClientError");
 const { commands, crons } = require("./index");
 
-const commandRouter = async (message) => {
+const commandRouter = async (message, client) => {
     const currentTimeStamp = Math.floor(Date.now() / 1000);
-    if (currentTimeStamp - message.timestamp > 5) {
+    if (currentTimeStamp - message.messageTimestamp > 5) {
         return;
     }
 
-    message.body = message.body.toLowerCase();
-    const prompt = message.body.split(/[\s\u00A0]+/)[0];
+    const messageBody =
+        message.message?.conversation ||
+        message.message?.extendedTextMessage?.text ||
+        "";
+    const prompt = messageBody.toLowerCase().split(/[\s\u00A0]+/)[0];
     const command = commands().find((command) => command.prompt === prompt);
 
     if (command) {
@@ -25,35 +28,39 @@ const commandRouter = async (message) => {
             }
 
             const result = await command.handler({
-                message,
+                message: { ...message, body: messageBody },
                 validation: command.validation || {},
-                middlewareData,
+                middlewareData: middlewareData,
             });
 
             if (result) {
-                message.reply(result);
+                client.sendMessage(message.key.remoteJid, { text: result });
             }
         } catch (e) {
             if (e instanceof ClientError) {
-                message.reply(e.message);
+                client.sendMessage(message.key.remoteJid, { text: e.message });
                 return;
             }
 
-            message.reply("Terjadi kesalahan");
+            client.sendMessage(message.key.remoteJid, {
+                text: "Terjadi kesalahan",
+            });
             console.error(e);
         }
     }
 };
 
-const cronRouter = async ({ message, cronHandler }) => {
+const cronRouter = async ({ message, cronHandler }, client) => {
     const currentTimeStamp = Math.floor(Date.now() / 1000);
-    if (currentTimeStamp - message.timestamp > 5) {
+    if (currentTimeStamp - message.messageTimestamp > 5) {
         return;
     }
 
-    const cron = crons(cronHandler).find(
-        (cron) => message.body === cron.prompt
-    );
+    const messageBody =
+        message.message?.conversation ||
+        message.message?.extendedTextMessage?.text ||
+        "";
+    const cron = crons(cronHandler).find((cron) => messageBody === cron.prompt);
 
     if (cron) {
         try {
@@ -65,14 +72,18 @@ const cronRouter = async ({ message, cronHandler }) => {
 
             await cron.handler();
 
-            message?.reply("Cron job ran successfully");
+            client.sendMessage(message.key.remoteJid, {
+                text: "Cron job ran successfully",
+            });
         } catch (e) {
             if (e instanceof ClientError) {
-                message.reply(e.message);
+                client.sendMessage(message.key.remoteJid, { text: e.message });
                 return;
             }
 
-            message?.reply("Terjadi kesalahan");
+            client.sendMessage(message.key.remoteJid, {
+                text: "Terjadi kesalahan",
+            });
             console.error(e);
         }
     }

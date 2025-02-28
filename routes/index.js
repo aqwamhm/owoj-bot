@@ -31,7 +31,7 @@ const commands = () => [
         handler: MemberHandler.handleRegisterMember.bind(MemberHandler),
         middlewares: [verifyMessageFromAdmin, verifyMessageInOWOJGroup],
         validation: {
-            regex: /(?<juz>\d{1,3})#(?<name>[a-zA-Z\s]+?)\s*(?=\d|$)/g,
+            regex: /^\/register\s+((?<juz>\d{1,3})#(?<name>[a-zA-Z\s]+?)\s*)+$/g,
             multiple: true,
         },
     },

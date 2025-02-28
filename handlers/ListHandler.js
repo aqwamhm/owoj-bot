@@ -23,7 +23,7 @@ class ListHandler {
         const { group } = middlewareData;
         const periods = await this.periodServices.getAll();
         const memberReportsData = await this.memberServices.getWithReports({
-            groupId: message.id.remote,
+            groupId: message.key.remoteJid,
         });
 
         return this.listView.memberListWithReport({
@@ -36,7 +36,7 @@ class ListHandler {
     async handleShowUncompletedMemberList({ message }) {
         const periods = await this.periodServices.getAll();
         const memberReportsData = await this.memberServices.getWithReports({
-            groupId: message.id.remote,
+            groupId: message.key.remoteJid,
         });
 
         return this.listView.uncompletedMemberList({

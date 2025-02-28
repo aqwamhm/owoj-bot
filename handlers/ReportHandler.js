@@ -28,7 +28,7 @@ class ReportHandler {
             }),
         });
 
-        const groupId = message.id.remote;
+        const groupId = message.key.remoteJid;
 
         const member = await this.memberServices.find({ name, groupId });
 
@@ -263,7 +263,7 @@ class ReportHandler {
 
         const inputPeriod = period ? -Math.abs(period) : 0;
 
-        const groupId = message.id.remote;
+        const groupId = message.key.remoteJid;
 
         const { startDate, endDate } = getPeriodDate(inputPeriod);
 

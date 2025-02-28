@@ -2,8 +2,9 @@ const AuthorizationError = require("../exceptions/AuthorizationError");
 const adminServices = require("../services/admin");
 
 const verifyMessageFromAdmin = async (message) => {
-    const contact = await message.getContact();
-    const { number: phoneNumber } = contact;
+    const phoneNumber =
+        message.key.participant?.split("@")[0] ||
+        message.key.remoteJid?.split("@")[0];
 
     const admin = await adminServices.find({ phoneNumber });
     if (!admin) {

@@ -3,7 +3,7 @@ const groupServices = require("../services/group");
 const groupViews = require("../views/group");
 
 const verifyMessageInOWOJGroup = async (message) => {
-    const groupId = message.id.remote;
+    const groupId = message.key.remoteJid;
     const group = await groupServices.find({ id: groupId });
 
     if (!group) {

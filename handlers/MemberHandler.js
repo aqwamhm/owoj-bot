@@ -33,7 +33,7 @@ class MemberHandler {
                 example: "#set 12#Aqwam",
             }),
         });
-        const groupId = message.id.remote;
+        const groupId = message.key.remoteJid;
         const { startDate, endDate } = this.getPeriodDate();
 
         if (!(await this.memberServices.find({ groupId, name }))) {
@@ -80,7 +80,7 @@ class MemberHandler {
             }),
         });
 
-        const groupId = message.id.remote;
+        const groupId = message.key.remoteJid;
 
         const member = await this.memberServices.find({
             groupId,
@@ -128,7 +128,7 @@ class MemberHandler {
         });
 
         const { startDate, endDate } = this.getPeriodDate();
-        const groupId = message.id.remote;
+        const groupId = message.key.remoteJid;
 
         for (const { name, juz: currentJuz } of members) {
             if (await this.memberServices.find({ groupId, name })) {
@@ -182,7 +182,7 @@ class MemberHandler {
             }),
         });
 
-        const groupId = message.id.remote;
+        const groupId = message.key.remoteJid;
 
         const member = await this.memberServices.find({ groupId, name });
         if (!member) {

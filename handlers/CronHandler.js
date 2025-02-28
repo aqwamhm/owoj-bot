@@ -52,7 +52,7 @@ class CronHandler {
                         );
 
                         const list = await ListHandler.handleShowMemberList({
-                            message: { id: { remote: group.id } },
+                            message: { key: { remoteJid: group.id } },
                             middlewareData: {
                                 group: {
                                     number: group.number,
@@ -82,7 +82,7 @@ class CronHandler {
                 try {
                     const uncompletedMemberList =
                         await ListHandler.handleShowUncompletedMemberList({
-                            message: { id: { remote: group.id } },
+                            message: { key: { remoteJid: group.id } },
                         });
                     const message = `${templateViews.oneDayReminder()}\n\n${uncompletedMemberList}`;
 
