@@ -1,4 +1,3 @@
-const ConflictError = require("../exceptions/ConflictError");
 const groupServices = require("../services/group");
 const memberServices = require("../services/member");
 const periodServices = require("../services/period");
@@ -43,14 +42,12 @@ class CronHandler {
                 await Promise.all(
                     groups.map(async (group) => {
                         try {
-                            await this.client.sendMessage(
-                                group.id,
-                                templateViews.doaKhatamQuran
-                            );
-                            await this.client.sendMessage(
-                                group.id,
-                                templateViews.pembukaan
-                            );
+                            await this.client.sendMessage(group.id, {
+                                text: templateViews.doaKhatamQuran,
+                            });
+                            await this.client.sendMessage(group.id, {
+                                text: templateViews.pembukaan,
+                            });
 
                             const list = await ListHandler.handleShowMemberList(
                                 {
@@ -64,7 +61,9 @@ class CronHandler {
                                 }
                             );
 
-                            await this.client.sendMessage(group.id, list);
+                            await this.client.sendMessage(group.id, {
+                                text: list,
+                            });
                         } catch (e) {
                             console.error(
                                 `Failed to send messages to group ${group.id}:`,
@@ -90,7 +89,7 @@ class CronHandler {
                         });
                     const message = `${templateViews.oneDayReminder()}\n\n${uncompletedMemberList}`;
 
-                    this.client.sendMessage(group.id, message);
+                    this.client.sendMessage(group.id, { text: message });
                 } catch (e) {
                     console.error(e);
                 }

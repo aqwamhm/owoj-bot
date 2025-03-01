@@ -128,18 +128,15 @@ describe("CronHandler", () => {
             );
 
             mockGroups.forEach((group) => {
-                expect(client.sendMessage).toHaveBeenCalledWith(
-                    group.id,
-                    templateViews.doaKhatamQuran
-                );
-                expect(client.sendMessage).toHaveBeenCalledWith(
-                    group.id,
-                    templateViews.pembukaan
-                );
-                expect(client.sendMessage).toHaveBeenCalledWith(
-                    group.id,
-                    "List message"
-                );
+                expect(client.sendMessage).toHaveBeenCalledWith(group.id, {
+                    text: templateViews.doaKhatamQuran,
+                });
+                expect(client.sendMessage).toHaveBeenCalledWith(group.id, {
+                    text: templateViews.pembukaan,
+                });
+                expect(client.sendMessage).toHaveBeenCalledWith(group.id, {
+                    text: "List message",
+                });
             });
         });
 
@@ -180,7 +177,7 @@ describe("CronHandler", () => {
             memberServices.incrementAllCurrentJuz.mockResolvedValue();
             reportServices.createMany.mockResolvedValue();
 
-            client.sendMessage.mockImplementation((id, message) => {
+            client.sendMessage.mockImplementation((id, { text }) => {
                 if (id === "groupId2") {
                     throw new Error(errorMessage);
                 }
@@ -216,10 +213,9 @@ describe("CronHandler", () => {
             await cronHandler.handleOneDayBeforeNewPeriod();
 
             const expectedMessage = `Reminder message\n\nUncompleted members list`;
-            expect(client.sendMessage).toHaveBeenCalledWith(
-                "groupId1",
-                expectedMessage
-            );
+            expect(client.sendMessage).toHaveBeenCalledWith("groupId1", {
+                text: expectedMessage,
+            });
         });
 
         it("should handle error when fetching uncompleted member list", async () => {

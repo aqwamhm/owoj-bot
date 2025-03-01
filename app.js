@@ -10,41 +10,6 @@ const {
 } = require("baileys");
 const { Boom } = require("@hapi/boom");
 
-const puppeteer = {
-    headless: true,
-    args: [
-        "--disable-setuid-sandbox",
-        "--disable-accelerated-2d-canvas",
-        "--disable-background-timer-throttling",
-        "--disable-backgrounding-occluded-windows",
-        "--disable-breakpad",
-        "--disable-cache",
-        "--disable-component-extensions-with-background-pages",
-        "--disable-crash-reporter",
-        "--disable-dev-shm-usage",
-        "--disable-extensions",
-        "--disable-gpu",
-        "--disable-hang-monitor",
-        "--disable-ipc-flooding-protection",
-        "--disable-mojo-local-storage",
-        "--disable-notifications",
-        "--disable-popup-blocking",
-        "--disable-print-preview",
-        "--disable-prompt-on-repost",
-        "--disable-renderer-backgrounding",
-        "--disable-software-rasterizer",
-        "--ignore-certificate-errors",
-        "--log-level=3",
-        "--no-default-browser-check",
-        "--no-first-run",
-        "--no-sandbox",
-        "--no-zygote",
-        "--renderer-process-limit=100",
-        "--enable-gpu-rasterization",
-        "--enable-zero-copy",
-    ],
-};
-
 const startSock = async () => {
     const { state, saveCreds } = await useMultiFileAuthState(
         "auth_info_baileys"
@@ -73,7 +38,6 @@ const startSock = async () => {
             }
         } else if (connection === "open") {
             console.log("opened connection");
-            console.log(process.env.NODE_ENV);
         }
     });
 
@@ -90,20 +54,26 @@ const startSock = async () => {
 };
 
 let client;
+let cronHandler;
+
 (async () => {
     client = await startSock();
+    cronHandler = new CronHandler(client);
 })();
 
-const cronHandler = new CronHandler(client);
-
 const routeCommand = async (message, client) => {
-    let result = "";
     try {
         if (process.env.NODE_ENV === "production") {
             await commandRouter(message, client);
             await cronRouter({ message, cronHandler }, client);
         } else {
-            result = await commandRouter(message, client);
+            let result = "";
+            client.sendMessage = async (_, message, _2) => {
+                result = message.text;
+            };
+            const cronHandler = new CronHandler(client);
+            await commandRouter(message, client);
+            await cronRouter({ message, cronHandler }, client);
             console.log("Result:", result);
         }
     } catch (e) {
@@ -111,8 +81,6 @@ const routeCommand = async (message, client) => {
         console.error("Error:", result);
     }
 };
-
-// client.initialize();
 
 const newPeriod = `0 ${process.env.PERIOD_START_HOUR} * * ${process.env.PERIOD_START_DAY}`;
 cron.schedule(newPeriod, async () => {

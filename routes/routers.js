@@ -35,40 +35,35 @@ const commandRouter = async (message, client) => {
             });
 
             if (result) {
-                if (process.env.NODE_ENV === "production") {
-                    client.sendMessage(
-                        message.key.remoteJid,
-                        { text: result },
-                        { quoted: message }
-                    );
-                }
+                client.sendMessage(
+                    message.key.remoteJid,
+                    { text: result },
+                    { quoted: message }
+                );
             }
         } catch (e) {
             if (e instanceof ClientError) {
                 result = e.message;
-                if (process.env.NODE_ENV === "production") {
-                    client.sendMessage(
-                        message.key.remoteJid,
-                        { text: result },
-                        { quoted: message }
-                    );
-                }
+
+                client.sendMessage(
+                    message.key.remoteJid,
+                    { text: result },
+                    { quoted: message }
+                );
             } else {
                 result = "Terjadi kesalahan";
-                if (process.env.NODE_ENV === "production") {
-                    client.sendMessage(
-                        message.key.remoteJid,
-                        {
-                            text: result,
-                        },
-                        { quoted: message }
-                    );
-                }
+
+                client.sendMessage(
+                    message.key.remoteJid,
+                    {
+                        text: result,
+                    },
+                    { quoted: message }
+                );
             }
             console.error(e);
         }
     }
-    return result;
 };
 
 const cronRouter = async ({ message, cronHandler }, client) => {
@@ -93,36 +88,32 @@ const cronRouter = async ({ message, cronHandler }, client) => {
 
             await cron.handler();
 
-            if (process.env.NODE_ENV === "production") {
-                client.sendMessage(
-                    message.key.remoteJid,
-                    {
-                        text: "Cron job ran successfully",
-                    },
-                    { quoted: message }
-                );
-            }
+            client.sendMessage(
+                message.key.remoteJid,
+                {
+                    text: "Cron job ran successfully",
+                },
+                { quoted: message }
+            );
         } catch (e) {
             if (e instanceof ClientError) {
-                if (process.env.NODE_ENV === "production") {
-                    client.sendMessage(
-                        message.key.remoteJid,
-                        { text: e.message },
-                        { quoted: message }
-                    );
-                }
+                client.sendMessage(
+                    message.key.remoteJid,
+                    { text: e.message },
+                    { quoted: message }
+                );
+
                 return;
             }
 
-            if (process.env.NODE_ENV === "production") {
-                client.sendMessage(
-                    message.key.remoteJid,
-                    {
-                        text: "Terjadi kesalahan",
-                    },
-                    { quoted: message }
-                );
-            }
+            client.sendMessage(
+                message.key.remoteJid,
+                {
+                    text: "Terjadi kesalahan",
+                },
+                { quoted: message }
+            );
+
             console.error(e);
         }
     }
