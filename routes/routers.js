@@ -60,8 +60,8 @@ const commandRouter = async (message, client) => {
                     },
                     { quoted: message }
                 );
+                console.error(e);
             }
-            console.error(e);
         }
     }
 };
