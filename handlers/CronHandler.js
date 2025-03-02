@@ -6,6 +6,11 @@ const { getPeriodDate } = require("../utils/date");
 const templateViews = require("../views/template");
 const ListHandler = require("./ListHandler");
 
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+const randomDelay = (min, max) =>
+    Math.floor(Math.random() * (max - min + 1)) + min;
+
 class CronHandler {
     constructor(client) {
         this.client = client;
@@ -39,39 +44,31 @@ class CronHandler {
             const groups = await groupServices.getAll();
 
             if (Array.isArray(groups)) {
-                await Promise.all(
-                    groups.map(async (group) => {
-                        try {
-                            await this.client.sendMessage(group.id, {
-                                text: templateViews.doaKhatamQuran,
-                            });
-                            await this.client.sendMessage(group.id, {
-                                text: templateViews.pembukaan,
-                            });
+                for (const group of groups) {
+                    try {
+                        const list = await ListHandler.handleShowMemberList({
+                            message: { key: { remoteJid: group.id } },
+                            middlewareData: {
+                                group: {
+                                    number: group.number,
+                                    admin: group.admin,
+                                },
+                            },
+                        });
 
-                            const list = await ListHandler.handleShowMemberList(
-                                {
-                                    message: { key: { remoteJid: group.id } },
-                                    middlewareData: {
-                                        group: {
-                                            number: group.number,
-                                            admin: group.admin,
-                                        },
-                                    },
-                                }
-                            );
+                        const combinedMessage = `${templateViews.doaKhatamQuran}\n\n------\n\n${templateViews.pembukaan}\n\n------\n\n${list}`;
 
-                            await this.client.sendMessage(group.id, {
-                                text: list,
-                            });
-                        } catch (e) {
-                            console.error(
-                                `Failed to send messages to group ${group.id}:`,
-                                e
-                            );
-                        }
-                    })
-                );
+                        await this.client.sendMessage(group.id, {
+                            text: combinedMessage,
+                        });
+                        await delay(randomDelay(100, 1500));
+                    } catch (e) {
+                        console.error(
+                            `Failed to send messages to group ${group.id}:`,
+                            e
+                        );
+                    }
+                }
             }
         } catch (e) {
             console.error(e);
@@ -89,7 +86,8 @@ class CronHandler {
                         });
                     const message = `${templateViews.oneDayReminder()}\n\n${uncompletedMemberList}`;
 
-                    this.client.sendMessage(group.id, { text: message });
+                    await this.client.sendMessage(group.id, { text: message });
+                    await delay(randomDelay(100, 1500));
                 } catch (e) {
                     console.error(e);
                 }
