@@ -6,11 +6,6 @@ const { getPeriodDate } = require("../utils/date");
 const templateViews = require("../views/template");
 const ListHandler = require("./ListHandler");
 
-const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-
-const randomDelay = (min, max) =>
-    Math.floor(Math.random() * (max - min + 1)) + min;
-
 class CronHandler {
     constructor(client) {
         this.client = client;
@@ -61,7 +56,7 @@ class CronHandler {
                         await this.client.sendMessage(group.id, {
                             text: combinedMessage,
                         });
-                        await delay(randomDelay(100, 1500));
+                        console.log(group.id);
                     } catch (e) {
                         console.error(
                             `Failed to send messages to group ${group.id}:`,
@@ -87,7 +82,6 @@ class CronHandler {
                     const message = `${templateViews.oneDayReminder()}\n\n${uncompletedMemberList}`;
 
                     await this.client.sendMessage(group.id, { text: message });
-                    await delay(randomDelay(100, 1500));
                 } catch (e) {
                     console.error(e);
                 }

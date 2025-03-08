@@ -68,11 +68,11 @@ const routeCommand = async (message, client) => {
             await cronRouter({ message, cronHandler }, client);
         } else {
             let result = "";
-            client.sendMessage = async (_, message, _2) => {
-                result = message.text;
-            };
-            const cronHandler = new CronHandler(client);
-            await commandRouter(message, client);
+            await commandRouter(message, {
+                sendMessage: async (_, message, _2) => {
+                    result = message.text;
+                },
+            });
             await cronRouter({ message, cronHandler }, client);
             console.log("Result:", result);
         }
