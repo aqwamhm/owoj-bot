@@ -22,6 +22,8 @@ const startSock = async () => {
         printQRInTerminal: true,
         browser: ["Chrome (Linux)", "", ""],
         markOnlineOnConnect: true,
+        syncFullHistory: false,
+        shouldSyncHistoryMessage: () => false,
         cachedGroupMetadata: async (jid) => {
             let meta = groupCache.get(jid);
             if (!meta) {
