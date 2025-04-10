@@ -1,7 +1,6 @@
 require("dotenv").config();
 const cron = require("node-cron");
 const { commandRouter, cronRouter } = require("./routes/routers");
-const qrcode = require("qrcode-terminal");
 const CronHandler = require("./handlers/CronHandler");
 const {
     default: makeWASocket,
@@ -9,6 +8,9 @@ const {
     DisconnectReason,
 } = require("baileys");
 const { Boom } = require("@hapi/boom");
+const NodeCache = require("node-cache");
+
+const groupCache = new NodeCache({ useClones: false });
 
 const startSock = async () => {
     const { state, saveCreds } = await useMultiFileAuthState(
@@ -20,6 +22,22 @@ const startSock = async () => {
         printQRInTerminal: true,
         browser: ["Chrome (Linux)", "", ""],
         markOnlineOnConnect: true,
+        cachedGroupMetadata: async (jid) => {
+            let meta = groupCache.get(jid);
+            if (!meta) {
+                try {
+                    meta = await client.groupMetadata(jid);
+                    groupCache.set(jid, meta);
+                } catch (err) {
+                    console.error(
+                        "Failed to fetch group metadata:",
+                        jid,
+                        err.message
+                    );
+                }
+            }
+            return meta;
+        },
     });
 
     client.ev.on("connection.update", (update) => {
@@ -48,6 +66,34 @@ const startSock = async () => {
         const messages = m.messages;
         for (const message of messages) {
             await routeCommand(message, client);
+        }
+    });
+
+    client.ev.on("groups.update", async (updates) => {
+        for (const update of updates) {
+            try {
+                const meta = await client.groupMetadata(update.id);
+                groupCache.set(update.id, meta);
+            } catch (err) {
+                console.error(
+                    "Error updating group metadata for",
+                    update.id,
+                    err.message
+                );
+            }
+        }
+    });
+
+    client.ev.on("group-participants.update", async (update) => {
+        try {
+            const meta = await client.groupMetadata(update.id);
+            groupCache.set(update.id, meta);
+        } catch (err) {
+            console.error(
+                "Error updating participant metadata for",
+                update.id,
+                err.message
+            );
         }
     });
 
