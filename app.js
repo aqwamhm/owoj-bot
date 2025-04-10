@@ -19,6 +19,7 @@ const startSock = async () => {
         auth: state,
         printQRInTerminal: true,
         browser: ["Chrome (Linux)", "", ""],
+        markOnlineOnConnect: true,
     });
 
     client.ev.on("connection.update", (update) => {
