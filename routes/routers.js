@@ -65,6 +65,8 @@ const commandRouter = async (message, client) => {
             }
         }
     }
+
+    return result;
 };
 
 const cronRouter = async ({ message, cronHandler }, client) => {
