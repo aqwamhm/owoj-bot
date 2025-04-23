@@ -8,11 +8,12 @@ const commandRouter = async (message, client) => {
         return result;
     }
 
-    const messageBody =
+    const messageBody = (
         message.message?.conversation ||
         message.message?.extendedTextMessage?.text ||
-        "";
-    const prompt = messageBody.toLowerCase().split(/[\s\u00A0]+/)[0];
+        ""
+    ).toLowerCase();
+    const prompt = messageBody.split(/[\s\u00A0]+/)[0];
     const command = commands().find((command) => command.prompt === prompt);
 
     if (command) {
@@ -72,10 +73,11 @@ const cronRouter = async ({ message, cronHandler }, client) => {
         return;
     }
 
-    const messageBody =
+    const messageBody = (
         message.message?.conversation ||
         message.message?.extendedTextMessage?.text ||
-        "";
+        ""
+    ).toLowerCase();
     const cron = crons(cronHandler).find((cron) => messageBody === cron.prompt);
 
     if (cron) {
