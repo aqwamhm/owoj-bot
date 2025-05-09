@@ -23,6 +23,7 @@ const groupCache = new NodeCache({ stdTTL: 86400, useClones: false }); // 24h TT
 let client = null;
 let cronHandler = null;
 let presenceIntervalStarted = false;
+let jobsScheduled = false;
 
 /**
  * Create and configure a new WhatsApp socket client
@@ -102,7 +103,6 @@ const handleConnectionUpdate = (update) => {
             presenceIntervalStarted = true;
             setInterval(() => {
                 if (client?.sendPresenceUpdate) {
-                    console.log("test");
                     client.sendPresenceUpdate("available");
                 }
             }, 60_000);
@@ -194,6 +194,9 @@ const routeCommand = async (message, sock) => {
  * Schedule cron jobs for new period & reminder
  */
 const scheduleCronJobs = () => {
+    if (jobsScheduled) return; // prevent double-scheduling
+    jobsScheduled = true;
+
     const hour = parseInt(process.env.PERIOD_START_HOUR, 10);
     const day = parseInt(process.env.PERIOD_START_DAY, 10);
     const previousDay = (day - 1 + 7) % 7;
