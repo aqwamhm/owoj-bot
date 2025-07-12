@@ -6,6 +6,8 @@ const { getPeriodDate } = require("../utils/date");
 const templateViews = require("../views/template");
 const ListHandler = require("./ListHandler");
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 class CronHandler {
     constructor(client) {
         this.client = client;
@@ -53,10 +55,8 @@ class CronHandler {
 
                         const combinedMessage = `${templateViews.doaKhatamQuran}\n\n------\n\n${templateViews.pembukaan}\n\n------\n\n${list}`;
 
-                        await this.client.sendMessage(group.id, {
-                            text: combinedMessage,
-                        });
-                        console.log(group.id);
+                        await this._sendWithThrottle(group.id, combinedMessage);
+                        console.log(`Message sent to ${group.id}`);
                     } catch (e) {
                         console.error(
                             `Failed to send messages to group ${group.id}:`,
@@ -81,13 +81,35 @@ class CronHandler {
                         });
                     const message = `${templateViews.oneDayReminder()}\n\n${uncompletedMemberList}`;
 
-                    await this.client.sendMessage(group.id, { text: message });
+                    await this._sendWithThrottle(group.id, message);
                 } catch (e) {
                     console.error(e);
                 }
             }
         } catch (e) {
             console.error(e);
+        }
+    }
+
+    /**
+     * Internal helper: send with rate-limit handling and delay
+     */
+    async _sendWithThrottle(jid, text, attempt = 1) {
+        try {
+            await this.client.sendMessage(jid, { text });
+            // wait 500 to 1000 ms between messages to avoid flooding
+            await delay(Math.floor(Math.random() * (1000 - 500 + 1)) + 500);
+        } catch (e) {
+            const isRateLimit =
+                e.data === 429 || (e.output && e.output.statusCode === 500);
+            if (isRateLimit && attempt <= 3) {
+                console.warn(
+                    `Rate limit hit on ${jid}, retrying in 5s (attempt ${attempt})`
+                );
+                await delay(5000);
+                return this._sendWithThrottle(jid, text, attempt + 1);
+            }
+            throw e;
         }
     }
 }

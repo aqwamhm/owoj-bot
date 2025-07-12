@@ -232,4 +232,130 @@ describe("CronHandler", () => {
             consoleSpy.mockRestore();
         });
     });
+
+    describe("_sendWithThrottle", () => {
+        it("should retry sending message on rate limit error (429)", async () => {
+            const consoleWarnSpy = jest
+                .spyOn(console, "warn")
+                .mockImplementation(() => {});
+            const originalDelay = global.setTimeout;
+            global.setTimeout = jest.fn((fn) => fn()); // Mock setTimeout to execute immediately
+
+            client.sendMessage
+                .mockRejectedValueOnce({ data: 429 }) // First attempt: rate limit
+                .mockResolvedValueOnce({}); // Second attempt: success
+
+            await cronHandler._sendWithThrottle("testJid", "testText");
+
+            expect(client.sendMessage).toHaveBeenCalledTimes(2);
+            expect(client.sendMessage).toHaveBeenCalledWith("testJid", {
+                text: "testText",
+            });
+            expect(consoleWarnSpy).toHaveBeenCalledWith(
+                `Rate limit hit on testJid, retrying in 5s (attempt 1)`
+            );
+
+            consoleWarnSpy.mockRestore();
+            global.setTimeout = originalDelay; // Restore original setTimeout
+        });
+
+        it("should retry sending message on rate limit error (500 status code)", async () => {
+            const consoleWarnSpy = jest
+                .spyOn(console, "warn")
+                .mockImplementation(() => {});
+            const originalDelay = global.setTimeout;
+            global.setTimeout = jest.fn((fn) => fn()); // Mock setTimeout to execute immediately
+
+            client.sendMessage
+                .mockRejectedValueOnce({
+                    output: { statusCode: 500 },
+                }) // First attempt: rate limit
+                .mockResolvedValueOnce({}); // Second attempt: success
+
+            await cronHandler._sendWithThrottle("testJid", "testText");
+
+            expect(client.sendMessage).toHaveBeenCalledTimes(2);
+            expect(client.sendMessage).toHaveBeenCalledWith("testJid", {
+                text: "testText",
+            });
+            expect(consoleWarnSpy).toHaveBeenCalledWith(
+                `Rate limit hit on testJid, retrying in 5s (attempt 1)`
+            );
+
+            consoleWarnSpy.mockRestore();
+            global.setTimeout = originalDelay; // Restore original setTimeout
+        });
+
+        it("should throw error if not a rate limit error (e.data not 429 and e.output.statusCode not 500)", async () => {
+            const consoleWarnSpy = jest
+                .spyOn(console, "warn")
+                .mockImplementation(() => {});
+            const originalDelay = global.setTimeout;
+            global.setTimeout = jest.fn((fn) => fn()); // Mock setTimeout to execute immediately
+
+            client.sendMessage.mockRejectedValue({
+                output: { statusCode: 400 },
+                data: 400,
+            }); // Not a rate limit error
+
+            await expect(
+                cronHandler._sendWithThrottle("testJid", "testText")
+            ).rejects.toEqual({ output: { statusCode: 400 }, data: 400 });
+
+            expect(client.sendMessage).toHaveBeenCalledTimes(1);
+            expect(consoleWarnSpy).not.toHaveBeenCalled();
+
+            consoleWarnSpy.mockRestore();
+            global.setTimeout = originalDelay; // Restore original setTimeout
+        });
+
+        it("should throw error if not a rate limit error (generic error)", async () => {
+            const consoleWarnSpy = jest
+                .spyOn(console, "warn")
+                .mockImplementation(() => {});
+            const originalDelay = global.setTimeout;
+            global.setTimeout = jest.fn((fn) => fn()); // Mock setTimeout to execute immediately
+
+            client.sendMessage.mockRejectedValue(new Error("Generic error"));
+
+            await expect(
+                cronHandler._sendWithThrottle("testJid", "testText")
+            ).rejects.toThrow("Generic error");
+
+            expect(client.sendMessage).toHaveBeenCalledTimes(1);
+            expect(consoleWarnSpy).not.toHaveBeenCalled();
+
+            consoleWarnSpy.mockRestore();
+            global.setTimeout = originalDelay; // Restore original setTimeout
+        });
+
+        it("should throw error after 3 retries on rate limit", async () => {
+            const consoleWarnSpy = jest
+                .spyOn(console, "warn")
+                .mockImplementation(() => {});
+            const originalDelay = global.setTimeout;
+            global.setTimeout = jest.fn((fn) => fn()); // Mock setTimeout to execute immediately
+
+            client.sendMessage.mockRejectedValue({ data: 429 }); // Always rate limit
+
+            await expect(
+                cronHandler._sendWithThrottle("testJid", "testText")
+            ).rejects.toEqual({ data: 429 });
+
+            expect(client.sendMessage).toHaveBeenCalledTimes(4); // 1 initial + 3 retries
+            expect(consoleWarnSpy).toHaveBeenCalledTimes(3);
+            expect(consoleWarnSpy).toHaveBeenCalledWith(
+                `Rate limit hit on testJid, retrying in 5s (attempt 1)`
+            );
+            expect(consoleWarnSpy).toHaveBeenCalledWith(
+                `Rate limit hit on testJid, retrying in 5s (attempt 2)`
+            );
+            expect(consoleWarnSpy).toHaveBeenCalledWith(
+                `Rate limit hit on testJid, retrying in 5s (attempt 3)`
+            );
+
+            consoleWarnSpy.mockRestore();
+            global.setTimeout = originalDelay; // Restore original setTimeout
+        });
+    });
 });
