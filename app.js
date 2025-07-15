@@ -1,5 +1,6 @@
 require("dotenv").config();
 const cron = require("node-cron");
+const QRCode = require("qrcode");
 const { commandRouter, cronRouter } = require("./routes/routers");
 const CronHandler = require("./handlers/CronHandler");
 const {
@@ -35,7 +36,6 @@ const createClient = async () => {
 
     const socketConfig = {
         auth: state,
-        printQRInTerminal: true,
         browser: ["Chrome (Linux)", "", ""],
         markOnlineOnConnect: true,
         syncFullHistory: false,
@@ -59,6 +59,48 @@ const createClient = async () => {
 
     const sock = makeWASocket(socketConfig);
     sock.ev.on("creds.update", saveCreds);
+
+    // Handle connection updates, including manual QR display
+    sock.ev.on("connection.update", async (update) => {
+        const { connection, lastDisconnect, qr } = update;
+
+        if (qr) {
+            // Generate and display QR code manually in terminal
+            console.log(
+                await QRCode.toString(qr, { type: "terminal", small: true })
+            );
+        }
+
+        if (connection === "close") {
+            const statusCode =
+                lastDisconnect?.error instanceof Boom
+                    ? lastDisconnect.error.output.statusCode
+                    : DisconnectReason.connectionClosed;
+
+            const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+            console.warn(
+                `Connection closed (Reason: ${
+                    DisconnectReason[statusCode] || statusCode
+                }), ${shouldReconnect ? "reconnecting..." : "stopping"}`
+            );
+            if (shouldReconnect) setTimeout(initializeClient, 5000);
+        }
+
+        if (connection === "open") {
+            console.info("Successfully connected to WhatsApp");
+
+            // start periodic presence updates once
+            if (!presenceIntervalStarted) {
+                presenceIntervalStarted = true;
+                setInterval(() => {
+                    if (client?.sendPresenceUpdate) {
+                        client.sendPresenceUpdate("available");
+                    }
+                }, 60_000);
+            }
+        }
+    });
+
     return sock;
 };
 
@@ -83,7 +125,6 @@ const initializeClient = async () => {
  * Wire up all Baileys event listeners
  */
 const setupEventHandlers = (sock) => {
-    sock.ev.on("connection.update", handleConnectionUpdate);
     sock.ev.on("messages.upsert", handleMessagesUpsert);
     sock.ev.on("groups.update", handleGroupsUpdate);
     sock.ev.on("group-participants.update", handleGroupParticipantsUpdate);
