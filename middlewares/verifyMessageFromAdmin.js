@@ -8,6 +8,8 @@ const verifyMessageFromAdmin = async (message) => {
 
     const admin = await adminServices.find({ phoneNumber });
     if (!admin) {
+        console.log(phoneNumber, "bukan admin");
+
         throw new AuthorizationError(
             `Tidak dapat menjalankan command ini. Nomor anda tidak terdaftar sebagai admin.`
         );
