@@ -36,6 +36,7 @@ const createClient = async () => {
 
     const socketConfig = {
         auth: state,
+        version: [2, 3000, 1027934701],
         browser: ["Chrome (Linux)", "", ""],
         markOnlineOnConnect: true,
         syncFullHistory: false,
