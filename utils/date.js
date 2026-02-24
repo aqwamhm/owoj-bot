@@ -61,4 +61,14 @@ const daysOfWeek = [
     "Minggu",
 ];
 
-module.exports = { getPeriodDate, showFormattedDate, daysOfWeek };
+const getPeriodText = (period) => {
+    if (period === 0) return "pekan ini";
+    return `${Math.abs(period)} pekan lalu`;
+};
+
+module.exports = {
+    getPeriodDate,
+    showFormattedDate,
+    daysOfWeek,
+    getPeriodText,
+};

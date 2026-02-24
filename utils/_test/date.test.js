@@ -1,4 +1,4 @@
-const { getPeriodDate, showFormattedDate } = require("../date");
+const { getPeriodDate, showFormattedDate, getPeriodText } = require("../date");
 
 describe("Utils - getPeriodDate", () => {
     const defaultStartDay = 6;
@@ -19,10 +19,10 @@ describe("Utils - getPeriodDate", () => {
         const { startDate, endDate } = getPeriodDate(undefined, testDate);
 
         expect(new Date(startDate).toISOString()).toBe(
-            "2024-11-02T11:00:00.000Z"
+            "2024-11-02T11:00:00.000Z",
         );
         expect(new Date(endDate).toISOString()).toBe(
-            "2024-11-09T10:59:59.999Z"
+            "2024-11-09T10:59:59.999Z",
         );
     });
 
@@ -38,10 +38,10 @@ describe("Utils - getPeriodDate", () => {
         const { startDate, endDate } = getPeriodDate(0, testDate);
 
         expect(new Date(startDate).toISOString()).toBe(
-            "2024-11-02T11:00:00.000Z"
+            "2024-11-02T11:00:00.000Z",
         );
         expect(new Date(endDate).toISOString()).toBe(
-            "2024-11-09T10:59:59.999Z"
+            "2024-11-09T10:59:59.999Z",
         );
     });
 
@@ -76,10 +76,10 @@ describe("Utils - getPeriodDate", () => {
         const { startDate, endDate } = getPeriodDate(2, testDate);
 
         expect(new Date(startDate).toISOString()).toBe(
-            "2024-11-16T11:00:00.000Z"
+            "2024-11-16T11:00:00.000Z",
         );
         expect(new Date(endDate).toISOString()).toBe(
-            "2024-11-23T10:59:59.999Z"
+            "2024-11-23T10:59:59.999Z",
         );
     });
 
@@ -88,10 +88,10 @@ describe("Utils - getPeriodDate", () => {
         const { startDate, endDate } = getPeriodDate(-2, testDate);
 
         expect(new Date(startDate).toISOString()).toBe(
-            "2024-10-19T11:00:00.000Z"
+            "2024-10-19T11:00:00.000Z",
         );
         expect(new Date(endDate).toISOString()).toBe(
-            "2024-10-26T10:59:59.999Z"
+            "2024-10-26T10:59:59.999Z",
         );
     });
 
@@ -100,10 +100,10 @@ describe("Utils - getPeriodDate", () => {
         const { startDate, endDate } = getPeriodDate(0, testDate);
 
         expect(new Date(startDate).toISOString()).toBe(
-            "2024-10-26T11:00:00.000Z"
+            "2024-10-26T11:00:00.000Z",
         );
         expect(new Date(endDate).toISOString()).toBe(
-            "2024-11-02T10:59:59.999Z"
+            "2024-11-02T10:59:59.999Z",
         );
     });
 });
@@ -142,5 +142,37 @@ describe("Utils - showFormattedDate", () => {
         const formattedDate = showFormattedDate(invalidDate);
 
         expect(formattedDate).toBe("Invalid Date");
+    });
+});
+
+describe("Utils - getPeriodText", () => {
+    it("should return 'pekan ini' for period 0", () => {
+        const result = getPeriodText(0);
+        expect(result).toBe("pekan ini");
+    });
+
+    it("should return '1 pekan lalu' for period -1", () => {
+        const result = getPeriodText(-1);
+        expect(result).toBe("1 pekan lalu");
+    });
+
+    it("should return '2 pekan lalu' for period -2", () => {
+        const result = getPeriodText(-2);
+        expect(result).toBe("2 pekan lalu");
+    });
+
+    it("should return '3 pekan lalu' for period -3", () => {
+        const result = getPeriodText(-3);
+        expect(result).toBe("3 pekan lalu");
+    });
+
+    it("should handle positive period values correctly", () => {
+        const result = getPeriodText(1);
+        expect(result).toBe("1 pekan lalu");
+    });
+
+    it("should handle large period values", () => {
+        const result = getPeriodText(-10);
+        expect(result).toBe("10 pekan lalu");
     });
 });

@@ -16,8 +16,8 @@ describe("reportViews", () => {
             });
             expect(result).toBe(
                 `Baarakallahu fiik, laporan berhasil dicatat: \n            \n- *Nama:* John Doe\n- *Jumlah Halaman:* 20\n- *Juz:* 1\n- *Jenis:* Terjemah \n- *Periode:* ${showFormattedDate(
-                    startDate
-                )} - ${showFormattedDate(endDate)}\n`
+                    startDate,
+                )} - ${showFormattedDate(endDate)}\n`,
             );
         });
 
@@ -36,14 +36,14 @@ describe("reportViews", () => {
         it("should return the correct message for conflict", () => {
             const result = reportViews.error.conflictPages();
             expect(result).toBe(
-                "Jumlah laporan halaman harus lebih banyak dari jumlah halaman sebelumnya."
+                "Jumlah laporan halaman harus lebih banyak dari jumlah halaman sebelumnya.",
             );
         });
 
         it("should return the correct message for conflictTotalPages", () => {
             const result = reportViews.error.conflictTotalPages();
             expect(result).toBe(
-                "Jumlah halaman tidak boleh lebih besar dari total halaman."
+                "Jumlah halaman tidak boleh lebih besar dari total halaman.",
             );
         });
 
@@ -57,20 +57,47 @@ describe("reportViews", () => {
             expect(result).toContain("Aqwam");
             expect(result).toContain("1 periode");
         });
+
+        it("should return the correct message for duplicateCompleted with current period", () => {
+            const result = reportViews.error.duplicateCompleted({
+                period: "pekan ini",
+            });
+            expect(result).toBe(
+                "Anda sudah tercatat khalas untuk pekan ini, tidak perlu lapor lagi ✅",
+            );
+        });
+
+        it("should return the correct message for duplicateCompleted with previous period", () => {
+            const result = reportViews.error.duplicateCompleted({
+                period: "1 pekan lalu",
+            });
+            expect(result).toBe(
+                "Anda sudah tercatat khalas untuk 1 pekan lalu, tidak perlu lapor lagi ✅",
+            );
+        });
+
+        it("should return the correct message for duplicateCompleted with multiple periods ago", () => {
+            const result = reportViews.error.duplicateCompleted({
+                period: "3 pekan lalu",
+            });
+            expect(result).toBe(
+                "Anda sudah tercatat khalas untuk 3 pekan lalu, tidak perlu lapor lagi ✅",
+            );
+        });
     });
 
     describe("validation", () => {
         it("should return the correct message for format", () => {
             const result = reportViews.validation.format();
             expect(result).toBe(
-                "- /lapor nama#jumlah halaman/total halaman\n- /lapor nama#jumlah halaman/total halaman#terjemah\n- /lapor nama#jumlah halaman/total halaman#murottal"
+                "- /lapor nama#jumlah halaman/total halaman\n- /lapor nama#jumlah halaman/total halaman#terjemah\n- /lapor nama#jumlah halaman/total halaman#murottal",
             );
         });
 
         it("should return the correct message for example", () => {
             const result = reportViews.validation.example();
             expect(result).toBe(
-                "- /lapor Aqwam#20/20 (untuk periode saat ini)\n- /lapor Aqwam#20/20 -1 (untuk satu periode sebelumnya)\n- /lapor Apri#20/20 -2 (untuk dua periode sebelumnya)\n- /lapor Ivo#20/20#terjemah (untuk laporan terjemah)\n- /lapor Ivo#20/20#murottal (untuk laporan murottal)"
+                "- /lapor Aqwam#20/20 (untuk periode saat ini)\n- /lapor Aqwam#20/20 -1 (untuk satu periode sebelumnya)\n- /lapor Apri#20/20 -2 (untuk dua periode sebelumnya)\n- /lapor Ivo#20/20#terjemah (untuk laporan terjemah)\n- /lapor Ivo#20/20#murottal (untuk laporan murottal)",
             );
         });
     });

@@ -1,6 +1,6 @@
 const memberServices = require("../services/member");
 const reportServices = require("../services/report");
-const { getPeriodDate } = require("../utils/date");
+const { getPeriodDate, getPeriodText } = require("../utils/date");
 const { validate } = require("../utils/validator");
 
 const errorMessages = require("../views/error");
@@ -97,7 +97,31 @@ class ReportHandler {
             periodEndDate: endDate,
         });
 
+        // Check if there's any completed report (any type) in this period
+        const allPeriodReports =
+            (await this.reportServices.findMany({
+                memberName: name,
+                memberGroupId: groupId,
+                periodStartDate: startDate,
+                periodEndDate: endDate,
+            })) || [];
+
+        const hasCompletedReport = allPeriodReports.some(
+            (r) => r.pages === r.totalPages && r.pages > 0
+        );
+
+        if (hasCompletedReport && finishedPages === totalPages) {
+            // Any completed report + new completed report = show duplicate completion message
+            const periodText = getPeriodText(inputPeriod);
+            throw new ConflictError(
+                this.reportViews.error.duplicateCompleted({
+                    period: periodText,
+                })
+            );
+        }
+
         if (previousReport && previousReport.pages >= finishedPages) {
+            // Regular conflict - existing partial progress or regression
             throw new ConflictError(this.reportViews.error.conflictPages());
         }
 

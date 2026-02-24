@@ -40,6 +40,9 @@ Untuk membuat laporan pada ${Math.abs(
 
 \`/lapor ${formatName(memberName)}#20/20 ${period}\``;
         },
+        duplicateCompleted({ period }) {
+            return `Anda sudah tercatat khalas untuk ${period}, tidak perlu lapor lagi ✅`;
+        },
     },
     validation: {
         format() {

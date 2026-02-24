@@ -1,7 +1,7 @@
 const ReportHandler = require("../ReportHandler");
 const memberServices = require("../../services/member");
 const reportServices = require("../../services/report");
-const { getPeriodDate } = require("../../utils/date");
+const { getPeriodDate, getPeriodText } = require("../../utils/date");
 const { validate } = require("../../utils/validator");
 const { decrementJuz } = require("../../utils/juz");
 const NotFoundError = require("../../exceptions/NotFoundError");
@@ -226,7 +226,7 @@ describe("ReportHandler", () => {
             });
 
             await expect(
-                ReportHandler.handleCreateReport({ message, validation })
+                ReportHandler.handleCreateReport({ message, validation }),
             ).rejects.toThrow(ConflictError);
         });
 
@@ -234,7 +234,7 @@ describe("ReportHandler", () => {
             memberServices.find.mockResolvedValue(null);
 
             await expect(
-                ReportHandler.handleCreateReport({ message, validation })
+                ReportHandler.handleCreateReport({ message, validation }),
             ).rejects.toThrow(NotFoundError);
         });
 
@@ -256,15 +256,15 @@ describe("ReportHandler", () => {
             ]);
 
             reportViews.error.conflictReportOnPreviousPeriod.mockReturnValue(
-                "Cannot create report. Previous period has unfinished report."
+                "Cannot create report. Previous period has unfinished report.",
             );
 
             await expect(
-                ReportHandler.handleCreateReport({ message, validation })
+                ReportHandler.handleCreateReport({ message, validation }),
             ).rejects.toThrow(ConflictError);
 
             expect(
-                reportViews.error.conflictReportOnPreviousPeriod
+                reportViews.error.conflictReportOnPreviousPeriod,
             ).toHaveBeenCalledWith({
                 juz: 5,
                 memberName: "Aqwam",
@@ -316,11 +316,11 @@ describe("ReportHandler", () => {
             });
 
             reportViews.error.conflictTotalPages.mockReturnValue(
-                "Finished pages cannot exceed total pages"
+                "Finished pages cannot exceed total pages",
             );
 
             await expect(
-                ReportHandler.handleCreateReport({ message, validation })
+                ReportHandler.handleCreateReport({ message, validation }),
             ).rejects.toThrow(ConflictError);
 
             expect(reportViews.error.conflictTotalPages).toHaveBeenCalled();
@@ -344,11 +344,11 @@ describe("ReportHandler", () => {
             });
 
             reportViews.error.conflictPages.mockReturnValue(
-                "New pages cannot be less than previous report"
+                "New pages cannot be less than previous report",
             );
 
             await expect(
-                ReportHandler.handleCreateReport({ message, validation })
+                ReportHandler.handleCreateReport({ message, validation }),
             ).rejects.toThrow(ConflictError);
 
             expect(reportViews.error.conflictPages).toHaveBeenCalled();
@@ -378,7 +378,7 @@ describe("ReportHandler", () => {
                     name: "Aqwam",
                     pages: 15,
                     totalPages: 20,
-                })
+                }),
             );
         });
 
@@ -404,7 +404,168 @@ describe("ReportHandler", () => {
                     name: "Aqwam",
                     pages: 10,
                     totalPages: 20,
-                })
+                }),
+            );
+        });
+
+        it("should throw ConflictError with duplicateCompleted message when submitting duplicate completed report of same type", async () => {
+            validate.mockReturnValue({
+                name: "Aqwam",
+                pages: "20/20",
+                type: "tilawah",
+                period: null,
+            });
+
+            memberServices.find.mockResolvedValue({
+                name: "Aqwam",
+                currentJuz: 1,
+            });
+
+            reportServices.find.mockResolvedValue({
+                pages: 20,
+                totalPages: 20,
+                type: "TILAWAH",
+            });
+
+            reportServices.findMany.mockResolvedValue([
+                {
+                    pages: 20,
+                    totalPages: 20,
+                    type: "TILAWAH",
+                },
+            ]);
+
+            getPeriodText.mockReturnValue("pekan ini");
+            reportViews.error.duplicateCompleted.mockReturnValue(
+                "Anda sudah tercatat khalas untuk pekan ini, tidak perlu lapso lagi ✅",
+            );
+
+            await expect(
+                ReportHandler.handleCreateReport({ message, validation }),
+            ).rejects.toThrow(ConflictError);
+
+            expect(reportViews.error.duplicateCompleted).toHaveBeenCalledWith({
+                period: "pekan ini",
+            });
+        });
+
+        it("should throw ConflictError with duplicateCompleted message when submitting completed report after different type completion", async () => {
+            validate.mockReturnValue({
+                name: "Aqwam",
+                pages: "20/20",
+                type: "murottal",
+                period: null,
+            });
+
+            memberServices.find.mockResolvedValue({
+                name: "Aqwam",
+                currentJuz: 1,
+            });
+
+            reportServices.find.mockResolvedValue({
+                pages: 20,
+                totalPages: 20,
+                type: "TILAWAH",
+            });
+
+            reportServices.findMany.mockResolvedValue([
+                {
+                    pages: 20,
+                    totalPages: 20,
+                    type: "TILAWAH",
+                },
+            ]);
+
+            getPeriodText.mockReturnValue("pekan ini");
+            reportViews.error.duplicateCompleted.mockReturnValue(
+                "Anda sudah tercatat khalas untuk pekan ini, tidak perlu lapso lagi ✅",
+            );
+
+            await expect(
+                ReportHandler.handleCreateReport({ message, validation }),
+            ).rejects.toThrow(ConflictError);
+
+            expect(reportViews.error.duplicateCompleted).toHaveBeenCalledWith({
+                period: "pekan ini",
+            });
+        });
+
+        it("should throw ConflictError with correct period text for previous period duplicate completion", async () => {
+            validate.mockReturnValue({
+                name: "Aqwam",
+                pages: "20/20",
+                type: "tilawah",
+                period: 1,
+            });
+
+            memberServices.find.mockResolvedValue({
+                name: "Aqwam",
+                currentJuz: 1,
+            });
+
+            reportServices.find.mockResolvedValue({
+                pages: 20,
+                totalPages: 20,
+                type: "TILAWAH",
+            });
+
+            reportServices.findMany.mockResolvedValue([
+                {
+                    pages: 20,
+                    totalPages: 20,
+                    type: "TILAWAH",
+                },
+            ]);
+
+            getPeriodText.mockReturnValue("1 pekan lalu");
+            reportViews.error.duplicateCompleted.mockReturnValue(
+                "Anda sudah tercatat khalas untuk 1 pekan lalu, tidak perlu lapso lagi ✅",
+            );
+
+            await expect(
+                ReportHandler.handleCreateReport({ message, validation }),
+            ).rejects.toThrow(ConflictError);
+
+            expect(reportViews.error.duplicateCompleted).toHaveBeenCalledWith({
+                period: "1 pekan lalu",
+            });
+        });
+
+        it("should allow partial progress report when there is a completed report", async () => {
+            validate.mockReturnValue({
+                name: "Aqwam",
+                pages: "15/20",
+                type: "tilawah",
+                period: null,
+            });
+
+            memberServices.find.mockResolvedValue({
+                name: "Aqwam",
+                currentJuz: 1,
+            });
+
+            reportServices.find.mockResolvedValue({
+                pages: 10,
+                totalPages: 20,
+                type: "TILAWAH",
+            });
+
+            reportServices.findMany.mockResolvedValue([
+                {
+                    pages: 20,
+                    totalPages: 20,
+                    type: "TERJEMAH",
+                },
+            ]);
+
+            await ReportHandler.handleCreateReport({ message, validation });
+
+            expect(reportServices.create).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    name: "Aqwam",
+                    pages: 15,
+                    totalPages: 20,
+                }),
             );
         });
     });
@@ -625,7 +786,7 @@ describe("ReportHandler", () => {
             reportServices.find.mockResolvedValue(null);
 
             await expect(
-                ReportHandler.handleRemoveReport({ message, validation })
+                ReportHandler.handleRemoveReport({ message, validation }),
             ).rejects.toThrow(NotFoundError);
         });
     });
