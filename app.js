@@ -30,13 +30,12 @@ let jobsScheduled = false;
  * Create and configure a new WhatsApp socket client
  */
 const createClient = async () => {
-    const { state, saveCreds } = await useMultiFileAuthState(
-        "auth_info_baileys"
-    );
+    const { state, saveCreds } =
+        await useMultiFileAuthState("auth_info_baileys");
 
     const socketConfig = {
         auth: state,
-        version: [2, 3000, 1027934701],
+        version: [2, 3000, 1033916097],
         browser: ["Chrome (Linux)", "", ""],
         markOnlineOnConnect: true,
         syncFullHistory: false,
@@ -51,7 +50,7 @@ const createClient = async () => {
                 return groupCache.get(jid);
             } catch (error) {
                 console.error(
-                    `Failed to cache group metadata for ${jid}: ${error.message}`
+                    `Failed to cache group metadata for ${jid}: ${error.message}`,
                 );
                 return null;
             }
@@ -68,7 +67,7 @@ const createClient = async () => {
         if (qr) {
             // Generate and display QR code manually in terminal
             console.log(
-                await QRCode.toString(qr, { type: "terminal", small: true })
+                await QRCode.toString(qr, { type: "terminal", small: true }),
             );
         }
 
@@ -82,7 +81,7 @@ const createClient = async () => {
             console.warn(
                 `Connection closed (Reason: ${
                     DisconnectReason[statusCode] || statusCode
-                }), ${shouldReconnect ? "reconnecting..." : "stopping"}`
+                }), ${shouldReconnect ? "reconnecting..." : "stopping"}`,
             );
             if (shouldReconnect) setTimeout(initializeClient, 5000);
         }
@@ -159,7 +158,7 @@ const handleConnectionUpdate = (update) => {
         console.warn(
             `Connection closed (Reason: ${
                 DisconnectReason[statusCode] || statusCode
-            }), ${shouldReconnect ? "reconnecting..." : "stopping"}`
+            }), ${shouldReconnect ? "reconnecting..." : "stopping"}`,
         );
         if (shouldReconnect) setTimeout(initializeClient, 5000);
     }
@@ -188,7 +187,7 @@ const handleGroupsUpdate = async (updates) => {
             } catch (err) {
                 console.error(`Group update error: ${err.message}`);
             }
-        })
+        }),
     );
 };
 
@@ -216,7 +215,7 @@ const routeCommand = async (message, sock) => {
             const testResponse = await commandRouter(message, {
                 sendMessage: async (jid, content) => {
                     console.debug(
-                        `[DEV] Would send to ${jid}: ${content.text}`
+                        `[DEV] Would send to ${jid}: ${content.text}`,
                     );
                 },
             });
