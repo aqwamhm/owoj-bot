@@ -10,8 +10,9 @@ const periodServices = {
         });
     },
 
-    async create({ startDate, endDate }) {
-        await prisma.period.create({
+    async create({ startDate, endDate }, tx = null) {
+        const client = tx || prisma;
+        await client.period.create({
             data: {
                 startDate,
                 endDate,

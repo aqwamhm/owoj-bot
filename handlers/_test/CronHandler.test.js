@@ -1,29 +1,41 @@
 const groupServices = require("../../services/group");
 const memberServices = require("../../services/member");
 const periodServices = require("../../services/period");
-const reportServices = require("../../services/report");
 const templateViews = require("../../views/template");
 const { getPeriodDate } = require("../../utils/date");
+const { prisma } = require("../../config/db");
 const ListHandler = require("../ListHandler");
 const CronHandler = require("../CronHandler");
 
 jest.mock("../../services/group");
 jest.mock("../../services/member");
 jest.mock("../../services/period");
-jest.mock("../../services/report");
 jest.mock("../../views/template");
 jest.mock("../../utils/date");
+jest.mock("../../config/db", () => ({
+    prisma: {
+        $transaction: jest.fn(),
+    },
+}));
 jest.mock("../ListHandler");
 
 describe("CronHandler", () => {
     let client;
     let cronHandler;
 
+    const mockStartDate = "2023-01-01";
+    const mockEndDate = "2023-01-07";
+
     beforeEach(() => {
         client = {
             sendMessage: jest.fn(),
         };
         cronHandler = new CronHandler(client);
+
+        getPeriodDate.mockReturnValue({
+            startDate: mockStartDate,
+            endDate: mockEndDate,
+        });
     });
 
     afterEach(() => {
@@ -31,44 +43,52 @@ describe("CronHandler", () => {
     });
 
     describe("handleNewPeriod", () => {
-        it("should create new period, increment member current juz, and create reports if period does not exist", async () => {
-            const mockStartDate = "2023-01-01";
-            const mockEndDate = "2023-01-07";
-
-            getPeriodDate.mockReturnValue({
-                startDate: mockStartDate,
-                endDate: mockEndDate,
-            });
+        it("should create new period, increment member current juz, and create reports atomically if period does not exist", async () => {
             periodServices.find.mockResolvedValue(null);
-            memberServices.findAll.mockResolvedValue([
-                { id: 1, name: "Member 1", currentJuz: 1 },
-            ]);
-            reportServices.createMany.mockResolvedValue(true);
-
             groupServices.getAll.mockResolvedValue(null);
+
+            // Mock $transaction to execute the callback with a fake tx client
+            const mockTx = {
+                member: {
+                    findMany: jest.fn().mockResolvedValue([
+                        { name: "Member 1", groupId: "group1", currentJuz: 2 },
+                    ]),
+                },
+                report: {
+                    createMany: jest.fn().mockResolvedValue({ count: 1 }),
+                },
+            };
+            prisma.$transaction.mockImplementation(async (fn) => {
+                await fn(mockTx);
+            });
 
             await cronHandler.handleNewPeriod();
 
-            expect(periodServices.create).toHaveBeenCalledWith({
-                startDate: mockStartDate,
-                endDate: mockEndDate,
-            });
-            expect(memberServices.incrementAllCurrentJuz).toHaveBeenCalled();
-            expect(reportServices.createMany).toHaveBeenCalledWith({
-                members: [{ id: 1, name: "Member 1", currentJuz: 1 }],
-                startDate: mockStartDate,
-                endDate: mockEndDate,
+            expect(prisma.$transaction).toHaveBeenCalledTimes(1);
+            expect(periodServices.create).toHaveBeenCalledWith(
+                { startDate: mockStartDate, endDate: mockEndDate },
+                mockTx
+            );
+            expect(memberServices.incrementAllCurrentJuz).toHaveBeenCalledWith(
+                mockTx
+            );
+            expect(mockTx.member.findMany).toHaveBeenCalled();
+            expect(mockTx.report.createMany).toHaveBeenCalledWith({
+                data: [
+                    {
+                        memberName: "Member 1",
+                        memberGroupId: "group1",
+                        juz: 2,
+                        pages: 0,
+                        periodStartDate: mockStartDate,
+                        periodEndDate: mockEndDate,
+                    },
+                ],
+                skipDuplicates: true,
             });
         });
 
         it("should not create new period, increment member current juz, or create reports if period exists", async () => {
-            const mockStartDate = "2023-01-01";
-            const mockEndDate = "2023-01-07";
-
-            getPeriodDate.mockReturnValue({
-                startDate: mockStartDate,
-                endDate: mockEndDate,
-            });
             periodServices.find.mockResolvedValue({
                 id: 1,
                 startDate: mockStartDate,
@@ -82,46 +102,51 @@ describe("CronHandler", () => {
                 startDate: mockStartDate,
                 endDate: mockEndDate,
             });
+            expect(prisma.$transaction).not.toHaveBeenCalled();
             expect(periodServices.create).not.toHaveBeenCalled();
             expect(
                 memberServices.incrementAllCurrentJuz
             ).not.toHaveBeenCalled();
-            expect(reportServices.createMany).not.toHaveBeenCalled();
         });
 
         it("should create a new period, increment member juz, create reports, and notify groups", async () => {
-            const mockStartDate = "2023-01-01";
-            const mockEndDate = "2023-01-07";
             const mockGroups = [
                 { id: "groupId1", number: "001", admin: "admin1" },
                 { id: "groupId2", number: "002", admin: "admin2" },
             ];
 
-            getPeriodDate.mockReturnValue({
-                startDate: mockStartDate,
-                endDate: mockEndDate,
-            });
             periodServices.find.mockResolvedValue(null);
-            memberServices.findAll.mockResolvedValue([
-                { id: 1, name: "Member 1" },
-            ]);
             groupServices.getAll.mockResolvedValue(mockGroups);
             ListHandler.handleShowMemberList.mockResolvedValue("List message");
 
+            const mockTx = {
+                member: {
+                    findMany: jest.fn().mockResolvedValue([
+                        { name: "Member 1", groupId: "group1", currentJuz: 2 },
+                    ]),
+                },
+                report: {
+                    createMany: jest.fn().mockResolvedValue({ count: 1 }),
+                },
+            };
+            prisma.$transaction.mockImplementation(async (fn) => {
+                await fn(mockTx);
+            });
+
             await cronHandler.handleNewPeriod();
 
-            expect(periodServices.create).toHaveBeenCalledWith({
-                startDate: mockStartDate,
-                endDate: mockEndDate,
-            });
-            expect(memberServices.incrementAllCurrentJuz).toHaveBeenCalled();
-            expect(reportServices.createMany).toHaveBeenCalledWith({
-                members: [{ id: 1, name: "Member 1" }],
-                startDate: mockStartDate,
-                endDate: mockEndDate,
-            });
+            expect(prisma.$transaction).toHaveBeenCalledTimes(1);
+            expect(periodServices.create).toHaveBeenCalledWith(
+                { startDate: mockStartDate, endDate: mockEndDate },
+                mockTx
+            );
+            expect(memberServices.incrementAllCurrentJuz).toHaveBeenCalledWith(
+                mockTx
+            );
 
-            expect(client.sendMessage).toHaveBeenCalledTimes(mockGroups.length);
+            expect(client.sendMessage).toHaveBeenCalledTimes(
+                mockGroups.length
+            );
             mockGroups.forEach((group) => {
                 const expectedCombinedMessage = `${templateViews.doaKhatamQuran}\n\n------\n\n${templateViews.pembukaan}\n\n------\n\nList message`;
                 expect(client.sendMessage).toHaveBeenCalledWith(group.id, {
@@ -130,45 +155,142 @@ describe("CronHandler", () => {
             });
         });
 
+        it("should rollback everything and NOT send messages when transaction fails", async () => {
+            const consoleSpy = jest
+                .spyOn(console, "error")
+                .mockImplementation(() => {});
+            const consoleInfoSpy = jest
+                .spyOn(console, "info")
+                .mockImplementation(() => {});
+            const originalSetTimeout = global.setTimeout;
+            global.setTimeout = jest.fn((fn) => fn());
+
+            periodServices.find.mockResolvedValue(null);
+            groupServices.getAll.mockResolvedValue([
+                { id: "groupId1", number: "001", admin: "admin1" },
+            ]);
+
+            // Simulate transaction failure on all attempts
+            prisma.$transaction.mockRejectedValue(
+                new Error("DB connection lost")
+            );
+
+            await cronHandler.handleNewPeriod();
+
+            // Transaction was retried 3 times
+            expect(prisma.$transaction).toHaveBeenCalledTimes(3);
+
+            // Messages were NOT sent (handler caught the fatal error)
+            expect(client.sendMessage).not.toHaveBeenCalled();
+
+            // Error was logged
+            expect(consoleSpy).toHaveBeenCalledWith(
+                expect.stringContaining("Transaction attempt"),
+                expect.any(String)
+            );
+
+            consoleSpy.mockRestore();
+            consoleInfoSpy.mockRestore();
+            global.setTimeout = originalSetTimeout;
+        });
+
+        it("should succeed on retry after first transaction attempt fails", async () => {
+            const consoleSpy = jest
+                .spyOn(console, "error")
+                .mockImplementation(() => {});
+            const consoleInfoSpy = jest
+                .spyOn(console, "info")
+                .mockImplementation(() => {});
+            const originalSetTimeout = global.setTimeout;
+            global.setTimeout = jest.fn((fn) => fn());
+
+            periodServices.find.mockResolvedValue(null);
+            groupServices.getAll.mockResolvedValue([]);
+
+            const mockTx = {
+                member: {
+                    findMany: jest.fn().mockResolvedValue([]),
+                },
+                report: {
+                    createMany: jest.fn().mockResolvedValue({ count: 0 }),
+                },
+            };
+
+            prisma.$transaction
+                .mockRejectedValueOnce(new Error("Temporary failure"))
+                .mockImplementation(async (fn) => {
+                    await fn(mockTx);
+                });
+
+            await cronHandler.handleNewPeriod();
+
+            // First attempt failed, second succeeded
+            expect(prisma.$transaction).toHaveBeenCalledTimes(2);
+            expect(periodServices.create).toHaveBeenCalledTimes(1);
+            expect(
+                memberServices.incrementAllCurrentJuz
+            ).toHaveBeenCalledTimes(1);
+
+            consoleSpy.mockRestore();
+            consoleInfoSpy.mockRestore();
+            global.setTimeout = originalSetTimeout;
+        });
+
         it("should log an error if an exception is thrown during period creation", async () => {
             const consoleSpy = jest
                 .spyOn(console, "error")
                 .mockImplementation(() => {});
-            periodServices.create.mockRejectedValue(new Error("Test error"));
+            const consoleInfoSpy = jest
+                .spyOn(console, "info")
+                .mockImplementation(() => {});
+            const originalSetTimeout = global.setTimeout;
+            global.setTimeout = jest.fn((fn) => fn());
+
+            periodServices.find.mockResolvedValue(null);
             groupServices.getAll.mockResolvedValue(null);
+
+            prisma.$transaction.mockRejectedValue(new Error("Test error"));
 
             await cronHandler.handleNewPeriod();
 
-            expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error));
+            expect(consoleSpy).toHaveBeenCalledWith(
+                "[handleNewPeriod] Fatal error:",
+                expect.any(Error)
+            );
             consoleSpy.mockRestore();
+            consoleInfoSpy.mockRestore();
+            global.setTimeout = originalSetTimeout;
         });
 
         it("should log an error when failing to send a message to a group", async () => {
             const consoleSpy = jest
                 .spyOn(console, "error")
                 .mockImplementation(() => {});
-            const mockStartDate = "2023-01-01";
-            const mockEndDate = "2023-01-07";
+            const consoleInfoSpy = jest
+                .spyOn(console, "info")
+                .mockImplementation(() => {});
+
             const mockGroups = [
                 { id: "groupId1", number: "001", admin: "admin1" },
                 { id: "groupId2", number: "002", admin: "admin2" },
             ];
             const errorMessage = "Failed to send message";
 
-            getPeriodDate.mockReturnValue({
-                startDate: mockStartDate,
-                endDate: mockEndDate,
-            });
             periodServices.find.mockResolvedValue(null);
-            memberServices.findAll.mockResolvedValue([
-                { id: 1, name: "Member 1" },
-            ]);
             groupServices.getAll.mockResolvedValue(mockGroups);
             ListHandler.handleShowMemberList.mockResolvedValue("List message");
 
-            periodServices.create.mockResolvedValue({});
-            memberServices.incrementAllCurrentJuz.mockResolvedValue();
-            reportServices.createMany.mockResolvedValue();
+            const mockTx = {
+                member: {
+                    findMany: jest.fn().mockResolvedValue([]),
+                },
+                report: {
+                    createMany: jest.fn().mockResolvedValue({ count: 0 }),
+                },
+            };
+            prisma.$transaction.mockImplementation(async (fn) => {
+                await fn(mockTx);
+            });
 
             client.sendMessage.mockImplementation((id, messageObj) => {
                 if (id === "groupId2") {
@@ -184,6 +306,7 @@ describe("CronHandler", () => {
                 expect.any(Error)
             );
             consoleSpy.mockRestore();
+            consoleInfoSpy.mockRestore();
         });
     });
 

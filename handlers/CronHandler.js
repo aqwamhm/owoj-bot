@@ -1,7 +1,7 @@
 const groupServices = require("../services/group");
 const memberServices = require("../services/member");
 const periodServices = require("../services/period");
-const reportServices = require("../services/report");
+const { prisma } = require("../config/db");
 const { getPeriodDate } = require("../utils/date");
 const templateViews = require("../views/template");
 const ListHandler = require("./ListHandler");
@@ -23,18 +23,38 @@ class CronHandler {
             });
 
             if (!verifyPeriodExists) {
-                await periodServices.create({
-                    startDate,
-                    endDate,
-                });
+                console.info(
+                    "[handleNewPeriod] Period not found, creating new period with data setup..."
+                );
 
-                await memberServices.incrementAllCurrentJuz();
+                await this._retryTransaction(async (tx) => {
+                    console.info("[handleNewPeriod] Creating period...");
+                    await periodServices.create({ startDate, endDate }, tx);
 
-                const members = await memberServices.findAll();
-                await reportServices.createMany({
-                    members,
-                    startDate,
-                    endDate,
+                    console.info(
+                        "[handleNewPeriod] Incrementing all member juz..."
+                    );
+                    await memberServices.incrementAllCurrentJuz(tx);
+
+                    console.info(
+                        "[handleNewPeriod] Creating default reports..."
+                    );
+                    const members = await tx.member.findMany();
+                    await tx.report.createMany({
+                        data: members.map((member) => ({
+                            memberName: member.name,
+                            memberGroupId: member.groupId,
+                            juz: member.currentJuz,
+                            pages: 0,
+                            periodStartDate: startDate,
+                            periodEndDate: endDate,
+                        })),
+                        skipDuplicates: true,
+                    });
+
+                    console.info(
+                        "[handleNewPeriod] Transaction committed successfully."
+                    );
                 });
             }
 
@@ -66,7 +86,29 @@ class CronHandler {
                 }
             }
         } catch (e) {
-            console.error(e);
+            console.error("[handleNewPeriod] Fatal error:", e);
+        }
+    }
+
+    /**
+     * Retry a Prisma interactive transaction up to maxAttempts times.
+     * On failure, rolls back automatically and retries after a delay.
+     */
+    async _retryTransaction(fn, maxAttempts = 3) {
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                await prisma.$transaction(fn, {
+                    timeout: 30000, // 30s timeout to handle slow DB
+                });
+                return;
+            } catch (e) {
+                console.error(
+                    `[handleNewPeriod] Transaction attempt ${attempt}/${maxAttempts} failed:`,
+                    e.message
+                );
+                if (attempt === maxAttempts) throw e;
+                await delay(5000);
+            }
         }
     }
 

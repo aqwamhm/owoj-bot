@@ -55,8 +55,9 @@ const memberServices = {
         });
     },
 
-    async incrementAllCurrentJuz() {
-        await prisma.member.updateMany({
+    async incrementAllCurrentJuz(tx = null) {
+        const client = tx || prisma;
+        await client.member.updateMany({
             data: {
                 currentJuz: {
                     increment: 1,
@@ -64,7 +65,7 @@ const memberServices = {
             },
         });
 
-        await prisma.member.updateMany({
+        await client.member.updateMany({
             where: {
                 currentJuz: {
                     gt: 30,
