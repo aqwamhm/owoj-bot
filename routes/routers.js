@@ -22,7 +22,7 @@ const commandRouter = async (message, client) => {
 
             if (command.middlewares) {
                 for (const middleware of command.middlewares) {
-                    const result = await middleware(message);
+                    const result = await middleware(message, client);
                     if (result) {
                         middlewareData = { ...middlewareData, ...result };
                     }
@@ -86,7 +86,7 @@ const cronRouter = async ({ message, cronHandler }, client) => {
         try {
             if (cron.middlewares) {
                 for (const middleware of cron.middlewares) {
-                    await middleware(message);
+                    await middleware(message, client);
                 }
             }
 

@@ -5,12 +5,13 @@ const ReportHandler = require("../handlers/ReportHandler");
 const ListHandler = require("../handlers/ListHandler");
 const UtilityHandler = require("../handlers/UtilityHandler");
 const verifyMessageInOWOJGroup = require("../middlewares/verifyMessageInOWOJGroup");
+const verifyMessageFromAdmin = require("../middlewares/verifyMessageFromAdmin");
 
 const commands = () => [
     {
         prompt: "/register-group",
         handler: GroupHandler.handleCreateGroup.bind(GroupHandler),
-        middlewares: [],
+        middlewares: [verifyMessageFromAdmin],
         validation: {
             regex: /^\/register-group\s+\d+\s*$/,
             multiple: false,
@@ -19,7 +20,7 @@ const commands = () => [
     {
         prompt: "/remove-group",
         handler: GroupHandler.handleRemoveGroup.bind(GroupHandler),
-        middlewares: [verifyMessageInOWOJGroup],
+        middlewares: [verifyMessageInOWOJGroup, verifyMessageFromAdmin],
         validation: {
             regex: /^\/remove-group\s+\d+\s*$/,
             multiple: false,
@@ -28,7 +29,7 @@ const commands = () => [
     {
         prompt: "/register",
         handler: MemberHandler.handleRegisterMember.bind(MemberHandler),
-        middlewares: [verifyMessageInOWOJGroup],
+        middlewares: [verifyMessageInOWOJGroup, verifyMessageFromAdmin],
         validation: {
             regex: /^\/register\s+((?<juz>\d{1,3})#(?<name>[a-zA-Z\s]+?)\s*)+$/g,
             multiple: true,
@@ -37,7 +38,7 @@ const commands = () => [
     {
         prompt: "/set-juz",
         handler: MemberHandler.handleSetMemberJuz.bind(MemberHandler),
-        middlewares: [verifyMessageInOWOJGroup],
+        middlewares: [verifyMessageInOWOJGroup, verifyMessageFromAdmin],
         validation: {
             regex: /^\/set-juz\s+(?<juz>\d{1,3})#(?<name>[a-zA-Z\s]+?)\s*$/,
             multiple: false,
@@ -46,7 +47,7 @@ const commands = () => [
     {
         prompt: "/set-nama",
         handler: MemberHandler.handleSetMemberName.bind(MemberHandler),
-        middlewares: [verifyMessageInOWOJGroup],
+        middlewares: [verifyMessageInOWOJGroup, verifyMessageFromAdmin],
         validation: {
             regex: /^\/set-nama\s+(?<oldName>[a-zA-Z\s]+?)\s*#\s*(?<newName>[a-zA-Z\s]+?)\s*$/,
             multiple: false,
@@ -55,7 +56,7 @@ const commands = () => [
     {
         prompt: "/remove",
         handler: MemberHandler.handleRemoveMember.bind(MemberHandler),
-        middlewares: [verifyMessageInOWOJGroup],
+        middlewares: [verifyMessageInOWOJGroup, verifyMessageFromAdmin],
         validation: {
             regex: /^\/remove\s+(?<name>[a-zA-Z\s]+?)\s*$/,
             multiple: false,
@@ -73,7 +74,7 @@ const commands = () => [
     {
         prompt: "/remove-admin",
         handler: AdminHandler.handleRemoveAdmin.bind(AdminHandler),
-        middlewares: [],
+        middlewares: [verifyMessageFromAdmin],
         validation: {
             regex: /^\/remove-admin\s+(?<phone>\d+)$/,
             multiple: false,
@@ -82,7 +83,7 @@ const commands = () => [
     {
         prompt: "/set-admin",
         handler: GroupHandler.handleSetGroupAdmin.bind(GroupHandler),
-        middlewares: [verifyMessageInOWOJGroup],
+        middlewares: [verifyMessageInOWOJGroup, verifyMessageFromAdmin],
         validation: {
             regex: /^\/set-admin\s+(?<phone>\+?\d+)\s*$/,
             multiple: false,
@@ -127,7 +128,7 @@ const commands = () => [
     {
         prompt: "/list-admin",
         handler: ListHandler.handleShowAdminList.bind(ListHandler),
-        middlewares: [],
+        middlewares: [verifyMessageFromAdmin],
         validation: {
             regex: /^\/list-admin\s*$/,
             multiple: false,
@@ -136,7 +137,7 @@ const commands = () => [
     {
         prompt: "/list-group",
         handler: ListHandler.handleShowGroupList.bind(ListHandler),
-        middlewares: [],
+        middlewares: [verifyMessageFromAdmin],
         validation: {
             regex: /^\/list-group\s*$/,
             multiple: false,
@@ -171,12 +172,12 @@ const commands = () => [
 const crons = (handler) => [
     {
         prompt: "!one-day-reminder!",
-        middlewares: [],
+        middlewares: [verifyMessageFromAdmin],
         handler: handler.handleOneDayBeforeNewPeriod.bind(handler),
     },
     {
         prompt: "!new-period!",
-        middlewares: [],
+        middlewares: [verifyMessageFromAdmin],
         handler: handler.handleNewPeriod.bind(handler),
     },
 ];
