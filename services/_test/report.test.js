@@ -68,14 +68,8 @@ describe("reportServices", () => {
                     totalPages: 0,
                     type: "TILAWAH",
                     period: {
-                        connectOrCreate: {
-                            where: {
-                                startDate_endDate: {
-                                    startDate: mockData.startDate,
-                                    endDate: mockData.endDate,
-                                },
-                            },
-                            create: {
+                        connect: {
+                            startDate_endDate: {
                                 startDate: mockData.startDate,
                                 endDate: mockData.endDate,
                             },
@@ -96,14 +90,8 @@ describe("reportServices", () => {
                     totalPages: 0,
                     type: "TILAWAH",
                     period: {
-                        connectOrCreate: {
-                            where: {
-                                startDate_endDate: {
-                                    startDate: mockData.startDate,
-                                    endDate: mockData.endDate,
-                                },
-                            },
-                            create: {
+                        connect: {
+                            startDate_endDate: {
                                 startDate: mockData.startDate,
                                 endDate: mockData.endDate,
                             },
@@ -154,14 +142,8 @@ describe("reportServices", () => {
                     totalPages: 30,
                     type: "TILAWAH",
                     period: {
-                        connectOrCreate: {
-                            where: {
-                                startDate_endDate: {
-                                    startDate: mockData.startDate,
-                                    endDate: mockData.endDate,
-                                },
-                            },
-                            create: {
+                        connect: {
+                            startDate_endDate: {
                                 startDate: mockData.startDate,
                                 endDate: mockData.endDate,
                             },
@@ -182,14 +164,8 @@ describe("reportServices", () => {
                     totalPages: 30,
                     type: "TILAWAH",
                     period: {
-                        connectOrCreate: {
-                            where: {
-                                startDate_endDate: {
-                                    startDate: mockData.startDate,
-                                    endDate: mockData.endDate,
-                                },
-                            },
-                            create: {
+                        connect: {
+                            startDate_endDate: {
                                 startDate: mockData.startDate,
                                 endDate: mockData.endDate,
                             },
@@ -199,7 +175,7 @@ describe("reportServices", () => {
             });
         });
 
-        it("should handle a missing period and create a new one if not found", async () => {
+        it("should connect to an existing period (only cron creates periods)", async () => {
             const mockData = {
                 name: "Alice",
                 groupId: "2",
@@ -237,14 +213,8 @@ describe("reportServices", () => {
                     totalPages: 0,
                     type: "TILAWAH",
                     period: {
-                        connectOrCreate: {
-                            where: {
-                                startDate_endDate: {
-                                    startDate: mockData.startDate,
-                                    endDate: mockData.endDate,
-                                },
-                            },
-                            create: {
+                        connect: {
+                            startDate_endDate: {
                                 startDate: mockData.startDate,
                                 endDate: mockData.endDate,
                             },
@@ -265,14 +235,8 @@ describe("reportServices", () => {
                     totalPages: 0,
                     type: "TILAWAH",
                     period: {
-                        connectOrCreate: {
-                            where: {
-                                startDate_endDate: {
-                                    startDate: mockData.startDate,
-                                    endDate: mockData.endDate,
-                                },
-                            },
-                            create: {
+                        connect: {
+                            startDate_endDate: {
                                 startDate: mockData.startDate,
                                 endDate: mockData.endDate,
                             },

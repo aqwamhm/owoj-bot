@@ -2,6 +2,7 @@ const memberServices = require("../services/member");
 const reportServices = require("../services/report");
 const { getPeriodDate, getPeriodText } = require("../utils/date");
 const { validate } = require("../utils/validator");
+const { Prisma } = require("@prisma/client");
 
 const errorMessages = require("../views/error");
 const NotFoundError = require("../exceptions/NotFoundError");
@@ -125,35 +126,50 @@ class ReportHandler {
             throw new ConflictError(this.reportViews.error.conflictPages());
         }
 
-        if (type === "terjemah") {
-            return await this.createTerjemahReport({
-                name,
-                groupId,
-                juz,
-                startDate,
-                endDate,
-                finishedPages,
-                totalPages,
-            });
-        } else if (type === "murottal") {
-            return await this.createMurottalReport({
-                name,
-                groupId,
-                juz,
-                startDate,
-                endDate,
-                finishedPages,
-                totalPages,
-            });
-        } else {
-            return await this.createTilawahReport({
-                name,
-                groupId,
-                pages,
-                juz,
-                startDate,
-                endDate,
-            });
+        try {
+            if (type === "terjemah") {
+                return await this.createTerjemahReport({
+                    name,
+                    groupId,
+                    juz,
+                    startDate,
+                    endDate,
+                    finishedPages,
+                    totalPages,
+                });
+            } else if (type === "murottal") {
+                return await this.createMurottalReport({
+                    name,
+                    groupId,
+                    juz,
+                    startDate,
+                    endDate,
+                    finishedPages,
+                    totalPages,
+                });
+            } else {
+                return await this.createTilawahReport({
+                    name,
+                    groupId,
+                    pages,
+                    juz,
+                    startDate,
+                    endDate,
+                });
+            }
+        } catch (e) {
+            // P2025 = period record not found — this happens when a member races to
+            // report at the exact moment the period changes, before the cron job has
+            // had a chance to set up the new period. Tell them to retry in a moment.
+            if (
+                e instanceof Prisma.PrismaClientKnownRequestError &&
+                e.code === "P2025"
+            ) {
+                throw new ConflictError(
+                    "Periode baru sedang dipersiapkan oleh sistem. Silakan coba lagi dalam beberapa detik."
+                );
+            }
+            throw e;
         }
     }
 

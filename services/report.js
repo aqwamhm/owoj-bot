@@ -42,14 +42,8 @@ const reportServices = {
                 totalPages: parseInt(totalPages),
                 type,
                 period: {
-                    connectOrCreate: {
-                        where: {
-                            startDate_endDate: {
-                                startDate,
-                                endDate,
-                            },
-                        },
-                        create: {
+                    connect: {
+                        startDate_endDate: {
                             startDate,
                             endDate,
                         },
@@ -70,14 +64,8 @@ const reportServices = {
                 totalPages: parseInt(totalPages),
                 type,
                 period: {
-                    connectOrCreate: {
-                        where: {
-                            startDate_endDate: {
-                                startDate,
-                                endDate,
-                            },
-                        },
-                        create: {
+                    connect: {
+                        startDate_endDate: {
                             startDate,
                             endDate,
                         },
