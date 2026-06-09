@@ -1,7 +1,7 @@
 FROM node:22-alpine
 WORKDIR /app
 
-RUN apk add --no-cache openssl
+RUN apk add --no-cache openssl tzdata
 
 COPY package*.json .
 RUN npm ci
