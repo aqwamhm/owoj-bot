@@ -1,0 +1,26 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: owoj-bot-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3307:3306"
+    volumes:
+      - owoj-bot-db:/var/lib/mysql
+
+  bot:
+    build: .
+    container_name: owoj-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - ./auth_info_baileys:/app/auth_info_baileys
+
+volumes:
+  owoj-bot-db:

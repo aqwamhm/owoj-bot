@@ -1,0 +1,4 @@
+node_modules
+/coverage
+auth_info_baileys
+.env
